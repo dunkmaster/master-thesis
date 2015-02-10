@@ -19,12 +19,15 @@
 \usepackage{color}
 \usepackage{gensymb}
 \usepackage{mathtools}
+\usepackage{courier}
 
 \include{glossary}
 \makeglossaries
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\newcommand{\codeword}[1]{\texttt{#1}}
 
 \lstset{ %
   backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
@@ -147,15 +150,15 @@ Håvard Helstrup, Johan Alme, Dieter, Arild, Christian, (Damian).
 \label{sec:motivation}
 \paragraph{•}
 The \gls{lhc} at the \gls{cern} is the world's largest particle accelerator, hosting multiple ongoing experiments.
-After a run period of more than 3 years, the \gls{lhc} at the \gls{cern} will be shut down for about 18 months.\cite{ls2}
-The purpose of this shutdown is to do maintenance on various equipment in the \gls{lhc}, as well as significant upgrades to the different detectors, one of which is the detector for the \gls{alice} experiment.
-\gls{alice} consists of multiple sub-detectors, which combined collects an enormous amount of data.
+After a run period of more than 3 years, the \gls{lhc} at the \gls{cern} will be shut down from 2018 until 2021.\cite{ls2}
+The purpose of this shutdown is to do maintenance on various equipment in the \gls{lhc}, as well as significant upgrades to the different detectors, one of which is the detector for the \gls{alice}.
+\gls{alice} consists of multiple sub-detectors, which combined collect an enormous amount of data.
 This amount is expected to increase after the shutdown period as the interaction rate of the \gls{lhc} will increase.
-Due to the increase in data output, the \gls{alice} collaboration is seeking to upgrade and enhance the detectors capabilities.\cite{alice-upgrade}
+Due to the increase in data output, the \gls{alice} collaboration is seeking to upgrade and enhance the detector capabilities.\cite{alice-upgrade}
 This includes a partial redesign of the readout electronics, upgrades to multiple sub-detectors and additional hardware upgrades.
 
 \paragraph{•}
-The \gls{alice} detectors main device for tracking and identifying particles is the \gls{tpc} sub-detector.
+The \gls{tpc} is the \gls{alice} detector's main sub-detector for tracking and identifying particles.
 A starting/temporary? design for the new \gls{tpc} readout electronics is made, and the different components are currently being developed.
 As this is still being worked on, many questions about the different components are yet to be answered.
 Are the current specifications sufficient to handle the expected increase in output from the detector?
@@ -169,7 +172,7 @@ One strategy for solving this problem, which will be further explored in this th
 Doing a simulation requires designing a accurate representation of the readout electronics, and creating a testbench where it is possible to configure and run multiple tests.
 
 
-\section{Research Question}
+\section{Research Question and thesis goal}
 
 \paragraph{•}
 Given the motivation and introduction given in section \ref{sec:motivation} the research question for this thesis becomes:
@@ -177,13 +180,19 @@ Given the motivation and introduction given in section \ref{sec:motivation} the 
 \paragraph{•}
 Is it possible to design and implement a simulation which directly represent the readout electronics, and in doing so will it have an optimizing effect?
 
-\section{Thesis goal}
+\paragraph{•}
+Further explained, the main tasks of this thesis will be to create a computer model of the readout electronics main components, and run multiple simulations on it.
+Experimenting with different configurations in order to find bottlenecks, faulty design or areas of improvement.
+The experiments should be logged, and the results will be presented in an organized fashion.
 
 
 \section{Report structure}
-Chapter 2 will give the reader the background information to be able to understand the different academic and scientific terms used, as well as some information about the context of the report. This includes information about \gls{cern}, the \gls{alice} experiment and the physics most relevant to the thesis.
+Chapter 2 will give the reader the background information to be able to understand the different academic and scientific terms used, as well as some information about the context of the report. 
+This includes information about \gls{cern}, the \gls{alice} experiment and the physics most relevant to the thesis.
+It will discuss the current readout electronics as well as the proposed upgrade.
 Chapter 3 is going further into the problem discussed in this report, initial plans on solving the problem, and information about the tools used.
-Chapter 4 will talk about the implementation of the simulation, what problems occurred along the way, and the chosen solution. The chapter will go into the design, as well as code snippets from the implementation.
+Chapter 4 will talk about the implementation of the simulation, what problems occurred along the way, and the chosen solution. 
+The chapter will go into the design, as well as code snippets from the implementation.
 With the information given in chapter 4, chapter 5 will discuss the results of the different simulations run, and evaluate the solution.
 Chapter 6 will conclude the thesis with some closing words, and work that can be done in the future.
 
@@ -195,9 +204,9 @@ Chapter 6 will conclude the thesis with some closing words, and work that can be
 \paragraph{•}
 \gls{cern} is a European research and scientific organization based out of Geneva near the Franco-Swiss border.\cite{cern}
 \gls{cern} is a collaboration between 21 countries with a member staff of over 2500, and more than 12000 associates and apprentices.
-The organization was founded in 1954 and has since than been the birthplace of many major scientific discoveries.
+The organization was founded in 1954 and has since then been the birthplace of many major scientific discoveries.
 These are not limited to discoveries in the field of physics, but includes the creation of the World Wide Web.\cite{www}
-Currently the biggest project at \gls{cern} is the particle accelerator, which serves as the foundation for multiple experiments in the field of particle physics.
+Currently the biggest project at \gls{cern} is the \gls{lhc} particle accelerator, which serves as the foundation for multiple experiments in the field of particle physics.
 % 2 - 3 more sentences about this!
 
 \section{The Large Hadron Collider}
@@ -206,7 +215,7 @@ Currently the biggest project at \gls{cern} is the particle accelerator, which s
 Starting up on 10 September 2008, \gls{lhc} is the latest construct added to \gls{cern}'s particle accelerator complex.\cite{lhc}
 It consist of a 27 kilometre underground ring of superconducting magnets and accelerators which boost the energy of the particles travelling inside the collider.
 The collider contains two adjacent parallel high-energy particle beams.
-These beams consists of protons extracted from standard hydrogen atoms by stripping them of electrons.
+These beams consist of protons extracted from standard hydrogen atoms by stripping them of electrons.
 Along the collider ring there are four intersect points where collision occurs.
 Each point corresponds to the location of a particle detector - ATLAS, \gls{alice}, CMS and LHCb. 
 The particle detectors are each built and operated by a large collaborations, with thousands of scientists from different institutes around the world.
@@ -226,32 +235,36 @@ The layout of the \gls{lhc} ring as well as its four collision points can be see
 The beams travelling inside the \gls{lhc} reach an energy-peak of 7 \gls{tev}, which means that on impact with each other the collision reach an energy of 14 \gls{tev}.\cite{lhc-pdf}
 During a normal run of the collider there will be about 600 million particle collisions per second during a period of 10 hours.
 This leads to a huge amount of data for each of the detectors to read out. 
-\gls{alice} is the detector which produce the most data, with about 1.25 GB/s.
+\gls{alice} is the detector which produce the most data per collision, with a design value of about 1.25 GB/s.
+The high amount of data per collision is produced primarily by the \gls{tpc} sub-detector, which records a high number of points per track, and has a low momentum threshold. Detectors like ATLAS and CMS  are designed with a higher momentum threshold, but can cope with significantly higher collision rates than ALICE. ALICE is designed for the study of heavy ion reactions, where particle correlations at low momentum is an important measure.
 
 \section{ALICE}
 \subsection{Introduction}
 
 \paragraph{•}
-\gls{alice} is a so called heavy-ion detector, which means it studies collisions between particles of high energy.\cite{alice-home}
-When the experiment started lead to lead ions collision was used, but they have now switched to colliding lead with protons, both produce a extreme high amount of temperature and density, but the later being the most preferable.
+\gls{alice} is a so called heavy-ion detector, which means it studies collisions between heavy nuclei of high energy.\cite{alice-home}
+When the experiment started heavy-ion collision lead ions was used, but they have now switched to colliding lead with protons, both produce a extreme high amount of temperature and density.
+They will eventually run collisions with lead to lead ions again as both types create interesting results.
+Lead to lead collisions create Hot Nuclear Matter, while lead to protons create Cold Nuclear Matter.
+The explanations for these types of matter is beyond the scope of this thesis and will not be discussed further.
 The high temperature and density is necessary to produce a phase of matter called quark-gluon plasma.
 
 \subsection{Quark-gluon plasma}
 \paragraph{•}
 Shortly after the big bang, the universe was filled with a extremely hot cluster of all kinds of different particles moving around at near light speed.\cite{alice-physics}
-Most of these particles was what is called quarks, fundamental building blocks for matter, and gluons which ties quarks together in order to form protons and neutrons.
-Normally quarks and gluons are very strictly tied together, but in the conditions of extreme temperature and density as in the time shortly after the big bang, that are much more lousily coupled and free to move around in what is called quark-gluon plasma.
+Most of these particles were quarks, fundamental building blocks for matter, and gluons which ties quarks together in order to form heavier particles.
+Normally quarks and gluons are very strictly tied together, but in the conditions of extreme temperature and density as in the time shortly after the big bang, that they are allowed to move freely in an extended volume called quark-gluon plasma.
 The existence of quark-gluon plasma and its properties is one of the key issues in \gls{qcd}.
 The \gls{alice} collaboration studies this, observing how it behaves.
 
 \subsection{The detector setup}
 \paragraph{•}
-The detector weighs in at 10,000 ton, it is 26 m long, 16 m wide, and 16 m high.\cite{alice-about}
+The detector weighst is about 10,000 ton, it is 26 m long, 16 m wide, and 16 m high.\cite{alice-about}
 It consists of 18 sub-detectors, each with its own set of tasks regarding tracking particles and collecting data.
-This large number of sub-detectors are needed in order to get the full picture of the complex system which is being studied(e.i different types of particles).
-The detector is also embedded in a magnetic field, created by a large solenoid magnet, which makes particles formed in collision bend according to its charge, and behave differently relative to its momentum. High momentum equals near straight lines while low momentum makes the particles move in spiral-like tracks.
+This large number of sub-detectors are needed in order to get the full picture of the complex system which is being studied(i.e different types of particles and the correlations between them).
+Most of the detector is embedded in a magnetic field, created by a large solenoid magnet, which makes particles formed in collision bend according to their charge, and behave differently relative to their momentum. High momentum equals near straight lines while low momentum makes the particles move in spiral-like tracks.
 During lead to lead collisions the collision rate peaks at 8 kHz(Where Hz is defined as number of events per second).
-This number is still a lot lower in practice because the \gls{alice} detector uses a triggered based readout, which only triggers on head-on(central) collisions. 
+This number is still a lot lower in practice because the \gls{alice} detector uses a triggered readout, which only triggers on head-on(central) collisions. 
 The maximum readout rate of the current \gls{alice} detector is 500 Hz, which is more than enough to track central collisions.
 \ref{fig:alice} shows a cross section of the detector as it is today with the red solenoid magnet, and all sub-detectors labelled.
 
@@ -269,7 +282,7 @@ One of the most important sub-detectors, and the one that is relevant for this t
 Located at the center of the \gls{alice} detector it is among the first entry point when gathering data from a particle collision.
 It is a 88\(m^3\) cylinder filled with gas.
 The gas works as a detection medium, which means that charges particles from a collision crossing will ionize the gas atoms, freeing electrons that move towards the end plates of the detector.
-The readout is done by specially designed readout chambers, which is capable of handling the high amount of data produced in heavy-ion collisions.
+The readout is done by specially designed readout chambers, which are capable of handling the high amount of data produced in heavy-ion collisions.
 
 \subsection{Readout electronics} %Should this be a chapter of itself?
 \paragraph{•}
@@ -291,8 +304,9 @@ The schematics is shown in \ref{fig:altro}.
 
 \section{Long Shutdown 2}
 \paragraph{•}
-As mentioned in \ref{sec:motivation} the \gls{lhc} ring will be shut down for about 3 years, and during that time the \gls{alice} detector will undergo a extensive upgrade.
-The upgrade strategy for \gls{alice} is based on the expected increase in collision rate of 50 kHz, and will now track every collision.
+As mentioned in \ref{sec:motivation} the \gls{lhc} ring will be shut down for about 3 years, starting 2018.
+During that time the \gls{alice} detector will undergo an extensive upgrade.
+The upgrade strategy for \gls{alice} is based on the expected increase in collision rate to 50 kHz, and will now track every collision.
 Essentially this comes down to a increase by a factor of 100, compared to what is achievable today.
 
 \paragraph{•}
@@ -338,11 +352,54 @@ Using computers to do simulations is in this day and age become more and more us
 \paragraph{•}
 Computer simulations often becomes quite complex, and it is often wise to use existing tools to help make the process easier.
 There is an array of different tools that can be used to various kinds of simulations.
-They vary from complete frameworks, with user interfaces too tools which helps developers write there own simulation program.
-
+They vary from complete frameworks, with graphical user interfaces too tools which helps programmers write there own simulation program.
+The later requires of course the most work, but will most often result in the best results as you can custom tailor your simulation on a lower level then with a complete framework.
+A programming tool that is made for creating simulations is the SystemC library, which will be discussed in the following section.
 
 \section{SystemC}
 \textit{Explain how SystemC works, what benefits and downsides}
+
+\section{Background}
+\paragraph{•}
+\gls{sc} is a system design library based on \gls{cpp}. 
+It provides an interface for easily create a software models that representing a hardware architecture, and together with standard \gls{cpp} development tools it is possible to quickly build a full scale simulation.
+Following the standards of \gls{cpp}, \gls{sc} is built to be easy to understand for both software and hardware developer, resulting in clearer cooperation between them while developing the hardware design.
+The \gls{sc} library provides a object-oriented approach to model design, where a single \gls{cpp} class represents a model.
+This makes it easy to separate concern between the different models in your simulation.
+\paragraph{•}
+When simulating a hardware system there is a couple of key points to be aware of, firstly you need to be able to handle hardware timing, clock cycles, and synchronisation.
+One of the many features of \gls{sc} is exactly this, again taking advantage of the object-oriented nature of \gls{cpp} to extend its capabilities through \codeword{classes}.
+
+\paragraph{•}
+Here is some of the features \gls{sc} provides, with emphases on the ones needed to understand code snippets from our final implementation.
+
+\paragraph{•}
+\begin{itemize}
+\item \textbf{Modules}
+	\begin{itemize}
+		\item Container \codeword{class} representing a hardware model.
+	\end{itemize}
+\item \textbf{Processes}
+	\begin{itemize}
+		\item In short, processes are methods inside a module which describe the module functionality.
+	\end{itemize}
+\item \textbf{Ports}
+	\begin{itemize}
+		\item Multiple modules are connected with the help of ports. These can be both one directional and bidirectional.
+	\end{itemize}
+\item \textbf{Signals}
+	\begin{itemize}
+		\item Signals represent data sent between modules via ports. They can be arbitrary data types like \codeword{bool} or \codeword{int}, but also user defined types.
+	\end{itemize}
+\item Rich set of data types
+	\begin{itemize}
+		\item \gls{sc} supports all data types defined in \gls{cpp} as well as multiple custom types. 
+	\end{itemize}
+\item Clocks
+	\begin{itemize}
+		\item SystemC comes with the clocks, which can be seen as timekeepers of the system during a simulation.
+	\end{itemize}
+\end{itemize}
 
 \section{Model Designs}
 \textit{Different design patterns, and plans for the electronic}
