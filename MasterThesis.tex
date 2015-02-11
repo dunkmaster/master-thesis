@@ -16,46 +16,63 @@
 \usepackage[floatrow]{chemstyle} % Displaying figures next to item lists.
 \usepackage[hidelinks]{hyperref}
 \usepackage{listings} % Adding source code listings.
+\usepackage{caption}
 \usepackage{color}
+\usepackage[usenames,dvipsnames]{xcolor}
+
 \usepackage{gensymb}
 \usepackage{mathtools}
 \usepackage{courier}
 
 \include{glossary}
 \makeglossaries
-\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygreen}{rgb}{0,0.8,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
-\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{listinggray}{gray}{0.5}
+\definecolor{lbcolor}{rgb}{0.95,0.95,0.95}
 
 \newcommand{\codeword}[1]{\texttt{#1}}
 
-\lstset{ %
-  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
-  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
-  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
-  breaklines=true,                 % sets automatic line breaking
-  captionpos=b,                    % sets the caption-position to bottom
-  commentstyle=\color{mygreen},    % comment style
-  deletekeywords={...},            % if you want to delete keywords from the given language
-  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
-  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
-  frame=single,                    % adds a frame around the code
-  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
-  keywordstyle=\color{blue},       % keyword style
-  language=Octave,                 % the language of the code
-  morekeywords={public, if, for, else, class, import, return, null},            % if you want to add more keywords to the set
-  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
-  numbersep=5pt,                   % how far the line-numbers are from the code
-  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
-  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
-  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
-  showstringspaces=false,          % underline spaces within strings only
-  showtabs=false,                  % show tabs within strings adding particular underscores
-  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
-  stringstyle=\color{mymauve},     % string literal style
-  tabsize=2,                       % sets default tabsize to 2 spaces
-  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+% Solarized colour scheme for listings
+\definecolor{variable}{RGB}{43, 145, 175}
+\definecolor{keyword}{RGB}{0, 0, 255}
+\definecolor{number}{HTML}{0080A0}
+\definecolor{string}{RGB}{163, 21, 21}
+\definecolor{comment}{RGB}{0, 128, 0}
+\definecolor{background}{HTML}{FFFFFF}
+\definecolor{function}{RGB}{111, 0, 138}
+
+% Define C++ syntax highlighting colour scheme
+\lstset{language=C++,
+		backgroundcolor=\color{background},
+        basicstyle=\scriptsize\ttfamily,
+        numbers=left,
+        numberstyle=\footnotesize,
+        tabsize=2,
+        breaklines=true,
+        escapeinside={@}{@},
+        numberstyle=\tiny\color{black},
+        keywordstyle=\color{keyword},
+        stringstyle=\color{string}\ttfamily,
+        %identifierstyle=\color{function},
+        commentstyle=\color{comment},
+       %directivestyle=\color{black},
+        frame=single,
+        rulecolor=\color{black},
+        showstringspaces=false,
+        captionpos=b
 }
+\DeclareCaptionFont{code}{\color{black}}
+\DeclareCaptionFormat{listing}{ #1#2#3  }
+\captionsetup[lstlisting]{ format=listing, labelfont=code, textfont=code, singlelinecheck=false, margin=0pt, font={bf,footnotesize} }
+
+\lstnewenvironment{code}[1][]%
+{
+   \noindent
+   \minipage{\linewidth} 
+   \vspace{0.5\baselineskip}
+   \lstset{basicstyle=\ttfamily\footnotesize,frame=single,#1}}
+{\endminipage}
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -133,8 +150,9 @@ Håvard Helstrup, Johan Alme, Dieter, Arild, Christian, (Damian).
 \addcontentsline{toc}{chapter}{List of Algorithms}
 
 \newpage
-\chapter*{Listings}
+\phantomsection
 \addcontentsline{toc}{chapter}{Listings}
+\lstlistoflistings
 \newpage
 
 % Glossary
@@ -359,7 +377,7 @@ A programming tool that is made for creating simulations is the SystemC library,
 \section{SystemC}
 \textit{Explain how SystemC works, what benefits and downsides}
 
-\section{Background}
+\subsection{Background}
 \paragraph{•}
 \gls{sc} is a system design library based on \gls{cpp}. 
 It provides an interface for easily create a software models that representing a hardware architecture, and together with standard \gls{cpp} development tools it is possible to quickly build a full scale simulation.
@@ -368,10 +386,8 @@ The \gls{sc} library provides a object-oriented approach to model design, where 
 This makes it easy to separate concern between the different models in your simulation.
 \paragraph{•}
 When simulating a hardware system there is a couple of key points to be aware of, firstly you need to be able to handle hardware timing, clock cycles, and synchronisation.
-One of the many features of \gls{sc} is exactly this, again taking advantage of the object-oriented nature of \gls{cpp} to extend its capabilities through \codeword{classes}.
-
-\paragraph{•}
-Here is some of the features \gls{sc} provides, with emphases on the ones needed to understand code snippets from our final implementation.
+One of the benefits of \gls{sc} is that it takes care of all of this, again taking advantage of the object-oriented nature of \gls{cpp} to extend its capabilities through \codeword{classes}.
+Here is some of the other features \gls{sc} provides, with emphases on the ones needed to understand code snippets shown in this thesis.
 
 \paragraph{•}
 \begin{itemize}
@@ -385,11 +401,19 @@ Here is some of the features \gls{sc} provides, with emphases on the ones needed
 	\end{itemize}
 \item \textbf{Ports}
 	\begin{itemize}
-		\item Multiple modules are connected with the help of ports. These can be both one directional and bidirectional.
+		\item Port represent the input and output points of a module, they can be connected to other modules through Channels. 
+		Ports can be both one directional or bidirectional.
+	\end{itemize}
+\item \textbf{Channels}
+	\begin{itemize}
+		\item Channels are the wires connecting two Ports. 
+		\gls{sc} comes with three predefined channels: fifo(First-In-First-Out), mutex, and semaphore.
+		It is possible to configure custom channels, but in most cases it is not necessary.
 	\end{itemize}
 \item \textbf{Signals}
 	\begin{itemize}
-		\item Signals represent data sent between modules via ports. They can be arbitrary data types like \codeword{bool} or \codeword{int}, but also user defined types.
+		\item Signals represent data sent between modules via ports. 
+		They can be arbitrary data types like \codeword{bool} or \codeword{int}, but also user defined types.
 	\end{itemize}
 \item Rich set of data types
 	\begin{itemize}
@@ -400,6 +424,34 @@ Here is some of the features \gls{sc} provides, with emphases on the ones needed
 		\item SystemC comes with the clocks, which can be seen as timekeepers of the system during a simulation.
 	\end{itemize}
 \end{itemize}
+
+\newpage
+\subsection{Small example}
+
+\paragraph{•}
+To get a basic understanding of how a \gls{sc} simulation looks like, it is useful to see it in action. 
+The following Figure~\ref{fig:sc-ex} and Listings~\ref{lst:prod-ex}-\ref{lst:main-ex} make up a very trivial example with only 2 modules; a \codeword{Producer} and a \codeword{Consumer}.
+The \codeword{Producer} will increase a counter every clock cycle, and send a \codeword{bool} value based if the count is an even number, and send this value to the \codeword{Consumer}, which registers how many times the \codeword{Producer} counted an even number.
+The example uses a fifo channel, connected between an output port on the \codeword{Producer}, and an input port on the \codeword{Consumer}.
+
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=1.0\textwidth]{images/sc-example.png}
+     \caption{Basic SystemC example}
+    \label{fig:sc-ex}
+\end{figure}
+
+\noindent
+\begin{minipage}{\linewidth}
+\lstinputlisting[caption=Hello,label=lst:prod-ex]{codelistings/producer.cpp}
+\end{minipage}
+\begin{minipage}{\linewidth}
+\lstinputlisting[caption=Hello,label=lst:cons-ex]{codelistings/consumer.cpp}
+\end{minipage}
+\begin{minipage}{\linewidth}
+\lstinputlisting[caption=Hello,label=lst:main-ex]{codelistings/main.cpp}
+\end{minipage}
+
 
 \section{Model Designs}
 \textit{Different design patterns, and plans for the electronic}
