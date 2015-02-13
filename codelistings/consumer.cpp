@@ -15,7 +15,7 @@ void Consumer::receiveData(){
 	
 	while(numberOfEvens < 10){ //stop lopp when received 10 evens
 		
-		if(inputChannel->nb_read(receivedSignal)){ //receiving signal; nb_read returns true if signal is  
+		if(inputChannel->nb_read(receivedSignal)){ //receiving signal; nb_read returns true if signal is read.  
 			if(receivedSignal){
 				numberOfEvens++; // if signal is true, count was even.
 			}

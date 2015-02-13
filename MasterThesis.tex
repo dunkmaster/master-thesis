@@ -304,13 +304,14 @@ The readout is done by specially designed readout chambers, which are capable of
 
 \subsection{Readout electronics} %Should this be a chapter of itself?
 \paragraph{•}
-Signals from the readout chambers are passed along to the front-end readout electronics, which today consist of 4356 ALTRO chips.
+Signals from the readout chambers are passed along to the front-end readout electronics, which today consist of 4356 ALTRO \gls{asic} chips.\cite{altro}
+\gls{asic} is the term used for specially customized chips, rather than chips with a more general-purpose use.\cite{asic}
 The ALTRO chip is made up of 16 asynchronous channels that digitise, process and compress the analogue signals from the readout chambers.
 It operates on a so called triggered readout mode.
 In short when ALTRO receives the first trigger, it stores the following data stream into memory, holding on to it until it is ready to pass on the data. 
 The front-end electronics are able to readout data at a speed of up to 300 MB/s.
-\paragraph{•} %Legg til RCU i acronym
-The ALTRO chip sends the digitised signals further down the readout chain to the readout control unit(RCU), where it is further processed and shipped to  and stored in the online systems.
+\paragraph{•} 
+The ALTRO chip sends the digitised signals further down the readout chain to the \gls{rcu}, where it is further processed and shipped to  and stored in the online systems.
 The schematics is shown in \ref{fig:altro}.
 
 \begin{figure}[h!]
@@ -327,10 +328,15 @@ During that time the \gls{alice} detector will undergo an extensive upgrade.
 The upgrade strategy for \gls{alice} is based on the expected increase in collision rate to 50 kHz, and will now track every collision.
 Essentially this comes down to a increase by a factor of 100, compared to what is achievable today.
 
-\paragraph{•}
+\paragraph{•} %NEW SHIT
 To be able to handle the increase in collision rate the \gls{tpc} will receive upgrades to both its readout chambers, and front-end readout electronics.
-\textit{Her skal jeg skrive mer. (Sampa, cru, etc..)}
-
+The dataflow from the detector, and a working schematics can be seen in FIGURE!
+Signals will be passed from the new readout chambers to the front-end cards (FEC). 
+The entry point in the FEC is the new custom-made \gls{asic}, the SAMPA chip, that is replacing the ALTRO chip.\cite{tdr-015}
+The SAMPA chip is capable of processing signals asynchronously in 32 individual channels.
+They are further on digitized and concurrently transferred to the GBTx, which enhances the signal strength and transmits them via multiple optical fibre links to the \gls{cru}.
+The \gls{cru} can be thought of as the new \gls{rcu} and serves as an interface to the online systems.
+\ref{cha:4} will go into more detail about the readout electronics in the context of our simulation.
 
 \chapter{Problem description}
 \textit{SystemC, Starting design of the simulation, plans for implementation and test runs}
@@ -371,7 +377,7 @@ Using computers to do simulations is in this day and age become more and more us
 Computer simulations often becomes quite complex, and it is often wise to use existing tools to help make the process easier.
 There is an array of different tools that can be used to various kinds of simulations.
 They vary from complete frameworks, with graphical user interfaces too tools which helps programmers write there own simulation program.
-The later requires of course the most work, but will most often result in the best results as you can custom tailor your simulation on a lower level then with a complete framework.
+The later requires of course the most work, but will most often end with the better results as you can custom tailor your simulation on a lower level then with a complete framework.
 A programming tool that is made for creating simulations is the SystemC library, which will be discussed in the following section.
 
 \section{SystemC}
@@ -456,8 +462,8 @@ The example uses a fifo channel, connected between an output port on the \codewo
 \section{Model Designs}
 \textit{Different design patterns, and plans for the electronic}
 
-\subsection{Zero suppression}
-\subsection{Huffman Encoding}
+\subsection{Zero suppression} %With random data, and real data
+\subsection{Huffman Encoding} %Only real data
 
 \chapter{Solution implementation}
 \textit{Code snippets, Incremental implementation stages and the final implementation, (before and after huffman), using real data vs random. Implementing fluxiation into the simulation}
