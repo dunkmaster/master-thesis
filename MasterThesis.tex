@@ -10,13 +10,13 @@
 
 \documentclass[a4paper]{report}
 \usepackage{helvet}
-\usepackage{subfig}
 \usepackage[toc,acronym,nomain]{glossaries}
 \usepackage{graphicx} % Displaying pictures in the document.
 \usepackage[floatrow]{chemstyle} % Displaying figures next to item lists.
 \usepackage[hidelinks]{hyperref}
 \usepackage{listings} % Adding source code listings.
 \usepackage{caption}
+\usepackage{subcaption}
 \usepackage{color}
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{epstopdf}
@@ -102,13 +102,17 @@ University of Bergen \\}
 \vspace{10pt}
 {\large June 2015} % Month and year published
 
-\begin{figure}[h!]
-	\captionsetup[subfigure]{labelformat=empty}
-	\subfloat[][]{\includegraphics[width=50pt]{HIB_sort_hovedlogo.eps}}
-	\hfill
-	\subfloat[][]{\includegraphics[width=50pt]{uib-logo.eps}}
-\end{figure}
 
+\begin{figure}[h]
+		\begin{subfigure}[]{50pt}
+			\includegraphics[width=50pt]{HIB_sort_hovedlogo.eps}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}[]{50pt}
+			\includegraphics[width=50pt]{uib-logo.eps}
+		\end{subfigure}
+
+\end{figure}
 
 \endgroup}
 
@@ -441,7 +445,7 @@ To get a basic understanding of how a \gls{sc} simulation looks like, it is usef
 The following Figure~\ref{fig:sc-ex} and Listings~\ref{lst:prod-ex}-\ref{lst:main-ex} make up a very trivial example with only 2 modules; a \codeword{Producer} and a \codeword{Consumer}.
 The \codeword{Producer} will increase a counter every clock cycle, and send a \codeword{bool} value based if the count is an even number, and send this value to the \codeword{Consumer}, which registers how many times the \codeword{Producer} counted an even number.
 The example uses a fifo channel, connected between an output port on the \codeword{Producer}, and an input port on the \codeword{Consumer}.
-}
+
 \begin{figure}[h!]
   \centering
     \includegraphics[width=1.0\textwidth]{images/sc-example.png}
@@ -460,6 +464,12 @@ The example uses a fifo channel, connected between an output port on the \codewo
 \lstinputlisting[caption=Hello,label=lst:main-ex]{codelistings/main.cpp}
 \end{minipage}
 
+\paragraph{}
+\gls{sc} can be used to create very low level hardware descriptions and models, and can interface directly with hardware description languages like \gls{vhdl} and \gls{verilog}.
+This is one way to create a simulation, and the models will be very accurately represented by doing so.
+The other way is to have a high level of abstraction, leaving out the unimportant details and focus solely on the expected problem areas.
+There are benefits and drawbacks for both ways, but sticking to a high abstraction level can in complex cases make it a lot easier to work with the model design and allows you to focus on the important parts.
+}
 \chapter{Problem Description}
 \textit{Explain the model, introduce the problem}
 
@@ -472,8 +482,9 @@ The example uses a fifo channel, connected between an output port on the \codewo
 \textit{Different design patterns, and plans for the electronic}
 {\color{red}
 The hardware design which is being simulated is already briefly shown in figure~\ref{fig:fec}.
-The 3 different chips that makes up this design is the \gls{sampa}, the \gls{gbt}, and the \gls{cru}.
-Out of the 3, the \gls{sampa} and the \gls{cru} are the most interesting as they are still being developed and testing them can give a lot of valuable feedback.
+The proposed schematic shown there consists of 12 \gls{fec} cards for every \gls{cru}.
+Each \gls{fec} consists of 5 \gls{sampa} and 2 \gls{gbt} \glspl{asic}, with the \gls{cru} being connected to them via 24 optical links.
+Out of the 3 main chips, the \gls{sampa} and the \gls{cru} are the most interesting as they are still being developed and testing them can give a lot of valuable feedback.
 The \gls{gbt} is a completed component, so even though it is part of readout electronic being simulated, it will only be a very shallow abstraction of it.
 This means that it will remain as an empty module who's objective will be to just pass along received data to the correct output links.
 One important note about the \gls{gbt} input and output links.
@@ -486,25 +497,68 @@ The next sections will go into details about the more important components.
 \paragraph{}
 The \gls{sampa} \gls{asic} is based on the work from its predecessor, the \gls{altro} chip.
 Just like the \gls{altro} chip it will be the first stop for signals being tracking in the \gls{tpc} detector.
-The signals will be processed, compressed, digitized, and temporarily stored in the \gls{sampas} memory before it is passed along.
-The \gls{sampa} has 32 integrated channels, which separately and asynchronously process the analog signals coming from the detector.
-Each channel has a readout speed of 10 bit on a 10 MHz clock, which combined results in 400 Mb/s.
+The signals will be processed, compressed, digitized, and temporarily stored in the \glspl{sampa} memory before it is passed along.
+The \gls{sampa} has 32 integrated channels, which separately and asynchronously process the analog signals coming from the detector.\cite{tdr-016}
+Each channel has a readout speed of 10 bit on a 10 MHz clock, which combined results in 3.2 Gbit/s.
 The channels also have there own \gls{fifo} buffer memory where signals coming in are stored as they wait to be sent along.
 The most efficient size for these buffers are one of the things the simulations will hopefully provide.
 The output links for the \gls{sampa} chip consists of 4 e-links connecting them to the \gls{gbt}.
-Each e-link has as said in the previous section a speed of 320 Mb/s, which sums up to 1.28 Mb/s.
+Each e-link has as said in the previous section a speed of 320 Mbit/s, which sums up to 1.28 Gb/s.\cite{tdr-015}
 
 \paragraph{}
 As the \gls{altro}, the \gls{sampa} can be run in triggered readout mode, but in addition can be run continuously.
 Being able to read out continuously is a necessary upgrade to handle the increased data load coming from the detector.
+During continuous mode the data acquisition is uninterruptable, meaning that there is no pause between reading two consecutive events from the detector.
+The difference it makes compared to triggered mode can be seen in figure~\ref{fig:cont} and \ref{fig:trig}.
+Every event, from now on referred to as time frames, is 1024 clock cycles long, and all 32 channels of the \gls{sampa} use the same time frame.
+This means that every 1024 clock cycle a 1024 long time window is initiated for all 32 channels, meaning they can readout 10 bit data samples 1024 times during this window.
+A synchronization input allows multiple \gls{sampa} \gls{asic}s to align their time frames with respect to each others.\cite{tdr-015}
 
+\begin{figure}[h]
+	\label{fig:cont-vs-trig}
+	\centering
+		\begin{subfigure}[]{1.0\textwidth}
+			\label{fig:cont}
+			\includegraphics[width=\textwidth]{images/cont-mode.png}
+		\end{subfigure}
+		\begin{subfigure}[]{1.0\textwidth}
+			\label{fig:trig}
+			\includegraphics[width=\textwidth]{images/triggered-mode.png}
+		\end{subfigure}
+	\caption{Continuous vs Triggered mode}
+
+\end{figure}
+
+\paragraph{}
+The \gls{sampa} creates data packets from the data assembled from each time frame.
+Consisting of a header of fixed size 50 bit, followed by a list of 10 bit samples, created from a single time frame.
+Even though a time frame consists of 1024 clock cycles, in practice a maximum of 1022 samples are received each time. %?????
+This is due to 2 * 10 bit words is required to represent cluster size (size of consecutive samples) and a timestamp.
+Figure~\ref{fig:packet} shows the structure and format of the packets.
+The header consists of information regarding the data, such as address for the channel and chip, number of data words in the time frame and packet type.
+The packet type is used as a marker to see if anything out of the ordinary has happened to the data.
+This can be if there is no samples in the time frame, causing the packet type to just become a channel fill packet.
+It can indicate of the stream of data was cut short because the \gls{fifo} buffer was full, causing buffer overflow.
+In the case of buffer overflow all data for the particular time frame are discarded and the empty packet is sent with type overflow.
+Overflow can cause a lot of data to get discarded if the \gls{sampa} can't empty the buffers fast enough, this can happen if the buffers don't have enough space.
+Seeing as the input rate is 3.2 Gbit/s and the readout speed is 1.28 Gbit/s, the \gls{sampa} can receive up to 2.5 more data per second then it can pass along.
+This is why the \gls{fifo} buffers are necessary, and finding a size which is sufficient, without going overboard is crucial.
+
+\paragraph{}
+There have been done some calculations on how much data will actually be received from the detector at any given time.
+It is estimated that on average over all channels for every \gls{sampa} there is around 30"\%" occupancy.
+This means that on a global average there is 30"\%" data in every given time frame.
+Some channels may be full while others are empty, and some may have 40"\%", but on average there is 30"\%", which means 306 samples out of 1022 every time frame.
+Taking this into account when calculating the input speed of the \gls{sampa} gives 960 Mbit/s which the design should be able to handle without any buffer overflow.
+Even though there is an estimated average occupancy there can still be some channels which time frame after time frame gets a lot more then that, so how much can the design handle?
+This is some of the question the simulation will give answers to.
 
 \subsection{CRU}
 The \gls{cru} serves as an interface between electronics directly on the detector and the online computing systems.
 
 
-
 \subsection{All put together}
+
 }
 
 
