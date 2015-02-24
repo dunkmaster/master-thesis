@@ -281,14 +281,14 @@ The \gls{alice} collaboration studies this, observing how it behaves.
 
 \subsection{The detector setup}
 \paragraph{•}
-The detector weighst is about 10,000 ton, it is 26 m long, 16 m wide, and 16 m high.\cite{alice-about}
+The detector weight is about 10,000 ton, it is 26 m long, 16 m wide, and 16 m high.\cite{alice-about}
 It consists of 18 sub-detectors, each with its own set of tasks regarding tracking particles and collecting data.
 This large number of sub-detectors are needed in order to get the full picture of the complex system which is being studied(i.e different types of particles and the correlations between them).
 Most of the detector is embedded in a magnetic field, created by a large solenoid magnet, which makes particles formed in collision bend according to their charge, and behave differently relative to their momentum. High momentum equals near straight lines while low momentum makes the particles move in spiral-like tracks.
 During lead to lead collisions the collision rate peaks at 8 kHz(Where Hz is defined as number of events per second).
 This number is still a lot lower in practice because the \gls{alice} detector uses a triggered readout, which only triggers on head-on(central) collisions.
 The maximum readout rate of the current \gls{alice} detector is 500 Hz, which is more than enough to track central collisions.
-\ref{fig:alice} shows a cross section of the detector as it is today with the red solenoid magnet, and all sub-detectors labelled.
+\ref{fig:alice} shows a cross section of the detector as it is today with the red solenoid magnet, and all sub-detectors labeled.
 
 \begin{figure}[h!]
   \centering
@@ -308,14 +308,14 @@ The readout is done by specially designed readout chambers, which are capable of
 
 \subsection{Readout electronics} %Should this be a chapter of itself?
 \paragraph{•}
-Signals from the readout chambers are passed along to the front-end readout electronics, which today consist of 4356 ALTRO \gls{asic} chips.\cite{altro}
+Signals from the readout chambers are passed along to the front-end readout electronics, which today consist of 4356 \gls{altro} \gls{asic} chips.\cite{altro}
 \gls{asic} is the term used for specially customized chips, rather than chips with a more general-purpose use.\cite{asic}
-The ALTRO chip is made up of 16 asynchronous channels that digitise, process and compress the analogue signals from the readout chambers.
+The \gls{altro} chip is made up of 16 asynchronous channels that digitize, process and compress the analogue signals from the readout chambers.
 It operates on a so called triggered readout mode.
-In short when ALTRO receives the first trigger, it stores the following data stream into memory, holding on to it until it is ready to pass on the data.
+In short when \gls{altro} receives the first trigger, it stores the following data stream into memory, holding on to it until it is ready to pass on the data.
 The front-end electronics are able to readout data at a speed of up to 300 MB/s.
 \paragraph{•}
-The ALTRO chip sends the digitised signals further down the readout chain to the \gls{rcu}, where it is further processed and shipped to  and stored in the online systems.
+The \gls{altro} chip sends the digitized signals further down the readout chain to the \gls{rcu}, where it is further processed and shipped to  and stored in the online systems.
 The schematics is shown in \ref{fig:altro}.
 
 \begin{figure}[h!]
@@ -334,13 +334,32 @@ Essentially this comes down to a increase by a factor of 100, compared to what i
 
 \paragraph{•} %NEW SHIT
 {\color{red} To be able to handle the increase in collision rate the \gls{tpc} will receive upgrades to both its readout chambers, and front-end readout electronics.
-The dataflow from the detector, and a working schematics can be seen in FIGURE!
-Signals will be passed from the new readout chambers to the front-end cards (FEC).
-The entry point in the FEC is the new custom-made \gls{asic}, the SAMPA chip, that is replacing the ALTRO chip.\cite{tdr-015}
-The SAMPA chip is capable of processing signals asynchronously in 32 individual channels.
-They are further on digitized and concurrently transferred to the GBTx, which enhances the signal strength and transmits them via multiple optical fibre links to the \gls{cru}.
+The current \gls{mwpc} based read-out chambers will be switched out for \gls{gem} detectors, which has a much higher readout rate capability.
+Signals will be passed from the new readout chambers to the \gls{fec} via a readout pad structure similar to the one presently used.
+There are multiple pad structure depending on its location on the detector, but the difference in structure is not relevant for this thesis.
+What is relevant however is that more data is expected from low pad numbers, an example of a pad structure is shown in figure~\ref{fig:pad-struct}.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.75\textwidth]{images/pad-structure.png}
+		\caption{Pad structure of an Inner Readout Chamber(IROC) (Credit to Christian Lippmann)}
+		\label{fig:pad-struct}
+\end{figure}
+
+\paragraph{}
+The entry point in the \gls{fec} is the new custom-made \gls{asic}, the \gls{sampa}, which is replacing the \gls{altro} chip.\cite{tdr-015}
+The \gls{sampa} chip is capable of processing signals asynchronously in 32 individual channels, each channel is directly connected to a single pad.
+They are further on digitized and concurrently transferred to the \gls{gbt}, which enhances the signal strength and transmits them via multiple optical fiber links to the \gls{cru}.
 The \gls{cru} can be thought of as the new \gls{rcu} and serves as an interface to the online systems.
+The data flow from the detector, and a working schematics can be seen in figure~\ref{fig:fec}.
 Chapter~\ref{cha:4} will go into more detail about the readout electronics in the context of our simulation.}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.75\textwidth]{images/fec.png}
+		\caption{Schematics of the readout electronics (From \cite{tdr-016})}
+		\label{fig:pad-struct}
+\end{figure}
 
 \chapter{Simulations}
 \label{cha:4}
@@ -365,22 +384,21 @@ To achieve efficient experimenting using a simulation, it should be easy to chan
 \paragraph{•}
 There are many benefits of simulating a system instead of creating and test the real thing.
 A simulation will in most cases be very time efficient, you can conduct the same kinds of experiments on the system in a much shorter time compared to the real thing.
-This means that more information about the systems behaviour and limitations in less time, which in turn can result in a better final product.
-Creating the real-world system can often be very expensive, which may limit the amount of prototypes or testproducts that are possible to create.
+This means that more information about the systems behavior and limitations in less time, which in turn can result in a better final product.
+Creating the real-world system can often be very expensive, which may limit the amount of prototypes or test-products that are possible to create.
 Therefore using results of a simulation to fine tune the specifications before starting to produce prototypes will cut unnecessary development costs by a significant margin.
 
 \paragraph{•}
 Taking the upgrade of the readout electronics for the \gls{alice} detector as an example to further address this point one can see the usefulness of not having to create multiple custom hardware components, all with different purposed specification.
 In regards to the readout electronics, another important point is that the proposed designs might work well from the start, but there is always room for improvement.
-Finding out that the design doesn't need as much memory, or less optic fibre cables can impact the overall production costs.
+Finding out that the design doesn't need as much memory, or less optic fiber cables can impact the overall production costs.
 One way to efficiently and accurately simulate hardware components is by creating a virtual computer simulation.
 
 \subsection{Computer Simulation}
 \paragraph{•}
 Using computers to do simulations is in this day and age become more and more useful because of their incredible computational power, and ability to produce fast results.
-%MORE stuff
-\paragraph{•}
-Computer simulations often becomes quite complex, and it is often wise to use existing tools to help make the process easier.
+This is important as simulations often becomes quite complex, both in regards to computational complexity and hard to work with.
+Therefore it can be wise to use existing tools to help make the process easier.
 There is an array of different tools that can be used to various kinds of simulations.
 They vary from complete frameworks, with graphical user interfaces too tools which helps programmers write there own simulation program.
 The later requires of course the most work, but will most often end with the better results as you can custom tailor your simulation on a lower level then with a complete framework.
@@ -444,7 +462,7 @@ Here is some of the other features \gls{sc} provides, with emphases on the ones 
 To get a basic understanding of how a \gls{sc} simulation looks like, it is useful to see it in action.
 The following Figure~\ref{fig:sc-ex} and Listings~\ref{lst:prod-ex}-\ref{lst:main-ex} make up a very trivial example with only 2 modules; a \codeword{Producer} and a \codeword{Consumer}.
 The \codeword{Producer} will increase a counter every clock cycle, and send a \codeword{bool} value based if the count is an even number, and send this value to the \codeword{Consumer}, which registers how many times the \codeword{Producer} counted an even number.
-The example uses a fifo channel, connected between an output port on the \codeword{Producer}, and an input port on the \codeword{Consumer}.
+The example uses a \gls{fifo} channel, connected between an output port on the \codeword{Producer}, and an input port on the \codeword{Consumer}.
 
 \begin{figure}[h!]
   \centering
@@ -473,10 +491,8 @@ There are benefits and drawbacks for both ways, but sticking to a high abstracti
 \chapter{Problem Description}
 \textit{Explain the model, introduce the problem}
 
-\section{Introduction}
-{\color{red}
- blablabla
-}
+\paragraph{}
+Føler nesten at det mangler noe her...... (Trenger jeg en introduksjon her?)
 
 \section{Model Design}
 \textit{Different design patterns, and plans for the electronic}
@@ -494,6 +510,7 @@ This is the reason letting data flow directly through the \gls{gbt} in the simul
 The next sections will go into details about the more important components.
 
 \subsection{SAMPA}
+\label{subsec:sampa}
 \paragraph{}
 The \gls{sampa} \gls{asic} is based on the work from its predecessor, the \gls{altro} chip.
 Just like the \gls{altro} chip it will be the first stop for signals being tracking in the \gls{tpc} detector.
@@ -504,37 +521,47 @@ The channels also have there own \gls{fifo} buffer memory where signals coming i
 The most efficient size for these buffers are one of the things the simulations will hopefully provide.
 The output links for the \gls{sampa} chip consists of 4 e-links connecting them to the \gls{gbt}.
 Each e-link has as said in the previous section a speed of 320 Mbit/s, which sums up to 1.28 Gb/s.\cite{tdr-015}
+Since each \gls{sampa} and \gls{gbt} has a specific number of output and input links, there is only certain setups which are desirable.
+This is why the proposed schematic uses 5 \gls{sampa} and 2 \gls{gbt} chips for each \gls{fec}.
+That setup gives exactly 20 output links from the \gls{sampa} chips, and 20 input links on the \gls{gbt} chips.
 
 \paragraph{}
 As the \gls{altro}, the \gls{sampa} can be run in triggered readout mode, but in addition can be run continuously.
 Being able to read out continuously is a necessary upgrade to handle the increased data load coming from the detector.
 During continuous mode the data acquisition is uninterruptable, meaning that there is no pause between reading two consecutive events from the detector.
-The difference it makes compared to triggered mode can be seen in figure~\ref{fig:cont} and \ref{fig:trig}.
+The difference it makes compared to triggered mode can be seen in figure~\ref{fig:cont-vs-trig}.
 Every event, from now on referred to as time frames, is 1024 clock cycles long, and all 32 channels of the \gls{sampa} use the same time frame.
 This means that every 1024 clock cycle a 1024 long time window is initiated for all 32 channels, meaning they can readout 10 bit data samples 1024 times during this window.
 A synchronization input allows multiple \gls{sampa} \gls{asic}s to align their time frames with respect to each others.\cite{tdr-015}
 
-\begin{figure}[h]
+\begin{figure}[t!]
 	\label{fig:cont-vs-trig}
 	\centering
-		\begin{subfigure}[]{1.0\textwidth}
+		\begin{subfigure}[]{0.9\textwidth}
 			\label{fig:cont}
 			\includegraphics[width=\textwidth]{images/cont-mode.png}
 		\end{subfigure}
-		\begin{subfigure}[]{1.0\textwidth}
+		\begin{subfigure}[]{0.9\textwidth}
 			\label{fig:trig}
 			\includegraphics[width=\textwidth]{images/triggered-mode.png}
 		\end{subfigure}
 	\caption{Continuous vs Triggered mode}
-
 \end{figure}
 
 \paragraph{}
 The \gls{sampa} creates data packets from the data assembled from each time frame.
 Consisting of a header of fixed size 50 bit, followed by a list of 10 bit samples, created from a single time frame.
-Even though a time frame consists of 1024 clock cycles, in practice a maximum of 1022 samples are received each time. %?????
+Even though a time frame consists of 1024 clock cycles, in practice a maximum of 1022 samples are received each time.
 This is due to 2 * 10 bit words is required to represent cluster size (size of consecutive samples) and a timestamp.
 Figure~\ref{fig:packet} shows the structure and format of the packets.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/packet.png}
+		\caption{Data packet format (From \cite{tdr-015})}
+		\label{fig:packet}
+\end{figure}
+
 The header consists of information regarding the data, such as address for the channel and chip, number of data words in the time frame and packet type.
 The packet type is used as a marker to see if anything out of the ordinary has happened to the data.
 This can be if there is no samples in the time frame, causing the packet type to just become a channel fill packet.
@@ -546,27 +573,74 @@ This is why the \gls{fifo} buffers are necessary, and finding a size which is su
 
 \paragraph{}
 There have been done some calculations on how much data will actually be received from the detector at any given time.
-It is estimated that on average over all channels for every \gls{sampa} there is around 30"\%" occupancy.
-This means that on a global average there is 30"\%" data in every given time frame.
-Some channels may be full while others are empty, and some may have 40"\%", but on average there is 30"\%", which means 306 samples out of 1022 every time frame.
+It is estimated that on average over all channels for every \gls{sampa} there is around 30\% occupancy.
+This means that on a global average there is 30\% data in every given time frame.
+Some channels may be full while others are empty, and some may have 40\%, but on average there is 30\%, which means 306 samples out of 1022 for every time frame.
 Taking this into account when calculating the input speed of the \gls{sampa} gives 960 Mbit/s which the design should be able to handle without any buffer overflow.
 Even though there is an estimated average occupancy there can still be some channels which time frame after time frame gets a lot more then that, so how much can the design handle?
 This is some of the question the simulation will give answers to.
 
 \subsection{CRU}
 The \gls{cru} serves as an interface between electronics directly on the detector and the online computing systems.
-
-
-\subsection{All put together}
-
+It is based on \gls{fpga} processors, with optical fiber used as input and output. %http://www.altera.com/products/fpga.html
+%What to write
 }
 
+\section{Signal processing in the SAMPA}
+\paragraph{}
+The \gls{sampa} chips will receive and process a huge amount of data, both relevant signals and background noise.
+In section~\ref{subsec:sampa} we talked about occupancy and amount of samples in each time frame.
+The estimated amount of 30\% refers to relevant samples, removing or compressing the background noise.
+Seeing as it will always be some interference in the background, there will always come samples with data, and gathering all will be a waist of time and space that could be used on the actual collision data in the detector.
+Figure~\ref{fig:signal} shows 2 actual events collected from the 2 different \gls{altro} channels, the events will look similar after the upgrade and we can use this as a starting point.
+The x-axis expresses the current time bin within a time frame from 0 to 1021.
+Here one can see that every sample in the time frame has some value most with 48-52, as well as certain peaks here and there.
+Those peaks are what is interesting, everything else is considered noise and should be removed.
+(Forklare hva som gjør at det blir bakgrunnstøy..)
+There are a number of ways to reduce the amount of noise, and/or compress the data to a manageable size.
+What has been used with the current setup and is also discussed to use in in the upgraded setup is \gls{zs}.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/signal.png}
+		\caption{Two signals from a previous experiment}
+		\label{fig:signal}
+\end{figure}
 
 \subsection{Zero suppression} %With random data, and real data
+\paragraph{}
+The Oxford Dictionary of Computing (6 ed) defines \gls{zs} in the following way: "The elimination of nonsignificant zeros.
+While numerical data is being processed it may be expanded to a uniform number of digits by the addition of nonsignificant zeros to the left of the most significant digit.
+For printout or display these nonsignificant zeros may be suppressed."\cite{zerosuppression}.
+This is a pretty good summary of what you wish to accomplish with \gls{zs}.
+To remove the background noise without discarding any important samples, a baseline for the \gls{zs} must be established.
+The problem with this is that the baseline may shift, in the case of our 2 example time frames the first one has a visibly lower baseline by 1 or 2.
+
+In the upgrade plans described in \cite{tdr-015} it specifies how this signal processing will take place.
+A short summary is that it is performed in 4 steps:
+
+\begin{itemize}
+	\item Initial correction by subtracting the signal using a fixed, previously set signal baseline.
+	\item Tail cancellation filter used to cancel slowly varying samples (e.i samples with values close to each other without large spikes).
+	\item A second baseline correction which using both a global threshold for each \gls{sampa} and one for specific to each channel.
+	\item The actual \gls{zs} which removes everything under a threshold.
+\end{itemize}
+
+(NESTE DEL MÅ Æ VERIFISERE MED DIETER ELLER JOHAN)
+In some later discussion regarding the upgrade there has been questions if the described method is not sufficient.
+The theory behind the discussion is that the baseline shift will be to great? to be able to do efficient \gls{zs} without loosing important samples in the process.
+This encourage finding another way of processing the signals.
+One proposed method is to use Huffman encoding on the signal values.
+
 \subsection{Huffman Encoding} %Only real data
+
+\section{Designing the simulation model}
+With all of the information defined for
 
 \chapter{Solution implementation}
 \textit{Code snippets, Incremental implementation stages and the final implementation, (before and after huffman), using real data vs random. Implementing fluxiation into the simulation}
+\section{}
+
 
 \chapter{Evaluation and results}
 \textit{Running the tests, results from different tests, Evaluating the final product}
