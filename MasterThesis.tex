@@ -8,7 +8,7 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-\documentclass[a4paper]{report}
+\documentclass[a4paper, 12pt]{report}
 \usepackage{helvet}
 \usepackage[toc,acronym,nomain]{glossaries}
 \usepackage{graphicx} % Displaying pictures in the document.
@@ -150,10 +150,6 @@ Håvard Helstrup, Johan Alme, Dieter, Arild, Christian, (Damian).
 \listoftables
 
 \newpage
-\chapter*{List of Algorithms}
-\addcontentsline{toc}{chapter}{List of Algorithms}
-
-\newpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Listings}
 \lstlistoflistings
@@ -172,7 +168,7 @@ Håvard Helstrup, Johan Alme, Dieter, Arild, Christian, (Damian).
 \label{sec:motivation}
 \paragraph{•}
 The \gls{lhc} at the \gls{cern} is the world's largest particle accelerator, hosting multiple ongoing experiments.
-After a run period of more than 3 years, the \gls{lhc} at the \gls{cern} will be shut down from 2018 until 2021.\cite{ls2}
+After a run period of more than 3 years, the \gls{lhc} will be shut down from 2018 until 2021.\cite{ls2}
 The purpose of this shutdown is to do maintenance on various equipment in the \gls{lhc}, as well as significant upgrades to the different detectors, one of which is the detector for the \gls{alice}.
 \gls{alice} consists of multiple sub-detectors, which combined collect an enormous amount of data.
 This amount is expected to increase after the shutdown period as the interaction rate of the \gls{lhc} will increase.
@@ -181,7 +177,7 @@ This includes a partial redesign of the readout electronics, upgrades to multipl
 
 \paragraph{•}
 The \gls{tpc} is the \gls{alice} detector's main sub-detector for tracking and identifying particles.
-A starting/temporary? design for the new \gls{tpc} readout electronics is made, and the different components are currently being developed.
+A starting design for the new \gls{tpc} readout electronics has been made, and the different components are currently being developed.
 As this is still being worked on, many questions about the different components are yet to be answered.
 Are the current specifications sufficient to handle the expected increase in output from the detector?
 Do they have the necessary bandwidth to be able to send the data with minimal sample loss.
@@ -189,7 +185,7 @@ Are the buffer memory enough to handle the traffic.
 Is it possible to optimize the current solution in any way?
 
 \paragraph{•}
-The previous paragraph motivates us to find a reliable way of determining a sufficient design for the readout electronics, while being both time and cost efficient.
+The previous paragraph provides motivation for us to find a reliable way of determining a sufficient design for the readout electronics, while being both time and cost efficient.
 One strategy for solving this problem, which will be further explored in this thesis is creating a simulation of the system.
 Doing a simulation requires designing a accurate representation of the readout electronics, and creating a testbench where it is possible to configure and run multiple tests.
 
@@ -215,7 +211,7 @@ It will discuss the current readout electronics as well as the proposed upgrade.
 Chapter 3 is going further into the problem discussed in this report, initial plans on solving the problem, and information about the tools used.
 Chapter 4 will talk about the implementation of the simulation, what problems occurred along the way, and the chosen solution.
 The chapter will go into the design, as well as code snippets from the implementation.
-With the information given in chapter 4, chapter 5 will discuss the results of the different simulations run, and evaluate the solution.
+With the information given in chapter 4, chapter 5 will discuss the results of the different simulation runs, and evaluate the solution.
 Chapter 6 will conclude the thesis with some closing words, and work that can be done in the future.
 
 
@@ -224,25 +220,25 @@ Chapter 6 will conclude the thesis with some closing words, and work that can be
 
 \section{CERN}
 \paragraph{•}
-\gls{cern} is a European research and scientific organization based out of Geneva near the Franco-Swiss border.\cite{cern}
+\gls{cern} is a European research and scientific organization based out of Geneva near the Franco-Swiss border\cite{cern}.
 \gls{cern} is a collaboration between 21 countries with a member staff of over 2500, and more than 12000 associates and apprentices.
 The organization was founded in 1954 and has since then been the birthplace of many major scientific discoveries.
-These are not limited to discoveries in the field of physics, but includes the creation of the World Wide Web.\cite{www}
+These are not limited to discoveries in the field of physics, but includes the creation of the World Wide Web\cite{www}.
 Currently the biggest project at \gls{cern} is the \gls{lhc} particle accelerator, which serves as the foundation for multiple experiments in the field of particle physics.
 % 2 - 3 more sentences about this!
 
 \section{The Large Hadron Collider}
 \label{sec:lhc}
 \paragraph{•}
-Starting up on 10 September 2008, \gls{lhc} is the latest construct added to \gls{cern}'s particle accelerator complex.\cite{lhc}
-It consist of a 27 kilometre underground ring of superconducting magnets and accelerators which boost the energy of the particles travelling inside the collider.
+Starting up on 10 September 2008, \gls{lhc} is the latest construct added to \gls{cern}'s particle accelerator complex\cite{lhc}.
+It consist of a 27 kilometer underground ring of superconducting magnets which boost the energy of the particles travelling inside the collider.
 The collider contains two adjacent parallel high-energy particle beams.
 These beams consist of protons extracted from standard hydrogen atoms by stripping them of electrons.
-Along the collider ring there are four intersect points where collision occurs.
+Along the collider ring there are four intersection points where collisions occur.
 Each point corresponds to the location of a particle detector - ATLAS, \gls{alice}, CMS and LHCb.
 The particle detectors are each built and operated by a large collaborations, with thousands of scientists from different institutes around the world.
 The beams travel at close to the speed of light and are guided by a magnetic field, which is created and maintained by superconducting electromagnets.
-Superconducting meaning that its in a state where it can most efficiently conduct electricity, without resistance or energy loss.
+Superconducting meaning that it is in a state where it can most efficiently conduct electricity, without resistance or energy loss.
 Achieving this state requires cooling the magnets to -271.3\degree~C , which is done by the distribution of liquid helium.
 The layout of the \gls{lhc} ring as well as its four collision points can be seen in \ref{fig:lhc}.
 
@@ -254,39 +250,43 @@ The layout of the \gls{lhc} ring as well as its four collision points can be see
 \end{figure}
 
 \paragraph{•}
-The beams travelling inside the \gls{lhc} reach an energy-peak of 7 \gls{tev}, which means that on impact with each other the collision reach an energy of 14 \gls{tev}.\cite{lhc-pdf}
+The beams travelling inside the \gls{lhc} reach an energy-peak of 7 \gls{tev}, which means that on impact with each other the collision reach an energy of 14 \gls{tev}\cite{lhc-pdf}.
 During a normal run of the collider there will be about 600 million particle collisions per second during a period of 10 hours.
 This leads to a huge amount of data for each of the detectors to read out.
-\gls{alice} is the detector which produce the most data per collision, with a design value of about 1.25 GB/s.
-The high amount of data per collision is produced primarily by the \gls{tpc} sub-detector, which records a high number of points per track, and has a low momentum threshold. Detectors like ATLAS and CMS  are designed with a higher momentum threshold, but can cope with significantly higher collision rates than ALICE. ALICE is designed for the study of heavy ion reactions, where particle correlations at low momentum is an important measure.
+\gls{alice} is the detector which produce the most data per collision, with a design value of about 1.25 GB/s written to permanent storage.
+The high amount of data per collision is produced primarily by the \gls{tpc} sub-detector, which records a high number of points per track, and has a low momentum threshold. Detectors like ATLAS and CMS  are designed with a higher momentum threshold, but can cope with significantly higher collision rates than ALICE.
+ALICE is designed for the study of heavy ion reactions, where particle correlations at low momentum is an important measure.
+The number of tracks correlating with momentum is exponentially declining.
+This means that a lot of tracks which doesn't get registered in ATLAS, produces data in \gls{alice}.
 
 \section{ALICE}
 \subsection{Introduction}
 
 \paragraph{•}
-\gls{alice} is a so called heavy-ion detector, which means it studies collisions between heavy nuclei of high energy.\cite{alice-home}
-When the experiment started heavy-ion collision lead ions was used, but they have now switched to colliding lead with protons, both produce a extreme high amount of temperature and density.
-They will eventually run collisions with lead to lead ions again as both types create interesting results.
-Lead to lead collisions create Hot Nuclear Matter, while lead to protons create Cold Nuclear Matter.
+\gls{alice} is designed as a heavy-ion detector, which means it studies collisions between heavy nuclei of high energy\cite{alice-home}.
+The experiments is run with two different particle collision systems, lead-lead(Pb-Pb) and lead-proton(Pb-p)
+Both systems produce a extreme high amount of temperature and density.
+They produce different, but equally interesting results.
+Pb-Pb collisions create Hot Nuclear Matter, while Pb-p create Cold Nuclear Matter.
 The explanations for these types of matter is beyond the scope of this thesis and will not be discussed further.
 The high temperature and density is necessary to produce a phase of matter called quark-gluon plasma.
 
 \subsection{Quark-gluon plasma}
 \paragraph{•}
-Shortly after the big bang, the universe was filled with a extremely hot cluster of all kinds of different particles moving around at near light speed.\cite{alice-physics}
+Shortly after the Big Bang, the universe was filled with a extremely hot cluster of all kinds of different particles moving around at near the speed of light\cite{alice-physics}.
 Most of these particles were quarks, fundamental building blocks for matter, and gluons which ties quarks together in order to form heavier particles.
-Normally quarks and gluons are very strictly tied together, but in the conditions of extreme temperature and density as in the time shortly after the big bang, that they are allowed to move freely in an extended volume called quark-gluon plasma.
+Normally quarks and gluons are very strictly tied together, but in the conditions of extreme temperature and density as in the time shortly after the Big Bang, that they are allowed to move freely in an extended volume called quark-gluon plasma.
 The existence of quark-gluon plasma and its properties is one of the key issues in \gls{qcd}.
 The \gls{alice} collaboration studies this, observing how it behaves.
 
 \subsection{The detector setup}
 \paragraph{•}
-The detector weight is about 10,000 ton, it is 26 m long, 16 m wide, and 16 m high.\cite{alice-about}
-It consists of 18 sub-detectors, each with its own set of tasks regarding tracking particles and collecting data.
+The detector weight is about 10,000 ton, it is 26 m long, 16 m wide, and 16 m high\cite{alice-about}.
+It consists of 18 sub-detectors, each with its own set of tasks regarding tracking and identifying particles.
 This large number of sub-detectors are needed in order to get the full picture of the complex system which is being studied(i.e different types of particles and the correlations between them).
 Most of the detector is embedded in a magnetic field, created by a large solenoid magnet, which makes particles formed in collision bend according to their charge, and behave differently relative to their momentum. High momentum equals near straight lines while low momentum makes the particles move in spiral-like tracks.
 During lead to lead collisions the collision rate peaks at 8 kHz(Where Hz is defined as number of events per second).
-This number is still a lot lower in practice because the \gls{alice} detector uses a triggered readout, which only triggers on head-on(central) collisions.
+The number of recorded events is smaller in practice because the \gls{alice} detector uses a triggered readout, which only triggers on head-on(central) collisions.
 The maximum readout rate of the current \gls{alice} detector is 500 Hz, which is more than enough to track central collisions.
 \ref{fig:alice} shows a cross section of the detector as it is today with the red solenoid magnet, and all sub-detectors labeled.
 
@@ -301,15 +301,15 @@ The maximum readout rate of the current \gls{alice} detector is 500 Hz, which is
 \subsection{Intro}
 \paragraph{•}
 One of the most important sub-detectors, and the one that is relevant for this thesis is the \gls{tpc} detector.
-Located at the center of the \gls{alice} detector it is among the first entry point when gathering data from a particle collision.
+Located at the center of the \gls{alice} detector it is among the first entry points when gathering data from a particle collision.
 It is a 88\(m^3\) cylinder filled with gas.
-The gas works as a detection medium, which means that charges particles from a collision crossing will ionize the gas atoms, freeing electrons that move towards the end plates of the detector.
+The gas works as a detection medium, which means that charged particles from a collision crossing will ionize the gas atoms, freeing electrons that move towards the end plates of the detector.
 The readout is done by specially designed readout chambers, which are capable of handling the high amount of data produced in heavy-ion collisions.
 
 \subsection{Readout electronics} %Should this be a chapter of itself?
 \paragraph{•}
-Signals from the readout chambers are passed along to the front-end readout electronics, which today consist of 4356 \gls{altro} \gls{asic} chips.\cite{altro}
-\gls{asic} is the term used for specially customized chips, rather than chips with a more general-purpose use.\cite{asic}
+Signals from the readout chambers are passed along to the front-end readout electronics, which today consist of 4356 \gls{altro} \gls{asic} chips\cite{altro}.
+\gls{asic} is the term used for specially customized chips, rather than chips with a more general-purpose use\cite{asic}.
 The \gls{altro} chip is made up of 16 asynchronous channels that digitize, process and compress the analogue signals from the readout chambers.
 It operates on a so called triggered readout mode.
 In short when \gls{altro} receives the first trigger, it stores the following data stream into memory, holding on to it until it is ready to pass on the data.
@@ -333,11 +333,11 @@ The upgrade strategy for \gls{alice} is based on the expected increase in collis
 Essentially this comes down to a increase by a factor of 100, compared to what is achievable today.
 
 \paragraph{•} %NEW SHIT
-{\color{red} To be able to handle the increase in collision rate the \gls{tpc} will receive upgrades to both its readout chambers, and front-end readout electronics.
-The current \gls{mwpc} based read-out chambers will be switched out for \gls{gem} detectors, which has a much higher readout rate capability.
+To be able to handle the increase in collision rate the \gls{tpc} will receive upgrades to both its readout chambers, and front-end readout electronics.
+The current \gls{mwpc} based read-out chambers will be replaced by \gls{gem} detectors, which has a much higher readout rate capability.
 Signals will be passed from the new readout chambers to the \gls{fec} via a readout pad structure similar to the one presently used.
-There are multiple pad structure depending on its location on the detector, but the difference in structure is not relevant for this thesis.
-What is relevant however is that more data is expected from low pad numbers, an example of a pad structure is shown in figure~\ref{fig:pad-struct}.
+There are multiple pad structures depending on its location on the detector, but the difference in structure is not relevant for this thesis.
+What is relevant however is that more data is expected from low pad numbers, an example of a pad structure is shown in \ref{fig:pad-struct}.
 
 \begin{figure}[h!]
 	\centering
@@ -347,12 +347,12 @@ What is relevant however is that more data is expected from low pad numbers, an 
 \end{figure}
 
 \paragraph{}
-The entry point in the \gls{fec} is the new custom-made \gls{asic}, the \gls{sampa}, which is replacing the \gls{altro} chip.\cite{tdr-015}
+The entry point in the \gls{fec} is the new custom-made \gls{asic}, the \gls{sampa}, which will replace the \gls{altro} chip\cite{tdr-015}.
 The \gls{sampa} chip is capable of processing signals asynchronously in 32 individual channels, each channel is directly connected to a single pad.
 They are further on digitized and concurrently transferred to the \gls{gbt}, which enhances the signal strength and transmits them via multiple optical fiber links to the \gls{cru}.
 The \gls{cru} can be thought of as the new \gls{rcu} and serves as an interface to the online systems.
 The data flow from the detector, and a working schematics can be seen in figure~\ref{fig:fec}.
-Chapter~\ref{cha:4} will go into more detail about the readout electronics in the context of our simulation.}
+Chapter~\ref{cha:4} will go into more detail about the readout electronics in the context of our simulation.
 
 \begin{figure}[h!]
 	\centering
@@ -365,7 +365,7 @@ Chapter~\ref{cha:4} will go into more detail about the readout electronics in th
 \label{cha:4}
 \textit{SystemC, Starting design of the simulation, plans for implementation and test runs}
 
-\section{Simulation}
+\section{Simulation Theory}
 \textit{General simulation theory (Should this be in a previous chapter?)}
 
 \subsection{Theory}
@@ -373,35 +373,35 @@ Chapter~\ref{cha:4} will go into more detail about the readout electronics in th
 A simulation can be seen as the imitation of a real-world system and its operations over time.
 This requires a model representation of the system which is accurate enough to conduct experiments on, which produce real-like results.
 The model should include key characteristics, specifications and functions of the selected system, but in a simplified fashion.
-A simulation model can take many forms as it can be used in different contexts ranging from physical object such as electrical circuits, bridges, and even entire cities too abstract systems like a mathematical equation or a scientific experiment. %Source
+A simulation model can take many forms as it can be used in different contexts ranging from physical object such as electrical circuits, bridges, and even entire cities to abstract systems like a mathematical equation or a scientific experiment\cite{simulations}.
 
 \paragraph{•}
 As the model represent the system itself, the simulation represents its operations over a set period of time.
 The simulation is normally conducted in a controlled environment that makes it possible to observe, monitor and log results.
-To achieve efficient experimenting using a simulation, it should be easy to change its parameters with respect to what is being tested.
+To achieve efficient experiments using a simulation, it should be easy to change its parameters with respect to what is being tested.
 
 \paragraph{•}
 There are many benefits of simulating a system instead of creating and test the real thing.
 A simulation will in most cases be very time efficient, you can conduct the same kinds of experiments on the system in a much shorter time compared to the real thing.
-This means that more information about the systems behavior and limitations in less time, which in turn can result in a better final product.
+This means that more information about the systems behavior and its limitations can be gathered in less time, which in turn can result in a better final product.
 Creating the real-world system can often be very expensive, which may limit the amount of prototypes or test-products that are possible to create.
 Therefore using results of a simulation to fine tune the specifications before starting to produce prototypes will cut unnecessary development costs by a significant margin.
 
 \paragraph{•}
 Taking the upgrade of the readout electronics for the \gls{alice} detector as an example to further address this point one can see the usefulness of not having to create multiple custom hardware components, all with different purposed specification.
-In regards to the readout electronics, another important point is that the proposed designs might work well from the start, but there is always room for improvement.
+In regards to the readout electronics, another important point is that the proposed designs might already function properly, but there is always room for improvement.
 Finding out that the design doesn't need as much memory, or less optic fiber cables can impact the overall production costs.
 One way to efficiently and accurately simulate hardware components is by creating a virtual computer simulation.
 
-\subsection{Computer Simulation}
+\subsection{Computer Simulations}
 \paragraph{•}
-Using computers to do simulations is in this day and age become more and more useful because of their incredible computational power, and ability to produce fast results.
-This is important as simulations often becomes quite complex, both in regards to computational complexity and hard to work with.
+Using computers to do simulations becomes more and more useful because of their incredible computational power, and ability to produce fast results.
+This is important as simulations often become quite complex, both in regards to computational complexity and level of difficulty to understand and further work with.
 Therefore it can be wise to use existing tools to help make the process easier.
 There is an array of different tools that can be used to various kinds of simulations.
-They vary from complete frameworks, with graphical user interfaces too tools which helps programmers write there own simulation program.
-The later requires of course the most work, but will most often end with the better results as you can custom tailor your simulation on a lower level then with a complete framework.
-A programming tool that is made for creating simulations is the SystemC library, which will be discussed in the following section.
+They vary from complete frameworks, with graphical user interfaces to tools which help programmers write there own simulation programs.
+The later requires of course the most work, but will most often end with the better results as you can tailor your simulation on a lower level than with a complete framework.
+A programming tool that is made for creating simulations is the \gls{sc} library, which will be discussed in the following section.
 
 \section{SystemC}
 \textit{Explain how SystemC works, what benefits and downsides}
@@ -409,14 +409,14 @@ A programming tool that is made for creating simulations is the SystemC library,
 \subsection{Background}
 \paragraph{•}
 \gls{sc} is a system design library based on \gls{cpp}.
-It provides an interface for easily create a software models that representing a hardware architecture, and together with standard \gls{cpp} development tools it is possible to quickly build a full scale simulation.
-Following the standards of \gls{cpp}, \gls{sc} is built to be easy to understand for both software and hardware developer, resulting in clearer cooperation between them while developing the hardware design.
-The \gls{sc} library provides a object-oriented approach to model design, where a single \gls{cpp} class represents a model.
-This makes it easy to separate concern between the different models in your simulation.
+It provides an interface to easily create a software model that represents a hardware architecture, and together with standard \gls{cpp} development tools it is possible to quickly build a full scale simulation.
+Following the standards of \gls{cpp}, \gls{sc} is built to be easy to understand for both software and hardware developers, resulting in clearer cooperation between them while developing the hardware design.
+The \gls{sc} library provides an object-oriented approach to model design, where a single \gls{cpp} class represents a model.
+This makes it easy to separate concerns between the different models in your simulation.
 \paragraph{•}
 When simulating a hardware system there is a couple of key points to be aware of, firstly you need to be able to handle hardware timing, clock cycles, and synchronisation.
 One of the benefits of \gls{sc} is that it takes care of all of this, again taking advantage of the object-oriented nature of \gls{cpp} to extend its capabilities through \codeword{classes}.
-Here is some of the other features \gls{sc} provides, with emphases on the ones needed to understand code snippets shown in this thesis.
+Here is some of the other features \gls{sc} provides, with emphasis on the ones needed to understand code snippets shown in this thesis.
 
 \paragraph{•}
 \begin{itemize}
@@ -430,7 +430,7 @@ Here is some of the other features \gls{sc} provides, with emphases on the ones 
 	\end{itemize}
 \item \textbf{Ports}
 	\begin{itemize}
-		\item Port represent the input and output points of a module, they can be connected to other modules through Channels.
+		\item Ports represent the input and output points of a module, they can be connected to other modules through Channels.
 		Ports can be both one directional or bidirectional.
 	\end{itemize}
 \item \textbf{Channels}
@@ -450,7 +450,7 @@ Here is some of the other features \gls{sc} provides, with emphases on the ones 
 	\end{itemize}
 \item Clocks
 	\begin{itemize}
-		\item SystemC comes with the clocks, which can be seen as timekeepers of the system during a simulation.
+		\item \gls{sc} comes with clocks, which can be seen as timekeepers of the system during a simulation.
 	\end{itemize}
 \end{itemize}
 
@@ -459,7 +459,7 @@ Here is some of the other features \gls{sc} provides, with emphases on the ones 
 
 \paragraph{•}
 To get a basic understanding of how a \gls{sc} simulation looks like, it is useful to see it in action.
-The following Figure~\ref{fig:sc-ex} and Listings~\ref{lst:prod-ex}-\ref{lst:main-ex} make up a very trivial example with only 2 modules; a \codeword{Producer} and a \codeword{Consumer}.
+The following \ref{fig:sc-ex} and Listings~\ref{lst:prod-ex}-\ref{lst:main-ex} make up a very trivial example with only 2 modules; a \codeword{Producer} and a \codeword{Consumer}.
 The \codeword{Producer} will increase a counter every clock cycle, and send a \codeword{bool} value based if the count is an even number, and send this value to the \codeword{Consumer}, which registers how many times the \codeword{Producer} counted an even number.
 The example uses a \gls{fifo} channel, connected between an output port on the \codeword{Producer}, and an input port on the \codeword{Consumer}.
 
@@ -494,13 +494,14 @@ There are benefits and drawbacks for both ways, but sticking to a high abstracti
 Føler nesten at det mangler noe her...... (Trenger jeg en introduksjon her?)
 
 \section{Model Design}
-\textit{Different design patterns, and plans for the electronic}
-The hardware design which is being simulated is already briefly shown in figure~\ref{fig:fec}.
+\textit{Different design patterns, and plans for the electronics}
+\paragraph{}
+The hardware design which is being simulated is already briefly shown in \ref{fig:fec}.
 The proposed schematic shown there consists of 12 \gls{fec} cards for every \gls{cru}.
 Each \gls{fec} consists of 5 \gls{sampa} and 2 \gls{gbt} \glspl{asic}, with the \gls{cru} being connected to them via 24 optical links.
 Out of the 3 main chips, the \gls{sampa} and the \gls{cru} are the most interesting as they are still being developed and testing them can give a lot of valuable feedback.
 The \gls{gbt} is a completed component, so even though it is part of readout electronic being simulated, it will only be a very shallow abstraction of it.
-This means that it will remain as an empty module who's objective will be to just pass along received data to the correct output links.
+This means that it will remain as an empty module whose objective will be to just pass along received data to the correct output links.
 One important note about the \gls{gbt} input and output links.
 Each \gls{gbt} has 10 input e-links, each with a transfer rate of 320 Mbit/s, giving an effective input speed of 3.2 Gbit/s per \gls{gbt}.
 The output is 1 optical fiber link with a speed of 3.2 Gbit/s, giving the \gls{gbt} the same input and output speed.
@@ -510,16 +511,18 @@ The next sections will go into details about the more important components.
 \subsection{SAMPA}
 \label{subsec:sampa}
 \paragraph{}
-The \gls{sampa} \gls{asic} is based on the work from its predecessor, the \gls{altro} chip.
-Just like the \gls{altro} chip it will be the first stop for signals being tracking in the \gls{tpc} detector.
+The \gls{sampa} \gls{asic} is based on the work from its predecessor, the \gls{altro}.
+Just like the \gls{altro} it will be the first step for signals being tracked in the \gls{tpc} detector.
 The signals will be processed, compressed, digitized, and temporarily stored in the \glspl{sampa} memory before it is passed along.
-The \gls{sampa} has 32 integrated channels, which separately and asynchronously process the analog signals coming from the detector.\cite{tdr-016}
+The \gls{sampa} has 32 integrated channels, which separately and asynchronously process the analog signals coming from the detector\cite{tdr-016}.
 Each channel has a readout speed of 10 bit on a 10 MHz clock, which combined results in 3.2 Gbit/s.
-The channels also have there own \gls{fifo} buffer memory where signals coming in are stored as they wait to be sent along.
+The channels also have their own \gls{fifo} buffer memory where signals coming in are stored as they wait to be sent along.
 The most efficient size for these buffers are one of the things the simulations will hopefully provide.
 The output links for the \gls{sampa} chip consists of 4 e-links connecting them to the \gls{gbt}.
-Each e-link has as said in the previous section a speed of 320 Mbit/s, which sums up to 1.28 Gb/s.\cite{tdr-015}
-Since each \gls{sampa} and \gls{gbt} has a specific number of output and input links, there is only certain setups which are desirable.
+Each e-link has as said in the previous section a speed of 320 Mbit/s, which sums up to 1.28 Gb/s\cite{tdr-015}.
+The e-links are connected to 4 readout buffers on the \gls{sampa} that reads from the channel buffers and transports the data to the e-links.
+The readout buffers reads from 8 channels each. (Litt bedre forklart kanskje?)
+Since each \gls{sampa} and \gls{gbt} has a specific number of output and input links, there are only certain setups which are desirable.
 This is why the proposed schematic uses 5 \gls{sampa} and 2 \gls{gbt} chips for each \gls{fec}.
 That setup gives exactly 20 output links from the \gls{sampa} chips, and 20 input links on the \gls{gbt} chips.
 
@@ -527,7 +530,7 @@ That setup gives exactly 20 output links from the \gls{sampa} chips, and 20 inpu
 As the \gls{altro}, the \gls{sampa} can be run in triggered readout mode, but in addition can be run continuously.
 Being able to read out continuously is a necessary upgrade to handle the increased data load coming from the detector.
 During continuous mode the data acquisition is uninterruptable, meaning that there is no pause between reading two consecutive events from the detector.
-The difference it makes compared to triggered mode can be seen in figure~\ref{fig:cont-vs-trig}.
+The difference it makes compared to triggered mode can be seen in \ref{fig:cont-vs-trig}.
 Every event, from now on referred to as time frames, is 1024 clock cycles long, and all 32 channels of the \gls{sampa} use the same time frame.
 This means that every 1024 clock cycle a 1024 long time window is initiated for all 32 channels, meaning they can readout 10 bit data samples 1024 times during this window.
 A synchronization input allows multiple \gls{sampa} \gls{asic}s to align their time frames with respect to each others.\cite{tdr-015}
@@ -550,7 +553,7 @@ A synchronization input allows multiple \gls{sampa} \gls{asic}s to align their t
 The \gls{sampa} creates data packets from the data assembled from each time frame.
 Consisting of a header of fixed size 50 bit, followed by a list of 10 bit samples, created from a single time frame.
 Even though a time frame consists of 1024 clock cycles, in practice a maximum of 1022 samples are received each time.
-This is due to 2 * 10 bit words is required to represent cluster size (size of consecutive samples) and a timestamp.
+This is due to the fact that 2 * 10 bit words are required to represent cluster size (size of consecutive samples) and a timestamp.
 Figure~\ref{fig:packet} shows the structure and format of the packets.
 
 \begin{figure}[h!]
@@ -564,11 +567,11 @@ Figure~\ref{fig:packet} shows the structure and format of the packets.
 The header consists of information regarding the data, such as address for the channel and chip, number of data words in the time frame and packet type.
 The packet type is used as a marker to see if anything out of the ordinary has happened to the data.
 This can be if there is no samples in the time frame, causing the packet type to just become a channel fill packet.
-It can indicate of the stream of data was cut short because the \gls{fifo} buffer was full, causing buffer overflow.
+It can indicate if the stream of data was cut short because the \gls{fifo} buffer was full, causing buffer overflow.
 In the case of buffer overflow all data for the particular time frame are discarded and the empty packet is sent with type overflow.
 Overflow can cause a lot of data to get discarded if the \gls{sampa} can't empty the buffers fast enough, this can happen if the buffers don't have enough space.
-Seeing as the input rate is 3.2 Gbit/s and the readout speed is 1.28 Gbit/s, the \gls{sampa} can receive up to 2.5 more data per second then it can pass along.
-This is why the \gls{fifo} buffers are necessary, and finding a size which is sufficient, without going overboard is crucial.
+As the input rate is 3.2 Gbit/s and the readout speed is 1.28 Gbit/s, the \gls{sampa} can receive up to 2.5 times more data per second then it can pass along.
+This is why the \gls{fifo} buffers are necessary, and finding a size which is sufficient, without giving overflow is crucial.
 
 \paragraph{}
 There have been done some calculations on how much data will actually be received from the detector at any given time.
@@ -589,12 +592,11 @@ It is based on \gls{fpga} processors, with optical fiber used as input and outpu
 The \gls{sampa} chips will receive and process a huge amount of data, both relevant signals and background noise.
 In section~\ref{subsec:sampa} we talked about occupancy and amount of samples in each time frame.
 The estimated amount of 30\% refers to relevant samples, removing or compressing the background noise.
-Seeing as it will always be some interference in the background, there will always come samples with data, and gathering all will be a waist of time and space that could be used on the actual collision data in the detector.
-Figure~\ref{fig:signal} shows 2 actual events collected from the 2 different \gls{altro} channels, the events will look similar after the upgrade and we can use this as a starting point.
+Seeing as it will always be some interference in the background, there will always come samples with data, and gathering all will be a waste of time and space that could be used on the actual collision data in the detector.
+\ref{fig:signal} shows 2 actual events collected from the 2 different \gls{altro} channels, the events will look similar after the upgrade and we can use this as a starting point.
 The x-axis expresses the current time bin within a time frame from 0 to 1021.
 Here one can see that every sample in the time frame has some value most with 48-52, as well as certain peaks here and there.
 Those peaks are what is interesting, everything else is considered noise and should be removed.
-\textit{Hva forusaker støy?}
 There are a number of ways to reduce the amount of noise, and/or compress the data to a manageable size.
 What has been used with the current setup and is also discussed to use in in the upgraded setup is \gls{zs}.
 
@@ -618,7 +620,7 @@ A short summary is that it is performed in 4 steps:
 
 \begin{itemize}
 	\item Initial correction by subtracting the signal using a fixed, previously set signal baseline.
-	\item Tail cancellation filter used to cancel slowly varying samples (e.i samples with values close to each other without large spikes).
+	\item Tail cancellation filter used to cancel slowly varying samples (i.e samples with values close to each other without large spikes).
 	\item A second baseline correction which using both a global threshold for each \gls{sampa} and one for specific to each channel.
 	\item The actual \gls{zs} which removes everything under a threshold.
 \end{itemize}
@@ -633,15 +635,15 @@ One proposed method is to use Huffman coding on the signal values.
 
 \subsection{Huffman Coding} %Only real data
 \paragraph{}
-Huffman is a method used to achieve data compression.\cite{huffman}
+Huffman is a method used to achieve data compression\cite{huffman}.
 It works by assigning binary codes to symbols in order to reduce the number of bits used to encode the symbol.
-By looking at the frequency of appearance for every symbol used one a frequency table sorted by most frequent.
+By looking at the frequency of appearance for every symbol used one can produce a frequency table sorted by most frequent.
 One thing to note is that since the binary codes is of variable length, they may not all be uniquely decipherable.
 For instance, if the codewords looks like the following: \codeword{\{0,01,11,001\}}, the code \codeword{0} is a prefix to \codeword{001}.
 This is solved by using the right data structure to store the codes, the one most used is a \textit{full} \gls{bt}.
 A \textit{full} \gls{bt} is a tree where every node either has zero or two child nodes.
 The symbols are then generated by the path from the root to a leaf node, where left and right indicates 0 or 1.
-Figure~\ref{fig:hm-ex} shows an example of a Huffman tree using made up frequencies for the letters A to D.
+\ref{fig:hm-ex} shows an example of a Huffman tree using made up frequencies for the letters A to D.
 Here you can see the advantage of sorting by frequency, since the most frequent symbol A only needs one bit to store.
 Creating the Huffman tree can be implemented using the following pseudo-code algorithm:
 
@@ -674,9 +676,9 @@ Creating the Huffman tree can be implemented using the following pseudo-code alg
 \paragraph{}
 \textit{Need to have Dieter look over this paragraph}
 In the context of compressing data coming from the detector there are one particular foreseen complication.
-First of, generating the Huffman tree needs values from the detector, so how do one create a tree with high compression factor without knowing this?
+First of all, generating the Huffman tree needs values from the detector, so how do one create a tree with high compression factor without knowing this?
 One answer to this is to generate a tree using existing data from previous experiments, but update the tree when receiving new data.
-This gives us a uncertain compression factor in the beginning, but it will become better over time.
+This gives us an uncertain compression factor in the beginning, but it will become better over time.
 Because of a shifting baseline encoding the signal values directly may lead to a large Huffman tree, and the best tree for one channel may not be the same for another.
 It is inefficient to create a separate tree for each channel, as there will be 160 channels for every \gls{fec}.
 A possible solution to this is to encode the derivative of each signal in a time frame compared to the previous value.
