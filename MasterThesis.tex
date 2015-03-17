@@ -24,6 +24,11 @@
 \usepackage{gensymb}
 \usepackage{mathtools}
 \usepackage{courier}
+\usepackage{fancyhdr}
+ 
+\fancyhf{}
+\rhead{\textbf{\thepage}}
+\lhead{\textbf{\rightmark}}
 
 \include{glossary}
 \makeglossaries
@@ -122,11 +127,12 @@ University of Bergen \\}
 
 \begin{document}
 
-\pagestyle{plain} % Removes page numbers
+\pagestyle{empty} % Removes page numbers
 
 \titlePage % This command includes the title page
 
 \newpage
+
 
 \chapter*{Acknowledgements}
 \addcontentsline{toc}{chapter}{Acknowledgments}
@@ -160,7 +166,7 @@ Håvard Helstrup, Johan Alme, Dieter, Arild, Christian, (Damian).
 %\addcontentsline{toc}{chapter}{Glossary and acronyms}
 \printglossaries
 \newpage
-
+\pagestyle{fancy}
 \chapter{Introduction}
 \textit{This chapter will cover the motivation, as well as the scope and goal of this report.}
 
@@ -351,18 +357,18 @@ The entry point in the \gls{fec} is the new custom-made \gls{asic}, the \gls{sam
 The \gls{sampa} chip is capable of processing signals asynchronously in 32 individual channels, each channel is directly connected to a single pad.
 They are further on digitized and concurrently transferred to the \gls{gbt}, which enhances the signal strength and transmits them via multiple optical fiber links to the \gls{cru}.
 The \gls{cru} can be thought of as the new \gls{rcu} and serves as an interface to the online systems.
-The data flow from the detector, and a working schematics can be seen in figure~\ref{fig:fec}.
+The data flow from the detector, and a working schematics can be seen in \ref{fig:fec}.
 Chapter~\ref{cha:4} will go into more detail about the readout electronics in the context of our simulation.
 
 \begin{figure}[h!]
 	\centering
 		\includegraphics[width=0.75\textwidth]{images/fec.png}
 		\caption{Schematics of the readout electronics (From \cite{tdr-016})}
-		\label{fig:pad-struct}
+		\label{fig:fec}
 \end{figure}
 
 \chapter{Simulations}
-\label{cha:4}
+
 \textit{SystemC, Starting design of the simulation, plans for implementation and test runs}
 
 \section{Simulation Theory}
@@ -431,12 +437,14 @@ Here is some of the other features \gls{sc} provides, with emphasis on the ones 
 \item \textbf{Ports}
 	\begin{itemize}
 		\item Ports represent the input and output points of a module, they can be connected to other modules through Channels.
-		Ports can be both one directional or bidirectional.
+		When you declare a port in a simulation, it is required to specify if the port is an input, output or bidirectional port.
+		This is done by specifying a channel interface for the port.
+		Example of a port using a input \gls{fifo} interface: \begin{verbatim}sc_port<sc_fifo_in_if>\end{verbatim}.
 	\end{itemize}
 \item \textbf{Channels}
 	\begin{itemize}
 		\item Channels are the wires connecting two Ports.
-		\gls{sc} comes with three predefined channels: fifo(First-In-First-Out), mutex, and semaphore.
+		\gls{sc} comes with three predefined channels: \gls{fifo}, mutex, and semaphore.
 		It is possible to configure custom channels, but in most cases it is not necessary.
 	\end{itemize}
 \item \textbf{Signals}
@@ -472,13 +480,13 @@ The example uses a \gls{fifo} channel, connected between an output port on the \
 
 \noindent
 \begin{minipage}{\linewidth}
-\lstinputlisting[caption=Hello,label=lst:prod-ex]{codelistings/producer.cpp}
+\lstinputlisting[caption=Producer module.,label=lst:prod-ex]{codelistings/producer.cpp}
 \end{minipage}
 \begin{minipage}{\linewidth}
-\lstinputlisting[caption=Hello,label=lst:cons-ex]{codelistings/consumer.cpp}
+\lstinputlisting[caption=Consumer module.,label=lst:cons-ex]{codelistings/consumer.cpp}
 \end{minipage}
 \begin{minipage}{\linewidth}
-\lstinputlisting[caption=Hello,label=lst:main-ex]{codelistings/main.cpp}
+\lstinputlisting[caption=Simulation test-bench.,label=lst:main-ex]{codelistings/main.cpp}
 \end{minipage}
 
 \paragraph{}
@@ -489,9 +497,14 @@ There are benefits and drawbacks for both ways, but sticking to a high abstracti
 
 \chapter{Problem Description}
 \textit{Explain the model, introduce the problem}
+\label{cha:4}
 
 \paragraph{}
-Føler nesten at det mangler noe her...... (Trenger jeg en introduksjon her?)
+The previous chapters has briefly introduced the problems of this thesis, relevant background information and looked at tools and the method of solving them.
+Essentially it boils down to creating a model based on the schematic of the \gls{tpc} readout electronics, run multiple simulations, testing different parameters for the involved components.
+Until now there has only been a introduction level description of the different components that is being included in the simulation model.
+This chapter will go deeper into them, giving detailed information about their design parameters, and how the \gls{alice} experiment data is handled by them.
+Not going to far into the task of implementing this in a \gls{sc} environment, but focus on the different problem areas, what is required in order to solve them and what goals to achieve.
 
 \section{Model Design}
 \textit{Different design patterns, and plans for the electronics}
@@ -521,7 +534,7 @@ The most efficient size for these buffers are one of the things the simulations 
 The output links for the \gls{sampa} chip consists of 4 e-links connecting them to the \gls{gbt}.
 Each e-link has as said in the previous section a speed of 320 Mbit/s, which sums up to 1.28 Gb/s\cite{tdr-015}.
 The e-links are connected to 4 readout buffers on the \gls{sampa} that reads from the channel buffers and transports the data to the e-links.
-The readout buffers reads from 8 channels each. (Litt bedre forklart kanskje?)
+The readout buffers reads from 8 channels each.
 Since each \gls{sampa} and \gls{gbt} has a specific number of output and input links, there are only certain setups which are desirable.
 This is why the proposed schematic uses 5 \gls{sampa} and 2 \gls{gbt} chips for each \gls{fec}.
 That setup gives exactly 20 output links from the \gls{sampa} chips, and 20 input links on the \gls{gbt} chips.
@@ -536,7 +549,6 @@ This means that every 1024 clock cycle a 1024 long time window is initiated for 
 A synchronization input allows multiple \gls{sampa} \gls{asic}s to align their time frames with respect to each others.\cite{tdr-015}
 
 \begin{figure}[t!]
-	\label{fig:cont-vs-trig}
 	\centering
 		\begin{subfigure}[]{0.9\textwidth}
 			\label{fig:cont}
@@ -547,6 +559,7 @@ A synchronization input allows multiple \gls{sampa} \gls{asic}s to align their t
 			\includegraphics[width=\textwidth]{images/triggered-mode.png}
 		\end{subfigure}
 	\caption{Continuous vs Triggered mode}
+	\label{fig:cont-vs-trig}
 \end{figure}
 
 \paragraph{}
@@ -554,6 +567,7 @@ The \gls{sampa} creates data packets from the data assembled from each time fram
 Consisting of a header of fixed size 50 bit, followed by a list of 10 bit samples, created from a single time frame.
 Even though a time frame consists of 1024 clock cycles, in practice a maximum of 1022 samples are received each time.
 This is due to the fact that 2 * 10 bit words are required to represent cluster size (size of consecutive samples) and a timestamp.
+The headers are stored in their own \gls{fifo} buffers, separate for each channel, much like the sample buffers.
 Figure~\ref{fig:packet} shows the structure and format of the packets.
 
 \begin{figure}[h!]
@@ -584,8 +598,10 @@ This is some of the question the simulation will give answers to.
 
 \subsection{CRU}
 The \gls{cru} serves as an interface between electronics directly on the detector and the online computing systems.
-It is based on \gls{fpga} processors, with optical fiber used as input and output. %http://www.altera.com/products/fpga.html
-\textit{Hva børr jeg ta med her?}
+It is based on high performance \gls{fpga} processors, with optical fiber used as input and output \cite{tdr-015}. 
+The \gls{cru} is somewhat out of the scope of the thesis, and will be regarded in the same fashion as the \gls{gbt}.
+How the \gls{cru} is implemented in our design model has no effect on the tests which are going to be performed on the \gls{sampa} and its channels.
+It is in more detail discussed in the thesis work of Damian K Wejnerowski, who is simulating the \gls{cru} and inspecting it in great detail.
 
 \section{Signal processing in the SAMPA}
 \paragraph{}
@@ -596,40 +612,53 @@ Seeing as it will always be some interference in the background, there will alwa
 \ref{fig:signal} shows 2 actual events collected from the 2 different \gls{altro} channels, the events will look similar after the upgrade and we can use this as a starting point.
 The x-axis expresses the current time bin within a time frame from 0 to 1021.
 Here one can see that every sample in the time frame has some value most with 48-52, as well as certain peaks here and there.
-Those peaks are what is interesting, everything else is considered noise and should be removed.
+Those peaks or pulses are what is interesting, everything else is considered noise and should be removed.
+In order for any compression schema or method of reducing noise to be valid it needs to have a compression factor above 2.5 for the average amount of data being processed.
+The compression factor will be the number of bits in a time frame before compressing compared to after. \codeword{factor = (bits before compression / bits after)}.
 There are a number of ways to reduce the amount of noise, and/or compress the data to a manageable size.
 What has been used with the current setup and is also discussed to use in in the upgraded setup is \gls{zs}.
 
-\begin{figure}[h!]
+\begin{figure}[t]
 	\centering
 		\includegraphics[width=1.0\textwidth]{images/signal.png}
 		\caption{Two signals from a previous experiment}
 		\label{fig:signal}
 \end{figure}
 
-\subsection{Zero suppression} %With random data, and real data
+\subsection{Zero suppression} 
 \paragraph{}
-The Oxford Dictionary of Computing (6 ed) defines \gls{zs} in the following way: "The elimination of nonsignificant zeros.
-While numerical data is being processed it may be expanded to a uniform number of digits by the addition of nonsignificant zeros to the left of the most significant digit.
-For printout or display these nonsignificant zeros may be suppressed."\cite{zerosuppression}.
-This is a pretty good summary of what you wish to accomplish with \gls{zs}.
-To remove the background noise without discarding any important samples, a baseline for the \gls{zs} must be established.
+\gls{zs} is the process of removing insignificant values below a set threshold or baseline.\cite{zerosuppression}.
+Applying this in order to remove the background noise without discarding any important samples, a baseline for the \gls{zs} must be established.
 The problem with this is that the baseline may shift, in the case of our 2 example time frames the first one has a visibly lower baseline by 1 or 2.
-In the upgrade plans described in \cite{tdr-015} it specifies how this signal processing will take place.
-A short summary is that it is performed in 4 steps:
+In the upgrade plans described in \cite{tdr-015}, it is specified how the signal processing will take place.
+It works by looking at consecutive signals with value over the set threshold, confirming that the peak is indeed a real pulse.
+The term real pulse refers to a sequence of signals over the threshold with more than one signal, standalone values over the threshold will be discarded.
+The difference is displayed in \ref{fig:minseq}.
 
-\begin{itemize}
-	\item Initial correction by subtracting the signal using a fixed, previously set signal baseline.
-	\item Tail cancellation filter used to cancel slowly varying samples (i.e samples with values close to each other without large spikes).
-	\item A second baseline correction which using both a global threshold for each \gls{sampa} and one for specific to each channel.
-	\item The actual \gls{zs} which removes everything under a threshold.
-\end{itemize}
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.75\textwidth]{images/minseq.png}
+		\caption{Difference between a valid and invalid signal sequence.}
+		\label{fig:minseq}
+\end{figure}
 
-%
+\paragraph{•}
+Because of the fact that \gls{zs} removes signals from various places in a time frame, the data losses its temporal positioning.
+Therefore every real pulse must be tagged with a time stamp and a word representing the number of words in the pulse.
+Since for every pulse we add two words, if two consecutive pulses are closer than three words they are merged and counted as one (\ref{fig:merge}).
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.75\textwidth]{images/merge.png}
+		\caption{Merging of two pulses and the storing of extra pulse information.}
+		\label{fig:merge}
+\end{figure}
+
 \paragraph{}
-\textit{Stemmer dette?}
 In some later discussion regarding the upgrade there has been questions if the described method is insufficient.
-The theory behind the discussion is that the baseline shift will be to great? to be able to do efficient \gls{zs} without loosing important samples in the process.
+The theory behind the discussion is that the baseline will shift to much to be able to do efficient \gls{zs} without loosing important samples in the process.
+Another argument against \gls{zs} is that with time frames with larger occupancies (40\%++) the compression factor is drastically reduced and will not be good enough.
+This is because time frames with higher occupancy will have more signal pulses, and pulses will be closer together, meaning that more pulses will be merged rather than discarded. 
 This encourage finding another way of processing the signals.
 One proposed method is to use Huffman coding on the signal values.
 
@@ -686,40 +715,150 @@ In other words, for every signal \textit{n} you store the value: \textit{signal(
 Doing so takes away the problem caused by shift in the baseline as it only stores the difference between two signals.
 This method requires that the first value of every time frame is stored somewhere(maybe the header of a \gls{sampa} packet) in order to decode it later on.
 
+
+\paragraph{}
+The way the \gls{fifo} buffers for each \gls{sampa} channel works is that it stores up to 10 bits in parallel for each slot.
+This means that compressing 10 bit samples into smaller sizes will still take up 10 bit of space in the buffers. 
+However reading the data from the buffer will be faster as there is less data to read.
+
 \section{Designing the simulation model}
 With all of the information regarding the different components already specified, creating a simulation model should be more then feasible.
-There will be in total 3 main modules part of the simulation: the \gls{sampa}, \gls{gbt} and \gls{cru}.
-The tasks, objectives and goals that this all boils down to is summarized in the table below.
+There will be in total 3 main modules part of the simulation: the \gls{sampa}, \gls{gbt} and \gls{cru}, but focusing heavily on the \gls{sampa}.
+In addition to the different modules there is need for a module which can be tasked with producing and/or distributing sample data to the simulation.
+This module will contain all methods of sending samples to the different \gls{sampa} channels and in doing so start the entire simulation process.
+The tasks, objectives and goals that this all boils down to is summarized in the list below.
 
 \begin{itemize}
 	\item \textbf{Tasks}
 		\begin{itemize}
 			\item Designing a model which is accurate, simple and customizable.
+			\item Creating a data generator module which can send data to the simulation, both synthetic and real.
 			\item Create a simulation test bench that allows for quick changes in order to run multiple simulations.
 			\item Run different stress tests on the system, find out where it breaks and why.
 			\item Run focused simulations on the \gls{sampa} channel buffers.
 			\item Run simulations which compares \gls{zs} and Huffman encoding.
 			\item Gather, and compile the simulation data into a readable and understandable format.
+			\item Verify that the simulation results is comparable to what is expected, and calculated beforehand.
 		\end{itemize}
 	\item \textbf{Goals}
 	\begin{itemize}
-		\item Verifying that the design can handle the expected data.
-		\item Focus on the
-		\item blabla
-		\item blabla
+		\item With a verified simulation model, we have a created a strong argument that the results are valid.
+		\item Find out how much \gls{sampa} buffer space is needed.
+		\item Conclude the compression factor of both \gls{zs} and Huffman encoding.
+		\item Verify the overall design of the \gls{sampa} chip, and use the results to come with a recommendation on possible changes.
 	\end{itemize}
 \end{itemize}
 
-\paragraph{}
-Closing words
+\section{Workflow}
+Approaching this project, one must assume that there will be many uncertainties along the way.
+Trying to simulate behaviour of an electronic system based solely on its early schematics, while others are working on the design in different areas will undoubtedly lead to many changes in the simulation model.
+Another characteristic concerning this project is that it requires a lot of work before one can start to see any results, but after completing a satisfying  model the results should be easy to obtain without many changes to the simulation program.
+Splitting the work into different phases, first a longer period of only working on the model, implementing the aspects that are known, and making the model ready to run simulations on.
+When the base model is complete, an iteratively process can start.
+Simulate for a specific scenario, gather results from the simulation, compile it into a readable format, verify the legitimacy of the results, in the case they are not legitimate, make adjustments before running new simulations in the same scenario.
+Customize the simulation parameters and tweak the model for different scenarios, and do the same as before.
+This way any changes in requirements, or changes to the model can be handled in a separate iteration.
+Working like this will result in a large period with no speakable results, but this will in the end be very beneficial.
 
 \chapter{Solution implementation}
 \textit{Code snippets, Incremental implementation stages and the final implementation, (before and after huffman), using real data vs random. Implementing fluxiation into the simulation}
-\section{}
+\section{Implementing the model in SystemC}
+%Introduction
+\subsection{The SAMPA module}
 
+\paragraph{•}
+As the focus of study in this project, the implementation of the \gls{sampa} is the most important piece to the simulation.
+The overall structure to the \gls{sampa} consists of 32 channels, with a input port for each channel, and in total 4 serial outputs which reads data from the channel buffers.
+There are a couple of things to think about when translating this design into code.
+
+\begin{enumerate}
+	\item What \gls{sc} channel should the input and output ports use.
+	
+		\begin{itemize}
+		\item The requirements for the \gls{sampa} I/O ports is that everything comes in the correct order, and on a specific clock cycle.
+		\gls{sc} comes the channel type \codeword{sc\_fifo}, it contains both read and write methods, depending on what channel interface is implemented.
+		So for our one directional design this should work perfectly.
+		The clock cycle is not tied to the ports specifically and will be handled separately.
+		\end{itemize}	
+		
+	\item What data structure to use for the channel buffers.
+		\begin{itemize}
+\item When choosing a data structure one need to think about what the purpose of it is, what operations are being done on it, and so forth.
+		The essential attributes the structure must have is: \textit{Insert} items to the back, \textit{Read/Remove} items from the front, dynamical storage space, and the structure should be a linear one-dimensional sequential storage.
+		On first glance using a \gls{fifo} like structure sounds like the best way to go.
+		However in addition to the essential attributes it may be needed to be able to remove and read from the back of the buffer.
+		This is because in the simulation it can be used to grab statistical data from the buffer, and reading from the back will not have any impact of the simulation result, but can make the buffers more versatile.
+		\gls{cpp} has many different data structures to choose from, all depending on the need for it.		
+		In \ref{tab:ds} three different \gls{cpp} data structures are being evaluated: \codeword{vector}, \codeword{list} and \codeword{queue}.
+		From this table and the requirements of what is needed from the buffer structure, it becomes clear that the \codeword{list} container has all the attributes needed, as well as performing equally or better than the rest in the different operations.
+\end{itemize}
+		
+	
+	\item Handling the clock frequency.
+		\begin{itemize}
+		\item \gls{sc} will handle the clock frequency for us, the only thing to note is that \gls{sc} uses pauses in the threads as a way simulating the clock cycles.
+		In other words, one perform the actions for 1 clock cycle, than the wait statement, and repeat.
+		This means that the frequencies needs to be converted to a time delay.	
+		An example of such a conversion is shown in listing~\ref{lst:cons-ex}.
+		\end{itemize}	
+	
+\end{enumerate}
+
+	
+
+	
+	
+
+\begin{table}
+\begin{tabular}{| l | l | l | l | p{6cm} |}
+\hline
+ & \multicolumn{3}{c |}{\textbf{\large{Time}}} & \\
+ \hline
+\textbf{Operation} & \textbf{Vector} & \textbf{List} & \textbf{Queue} & \textbf{Remarks} \\
+\hline
+Add back & O(1) & O(1) & O(1) & Constant time for all containers.\\
+\hline
+Add front & O(n) & O(1) & X & Vector does not have a direct method for adding to front. Queue cant do that at all.  \\
+\hline
+Access back & O(1) & O(1) & O(1) & Constant time for all containers.\\
+\hline
+Access front & O(1) & O(1) & O(1) & Constant time for all containers.\\
+\hline
+Remove front & O(n+m) & O(1) & O(1) & Vector erase is linear to number of deleted elements + number of elements after last deleted item (moving). \\
+\hline
+Remove back & O(1) & O(1) & X & Queue does not have a method for doing this.\\
+\hline
+Size of container & O(1) & O(1) & O(1) & Constant time for all containers.\\
+\hline
+
+\end{tabular}
+\caption[Data structure comparison.]{Data structure comparison\cite{vector}, \cite{list}, \cite{queue}.}
+\label{tab:ds}
+\end{table}
+\paragraph{•}
+Looking at the deceleration of the \gls{sampa} module it seems that, minus the data compression, everything is structured as the chip itself.
+It stores every channels header and data buffer in an array, 
+
+Each of the channels will contain a lot of functionality when this is translated into \gls{sc}, so to avoid duplication of code, each channel will be its own \gls{sc} module.
+This means that every \gls{sampa} will consist of an array of \codeword{Channel} modules, all running there separate asynchronous thread.
+
+
+\subsection{The DataGenerator module}
+\subsection{Lesser modules}
+\subsection{Connecting the modules together}
+\section{Creating a customizable testbench}
+\section{Data gathering}
 
 \chapter{Evaluation and results}
 \textit{Running the tests, results from different tests, Evaluating the final product}
+\section{Simulation results}
+\subsection{Initial test scenarios}
+\subsection{First substantial simulations}
+\subsubsection{Full simulation}
+
+\subsection{Zero Suppression - preliminary results}
+\subsection{Zero Suppression - extended results}
+\subsection{Huffman results}
 
 \chapter{Conclusion and Future work}
 \textit{Conclude the thesis, talk about the impact it has and its usefulness in future planing of the front end electronics.}
