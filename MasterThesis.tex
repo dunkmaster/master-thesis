@@ -51,7 +51,7 @@
 % Define C++ syntax highlighting colour scheme
 \lstset{language=C++,
 		backgroundcolor=\color{background},
-        basicstyle=\small\ttfamily,
+        basicstyle=\footnotesize\ttfamily,
         numbers=left,
         tabsize=2,
         breaklines=true,
@@ -414,11 +414,12 @@ A programming tool that is made for creating simulations is the \gls{sc} library
 
 \subsection{Background}
 \paragraph{•}
-\gls{sc} is a system design library based on \gls{cpp}.
+\gls{sc} is a system design library based on \gls{cpp}\cite{systemc}.
 It provides an interface to easily create a software model that represents a hardware architecture, and together with standard \gls{cpp} development tools it is possible to quickly build a full scale simulation.
 Following the standards of \gls{cpp}, \gls{sc} is built to be easy to understand for both software and hardware developers, resulting in clearer cooperation between them while developing the hardware design.
 The \gls{sc} library provides an object-oriented approach to model design, where a single \gls{cpp} class represents a model.
 This makes it easy to separate concerns between the different models in your simulation.
+
 \paragraph{•}
 When simulating a hardware system there is a couple of key points to be aware of, firstly you need to be able to handle hardware timing, clock cycles, and synchronisation.
 One of the benefits of \gls{sc} is that it takes care of all of this, again taking advantage of the object-oriented nature of \gls{cpp} to extend its capabilities through \codeword{classes}.
@@ -804,11 +805,6 @@ There are a couple of things to think about when translating this design into co
 	
 \end{enumerate}
 
-	
-
-	
-	
-
 \begin{table}
 \begin{tabular}{| l | l | l | l | p{6cm} |}
 \hline
@@ -835,15 +831,80 @@ Size of container & O(1) & O(1) & O(1) & Constant time for all containers.\\
 \caption[Data structure comparison.]{Data structure comparison\cite{vector}, \cite{list}, \cite{queue}.}
 \label{tab:ds}
 \end{table}
+
 \paragraph{•}
-Looking at the deceleration of the \gls{sampa} module it seems that, minus the data compression, everything is structured as the chip itself.
-It stores every channels header and data buffer in an array, 
+One possible setup for the \gls{sampa} deceleration is shown in listing~\ref{lst:sampa1}.
+This takes everything we need into account, storing the channels header and data buffer in an array, declaring input ports, and the output elinks.
+In addition it declares a single thread for receiving signals, and four threads representing the serial outs reading from the channel buffers.
+Lets now look at how the implementation for receiving signals can look like.
+In listing~\ref{lst:sampa1.2} the thread logic is implemented, and here some weaknesses with the \gls{sampa} module becomes clear.
+Having to iterate over every channel every timebin can become costly and hard to maintain when the code becomes more complex.
+In the code shown there is already a flaw, if one of the channels buffer has \codeword{overflow}, none of the other buffers will receive data.
+The \codeword{overflow} variable needs to be stored as a array as well to be able to know what channel it represent.
+The same problem will occur for every value that is unique for each channel.
+A principle of \gls{oop} is single-responsibility, meaning that every class/object should be responsibly for one piece of functionality.
+One solution to the previous problem following this principle can be to create a \codeword{Channel} sub-module inside of the \gls{sampa} module.
+The channel module will contain logic for receiving signals, as this happens for every channel, while the \gls{sampa} will contain the serial outs, which are accessing data from the buffers.
 
-Each of the channels will contain a lot of functionality when this is translated into \gls{sc}, so to avoid duplication of code, each channel will be its own \gls{sc} module.
-This means that every \gls{sampa} will consist of an array of \codeword{Channel} modules, all running there separate asynchronous thread.
+\newpage
+\lstinputlisting[caption=SAMPA - First iteration.,firstline=1,lastline=25,label=lst:sampa1]{codelistings/sampa1.cpp}
+\lstinputlisting[caption=Receive thread.,firstline=27,lastline=53,label=lst:sampa1.2]{codelistings/sampa1.cpp}
 
+
+\paragraph{•}
+The changes made to the \gls{sampa} and \codeword{Channel} modules is shown in listing~\ref{lst:sampa2} and \ref{lst:channel1}.
+The \gls{sampa} now has an array of \codeword{Channel} modules, a new method called \codeword{initChannel()} that initiate the channels, and connects them to the correct input port.
+
+\lstinputlisting[caption=SAMPA - Second iteration.,firstline=1,lastline=26,label=lst:sampa2]{codelistings/sampa2.cpp}
+\lstinputlisting[caption=Channel module.,firstline=1,lastline=24,label=lst:channel1]{codelistings/channel.cpp}
+
+The \codeword{Channel} module now has the \codeword{receiveData()} thread, and its own data/header buffer.
+Having it structured like this makes it possible to add \codeword{Channel} specific variables or methods, without disturbing the \gls{sampa} as a whole.
+The implementation of the receive thread is now more simple in terms of complexity, and is exclusive for each \codeword{Channel}.
+Listing~\ref{lst:receive-channel} shows the basic thread structure, excluding any data compression or processing.
+It continuously receives samples and adding them to the buffer, unless the buffer reach their maximum size.
+
+\lstinputlisting[caption=Receive samples.,firstline=26,lastline=62,label=lst:receive-channel]{codelistings/channel.cpp}
+
+
+\paragraph{•}
+The basic implementation of reading from the buffer is somewhat more complicated.
+This is because the real reading procedure is more complex in it self.
+In listing~\ref{lst:read-buffers} the procedure is shown, along with one of four equal serial out threads.
+The procedure loops through the eight channels for the given serial out, getting the correct channel, and reading out the entire timeframe.
+One thing to notice here is that the actual data from the buffers aren't passed along further.
+This is because we only care about the time it takes to transfer them, which is being calculated in the \codeword{wait} statement.
+The header packet is sent as it contains important information which can be useful later on.
+
+\lstinputlisting[caption=Reading data from the SAMPA buffers.,firstline=28,lastline=72,label=lst:read-buffers]{codelistings/sampa2.cpp}
+
+\paragraph{•}
+The implementation of the \gls{zs} and the Huffman procedures will be discussed in a later section.
 
 \subsection{The DataGenerator module}
+
+
+\subsection{Signal classes}
+\paragraph{•}
+\gls{sc} allows the creation of custom \codeword{classes} to be used as data type when transferring data between modules.
+There are some requirements when doing so that needs to be fulfilled for it to work however.
+\gls{sc} requires you to define several methods which is vital for the read/write methods of a \gls{sc} channel.
+The read/write methods involve copying the custom data type.
+Because of this it requires the definition of the assignment(\codeword{operator=()}) operator.
+In addition the output streaming(\codeword{ostream\& operator<<()}) method is required. 
+
+\paragraph{•}
+The simulation needs to different data types, these has been briefly shown in the previous code listings.
+The \codeword{Sample} and the \codeword{Packet}.
+\codeword{Sample} represents a single 10-bit signal, storing information about what timeframe the sample belongs to, the signal value itself, and other statistical variables.
+Representing the \gls{sampa} header is the \codeword{Packet} class, it stores the relevant values selected from its documentation.
+This include the timeframe, channel id, sampa id, number of samples and there was overflow in its timeframe.
+Source code for the \codeword{Packet} class is shown in listing~\ref{lst:packet}.
+The \codeword{Sample} class is implemented in similar fashion and will not be displayed in the report. 
+
+\lstinputlisting[caption=Custom data type - The SAMPA header.,label=lst:packet]{codelistings/packet.cpp}
+
+
 \subsection{Lesser modules}
 \subsection{Connecting the modules together}
 \section{Creating a customizable testbench}
