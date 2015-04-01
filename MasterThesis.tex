@@ -759,7 +759,7 @@ When the base model is complete, an iteratively process can start.
 Simulate for a specific scenario, gather results from the simulation, compile it into a readable format, verify the legitimacy of the results, in the case they are not legitimate, make adjustments before running new simulations in the same scenario.
 Customize the simulation parameters and tweak the model for different scenarios, and do the same as before.
 This way any changes in requirements, or changes to the model can be handled in a separate iteration.
-Working like this will result in a large period with no speakable results, but this will in the end be very beneficial.
+Working like this will result in a large period with no speakable results, but this will towards the end be very beneficial.
 
 \chapter{Solution implementation}
 \textit{Code snippets, Incremental implementation stages and the final implementation, (before and after huffman), using real data vs random. Implementing fluxiation into the simulation}
@@ -846,17 +846,25 @@ A principle of \gls{oop} is single-responsibility, meaning that every class/obje
 One solution to the previous problem following this principle can be to create a \codeword{Channel} sub-module inside of the \gls{sampa} module.
 The channel module will contain logic for receiving signals, as this happens for every channel, while the \gls{sampa} will contain the serial outs, which are accessing data from the buffers.
 
-\newpage
+\begin{minipage}{\linewidth}
 \lstinputlisting[caption=SAMPA - First iteration.,firstline=1,lastline=25,label=lst:sampa1]{codelistings/sampa1.cpp}
-\lstinputlisting[caption=Receive thread.,firstline=27,lastline=53,label=lst:sampa1.2]{codelistings/sampa1.cpp}
+\end{minipage}
 
+\begin{minipage}{\linewidth}
+\lstinputlisting[caption=Receive thread.,firstline=27,lastline=53,label=lst:sampa1.2]{codelistings/sampa1.cpp}
+\end{minipage}
 
 \paragraph{•}
 The changes made to the \gls{sampa} and \codeword{Channel} modules is shown in listing~\ref{lst:sampa2} and \ref{lst:channel1}.
 The \gls{sampa} now has an array of \codeword{Channel} modules, a new method called \codeword{initChannel()} that initiate the channels, and connects them to the correct input port.
 
+\begin{minipage}{\linewidth}
 \lstinputlisting[caption=SAMPA - Second iteration.,firstline=1,lastline=26,label=lst:sampa2]{codelistings/sampa2.cpp}
+\end{minipage}
+
+\begin{minipage}{\linewidth}
 \lstinputlisting[caption=Channel module.,firstline=1,lastline=24,label=lst:channel1]{codelistings/channel.cpp}
+\end{minipage}
 
 The \codeword{Channel} module now has the \codeword{receiveData()} thread, and its own data/header buffer.
 Having it structured like this makes it possible to add \codeword{Channel} specific variables or methods, without disturbing the \gls{sampa} as a whole.
@@ -868,7 +876,7 @@ It continuously receives samples and adding them to the buffer, unless the buffe
 
 
 \paragraph{•}
-The basic implementation of reading from the buffer is somewhat more complicated.
+The basic implementation of reading from the buffer is somewhat more complicated than receiving data.
 This is because the real reading procedure is more complex in it self.
 In listing~\ref{lst:read-buffers} the procedure is shown, along with one of four equal serial out threads.
 The procedure loops through the eight channels for the given serial out, getting the correct channel, and reading out the entire timeframe.
@@ -876,12 +884,18 @@ One thing to notice here is that the actual data from the buffers aren't passed 
 This is because we only care about the time it takes to transfer them, which is being calculated in the \codeword{wait} statement.
 The header packet is sent as it contains important information which can be useful later on.
 
+\begin{minipage}{\linewidth}
 \lstinputlisting[caption=Reading data from the SAMPA buffers.,firstline=28,lastline=72,label=lst:read-buffers]{codelistings/sampa2.cpp}
+\end{minipage}
 
 \paragraph{•}
 The implementation of the \gls{zs} and the Huffman procedures will be discussed in a later section.
 
 \subsection{The DataGenerator module}
+\paragraph{•}
+The simulation model is scoped to the readout electronics, which doesn't handle the creation of signals.
+This means that the simulation needs a module which can create and distribute data, both simulated and real to the \gls{sampa} modules.
+The module needs to be able to continuously send samples, based on what is desired for a specific simulation.
 
 
 \subsection{Signal classes}
@@ -894,7 +908,7 @@ Because of this it requires the definition of the assignment(\codeword{operator=
 In addition the output streaming(\codeword{ostream\& operator<<()}) method is required. 
 
 \paragraph{•}
-The simulation needs to different data types, these has been briefly shown in the previous code listings.
+The simulation needs two different data types, these has been briefly shown in the previous code listings.
 The \codeword{Sample} and the \codeword{Packet}.
 \codeword{Sample} represents a single 10-bit signal, storing information about what timeframe the sample belongs to, the signal value itself, and other statistical variables.
 Representing the \gls{sampa} header is the \codeword{Packet} class, it stores the relevant values selected from its documentation.
@@ -902,8 +916,9 @@ This include the timeframe, channel id, sampa id, number of samples and there wa
 Source code for the \codeword{Packet} class is shown in listing~\ref{lst:packet}.
 The \codeword{Sample} class is implemented in similar fashion and will not be displayed in the report. 
 
+\begin{minipage}{\linewidth}
 \lstinputlisting[caption=Custom data type - The SAMPA header.,label=lst:packet]{codelistings/packet.cpp}
-
+\end{minipage}
 
 \subsection{Lesser modules}
 \subsection{Connecting the modules together}
