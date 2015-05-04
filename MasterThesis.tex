@@ -10,6 +10,7 @@
 
 \documentclass[a4paper, 12pt]{report}
 \usepackage{helvet}
+\usepackage[toc,page]{appendix}
 \usepackage[toc,acronym,nomain]{glossaries}
 \usepackage{graphicx} % Displaying pictures in the document.
 \usepackage[floatrow]{chemstyle} % Displaying figures next to item lists.
@@ -90,7 +91,7 @@
 {\Huge SystemC simulation of the future SAMPA ASIC for use in the ALICE Experiment in Run 3} \\ % Title
 \vspace{5pt}
 
-{\Large \textsl{Consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua}} % Subtitle or further description
+{\Large \textsl{}} % Subtitle or further description
 \vspace{50pt}
 
 {\Large{H\r{a}vard Rustad Olsen}}\\ % Author name
@@ -621,11 +622,13 @@ What has been used with the current setup and is also discussed to use in in the
 \begin{figure}[t]
 	\centering
 		\includegraphics[width=1.0\textwidth]{images/signal.png}
-		\caption{Two signals from a previous experiment}
+		\caption{Two signals from RUN 1.}
 		\label{fig:signal}
 \end{figure}
 
 \subsection{Zero suppression} 
+\label{subsec:zs}
+
 \paragraph{}
 \gls{zs} is the process of removing insignificant values below a set threshold or baseline.\cite{zerosuppression}.
 Applying this in order to remove the background noise without discarding any important samples, a baseline for the \gls{zs} must be established.
@@ -723,7 +726,7 @@ However reading the data from the buffer will be faster as there is less data to
 
 \section{Designing the simulation model}
 With all of the information regarding the different components already specified, creating a simulation model should be more than feasible.
-There will be in total 3 main modules part of the simulation: the \gls{sampa}, \gls{gbt} and \gls{cru}, but focusing heavily on the \gls{sampa}.
+There will be in total 3 main modules part of the simulation: the \gls{sampa}, \gls{gbt} and \gls{cru}, but the thesis will focus heavily on the \gls{sampa}, leaving the \gls{gbt} and \gls{cru} mostly empty as what happens after data leaves the \gls{sampa} is outside the scope.
 In addition to the different modules there is need for a module which can be tasked with producing and/or distributing sample data to the simulation.
 This module will contain all methods of sending samples to the different \gls{sampa} channels and in doing so start the entire simulation process.
 The tasks, objectives and goals that this all boils down to is summarized in the list below.
@@ -763,7 +766,7 @@ Working like this will result in a large period with no speakable results, but t
 \chapter{Solution implementation}
 \textit{Code snippets, Incremental implementation stages and the final implementation, (before and after huffman), using real data vs random. Implementing fluxiation into the simulation}
 \section{Implementing the model in SystemC}
-%Introduction
+
 \subsection{The SAMPA module}
 
 \paragraph{•}
@@ -831,40 +834,26 @@ Size of container & O(1) & O(1) & O(1) & Constant time for all containers.\\
 \label{tab:ds}
 \end{table}
 
-\paragraph{•}
-One possible setup for the \gls{sampa} deceleration is shown in listing~\ref{lst:sampa1}.
-This takes everything we need into account, storing the channel header and data buffer in an array, declaring input ports, and the output elinks.
-In addition it declares a single thread for receiving signals, and four threads representing the serial outs reading from the channel buffers.
-Lets now look at how the implementation for receiving signals can look like.
+\paragraph{•}%OBS! Reference book here.
+The setup for the \gls{sampa} uses a single thread for receiving signals, and four individual threads which represents the serial outs.
+It also stores the channel header and data buffers in two separate arrays, declaring input ports, and the output eLinks.
+Lets look at how the implementation for receiving signals can look like.
 In listing~\ref{lst:sampa1.2} the thread logic is implemented, and here some weaknesses with the \gls{sampa} module becomes clear.
 Having to iterate over every channel every timebin can become costly and hard to maintain when the code becomes more complex.
 In the code shown there is already a flaw, if one of the channel buffers has \codeword{overflow}, none of the other buffers will receive data.
 The \codeword{overflow} variable needs to be stored as a array as well to be able to know what channel it represented.
-The same problem will occur for every value that is unique for each channel.
+The same problem will occur for every other variable that is unique for each channel.
 A principle of \gls{oop} is single-responsibility, meaning that every class/object should be responsibly for one piece of functionality.
 One solution to the previous problem following this principle can be to create a \codeword{Channel} sub-module inside of the \gls{sampa} module.
 The channel module will contain logic for receiving signals, as this happens for every channel, while the \gls{sampa} will contain the serial outs, which are accessing data from the buffers.
 
 \begin{minipage}{\linewidth}
-\lstinputlisting[caption=SAMPA - First iteration.,firstline=1,lastline=25,label=lst:sampa1]{codelistings/sampa1.cpp}
-\end{minipage}
-
-\begin{minipage}{\linewidth}
 \lstinputlisting[caption=Receive thread.,firstline=27,lastline=53,label=lst:sampa1.2]{codelistings/sampa1.cpp}
 \end{minipage}
 
-\paragraph{•}
-The changes made to the \gls{sampa} and \codeword{Channel} modules is shown in listing~\ref{lst:sampa2} and \ref{lst:channel1}.
-The \gls{sampa} now has an array of \codeword{Channel} modules, a new method called \codeword{initChannel()} that initiate the channels, and connects them to the correct input port.
-
-\begin{minipage}{\linewidth}
-\lstinputlisting[caption=SAMPA - Second iteration.,firstline=1,lastline=26,label=lst:sampa2]{codelistings/sampa2.cpp}
-\end{minipage}
-
-\begin{minipage}{\linewidth}
-\lstinputlisting[caption=Channel module.,firstline=1,lastline=24,label=lst:channel1]{codelistings/channel.cpp}
-\end{minipage}
-
+\paragraph{•}%Change according to removing the header files. maybe still keep the channel header? Maybe a figure of it!
+The corrected overall structure for the \gls{sampa}, and the new channel module is shown in \ref{cha:app-code}.
+As seen there the \gls{sampa} now has an array of \codeword{Channel} modules, a new method called \codeword{initChannel()} that initiate the channels, and connects them to the correct input port.
 The \codeword{Channel} module now has the \codeword{receiveData()} thread, and its own data/header buffer.
 Having it structured like this makes it possible to add \codeword{Channel} specific variables or methods, without disturbing the \gls{sampa} as a whole.
 The implementation of the receive thread is now more simple in terms of complexity, and is exclusive for each \codeword{Channel}.
@@ -872,25 +861,84 @@ Listing~\ref{lst:receive-channel} shows the basic thread structure, excluding an
 It continuously receives samples and adds them to the buffer, unless the buffer reach its maximum size.
 
 \begin{minipage}{\linewidth}
-\lstinputlisting[caption=Receive samples.,firstline=26,lastline=62,label=lst:receive-channel]{codelistings/channel.cpp}
+\lstinputlisting[caption=Receive samples.,firstline=26,lastline=57,label=lst:receive-channel]{codelistings/channel.cpp}
 \end{minipage}
-
 
 \paragraph{•}
 The basic implementation of reading from the buffer is somewhat more complicated than receiving data.
 This is because the real reading procedure is more complex in itself.
-In listing~\ref{lst:read-buffers} the procedure is shown, along with one of four equal serial out threads.
+In listing~\ref{lst:read-buffers} the procedure is shown.
 The procedure loops through the eight channels for the given serial out, getting the correct channel, and reading out the entire timeframe.
+This procedure is ran for all four serial out threads at the same time.
 One thing to notice here is that the actual data from the buffers aren't passed along further.
 This is because we only care about the time it takes to transfer them, which is being calculated in the \codeword{wait} statement.
 The header packet is sent as it contains important information which can be useful later on.
 
+\paragraph{•}
 \begin{minipage}{\linewidth}
-\lstinputlisting[caption=Reading data from the SAMPA buffers.,firstline=28,lastline=72,label=lst:read-buffers]{codelistings/sampa2.cpp}
+\lstinputlisting[caption=Reading data from the SAMPA buffers.,firstline=28,lastline=58,label=lst:read-buffers]{codelistings/sampa2.cpp}
 \end{minipage}
 
+\subsubsection{Implementing zero suppression}
+
 \paragraph{•} 
-\textit{Viser implementasjon av huffman og zero suppression her.}
+Now that the input channels, and the serial outs are in place, the data processing can be implemented.
+The \gls{zs} occurs before the samples are added to the channel buffers, so the correct place to put it in the simulation will be in the channel modules \codeword{receiveData()} method.
+Since this is a piece of code which needs to be turned off and on, the implementation is done in its own method called \codeword{zeroSuppress}.
+The method needs the current sample, the last received sample, and some meta-data about the current behaviour of the timeframe.
+The rules for the \gls{zs} is described in detail in section~\ref{subsec:zs}, as such this section will only look at the implementation.
+
+\paragraph{•}
+Looking at the two last samples there are four different scenarios, either both, one or, none of them are above the \gls{zs} threshold.
+In code this translates to four different conditional statements, in this case the implementation uses \codeword{if-else} statements, as seen in \ref{lst:zs-ifelse}.
+
+\paragraph{•}
+\begin{minipage}{\linewidth}
+\lstinputlisting[caption=If-else structure for the Zero Suppression algorithm.,firstline=1,lastline=10,label=lst:zs-ifelse]{codelistings/zero-suppression.cpp}
+\end{minipage}
+
+\paragraph{•}
+When both of the two last samples are over the threshold, the algorithm knows for sure that a valid cluster is found, and marks it as such.
+If the current sample is valid, but the last is not, then it isn't clear if the sample is part of a valid cluster, so it is added to the buffer, but marked as invalid for now.
+If the last two samples where both invalid, it means that either they are just part of some noise, they can be a part of the last valid cluster, or if the next sample is part of a cluster, they can be merged together, forming a single cluster.
+Most of the time the last condition will be very straight forward, but there exists one edge case which makes it more complicated to implement.
+The edge case occurs when the last couple of signals has a particular shape.
+The problematic sequence is displayed in \ref{fig:zs-prob}.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.75\textwidth]{images/zs-prob.png}
+		\caption{An edge case that the Zero suppression needs to handle.}
+		\label{fig:zs-prob}
+\end{figure}
+
+\paragraph{•}
+Now the last sample, which was added to the buffer turned out to be an invalid cluster, and needs to be discarded.
+The algorithm must then remove it, and replace it with an empty sample as part of the previous clusters meta-data.
+The final implementation of the \gls{zs} algorithm is shown in \ref{lst:zs}.
+Since the code was implemented in its own method, all the change needed in the \codeword{receiveData()} thread is to call the \codeword{zeroSuppress()} method instead of adding samples directly to the buffer.
+
+\begin{minipage}{\linewidth}
+\lstinputlisting[caption=Zero suppression algorithm.,firstline=12,lastline=44,label=lst:zs]{codelistings/zero-suppression.cpp}
+\end{minipage}
+
+\subsubsection{Implementing Huffman encoding}
+
+\paragraph{•}
+Huffman is a well known, and widely used algorithm.
+Because of this, there are multiple providers which has made there implementation available online for people to use.
+The Huffman code used in the simulation is based on code provided by Rosetta Code, licensed under GNU Free Documentation License 1.2\cite{rosetta}\cite{gnu}.
+The code is modified slightly to suit the requirements of the simulation program.
+In addition methods for writing a full Huffman tree to a file, as well as reading a tree from a source file is implemented.
+
+\paragraph{•}
+The simulation will only be able to use the Huffman encoding when it uses realistic data, i.e where the samples have realistic values.
+Only when there is a wide spectre of different values can the simulation determine an accurate compression factor.
+There are two different sets of realistic data available for use, and they are gone into more detail in \ref{subsubsec:real-data}.
+The Huffman tree will be created directly from the dataset that is used, and the tree will be stored to a file so that it can be used to decode later on.
+Creating the tree in such a manner means that it gets the optimal compression possible.
+In the real world a perfect compression is not plausible as signals coming from the detector will continuously change, and it doesn't contain a steady pattern.
+Even though using the optimal compression in the simulation doesn't give us the worst case, it can still establish a base estimate that is within reason.
 
 \subsection{The DataGenerator module}
 \paragraph{•}
@@ -917,11 +965,11 @@ Creating a single function that has the core functionality of data generator, wh
 Because of this, for every different way of creating/distributing data, there is a completely different function.
 The benefits of implementing it like this is that the functions doesn't depend on each other and can be separately updated or improved, which allows for easier development as the module becomes larger and more complex.
 
-\paragraph{•} %Need a paragraph about the different sim scenarioes to justify the different sink threads.
-To be able to quickly switch between different functions when running a different simulation, the module contains only a single \gls{sc} thread, where we can choose the correct function based on the simulation type.
+\paragraph{•} 
+To be able to quickly switch between different functions when running a different simulation, the module contains only a single \gls{sc} thread, where it is possible to choose the correct function based on the simulation type.
 The \codeword{sink\_tread()} function can be seen in \ref{lst:sink-thread}.
 The testbench is explained in section~\ref{subsec:testbench}, but one of its purposes is storing global variables which are used around the different modules.
-One example of this is shown in \ref{lst:sink-thread} with the use of the \codeword{DG\_SIMULATION\_TYPE} variable.
+One example of such a variable is shown in \ref{lst:sink-thread} with the use of the \codeword{DG\_SIMULATION\_TYPE} variable.
 The different functions for distributing data is also shown.
 
 \begin{minipage}{\linewidth}
@@ -944,7 +992,7 @@ Since it relays on a flat occupancy it is expected that most channels will get s
 Real experiment data will not be as flat, and the occupancy will differ from timeframe to timeframe.
 
 \begin{minipage}{\linewidth}
-\lstinputlisting[caption=Data generator SystemC thread.,firstline=15,lastline=42,label=lst:standard-sink]{codelistings/dg.cpp}
+\lstinputlisting[caption=Data generator SystemC thread.,firstline=15,lastline=37,label=lst:standard-sink]{codelistings/dg.cpp}
 \end{minipage}
 
 \paragraph{•}
@@ -955,7 +1003,7 @@ The code for these functions is similar to the \codeword{standardSink()}, and th
 
 \begin{minipage}{\linewidth}
 \lstinputlisting[caption=Data generator SystemC thread.,firstline=1,lastline=17,label=lst:diff1]{codelistings/dg-diff.cpp}
-\lstinputlisting[caption=Data generator SystemC thread.,firstline=19,lastline=32,label=lst:diff2]{codelistings/dg-diff.cpp}
+\lstinputlisting[caption=Data generator SystemC thread.,firstline=20,lastline=32,label=lst:diff2]{codelistings/dg-diff.cpp}
 \end{minipage}
 
 \paragraph{•} 
@@ -965,17 +1013,25 @@ To get more accurate results from the simulation there is a need for data which 
 The implementation so far doesn't worry about the value of the samples, but the values are required in order to test \gls{zs} and Huffman encoding.
 
 \subsubsection{Creating Normally distributed samples}
-\textit{Her trenger litt hjelp å formulere meg. En del ting vi har snakket med dieter om jeg ikke vet om jeg finner noen kilde på osv..Trenger den distribusjons grafen til Dieter.}
 
 \paragraph{•}
-Analysis done on the results from RUN 1??(Need source) has shown that the shape of the incoming samples can be somewhat predicted.
-This is shown in (NEED FIGURE HERE), where the x axis is the position of a single pad on the actual detector.
+Measured occupancies gathered from experiment events recorded in 2010 provides a graph of expected average occupancies within a timeframe.
+This is shown in \ref{fig:expected-occupancy}, where the x axis is the position of a pad row on the actual detector.
 The closer to origin, the closer to the center of the detector.
 The pads closer to the center has generally higher occupancy than the outer ones, which makes them the worst case, and the most interesting for use in the simulation.
-FIGURE shows that the average occupancy for the inner pads is 28\%, in 10\% of all timeframes the occupancy is 44\% and in 1\% of all timeframes the occupancy is 74\%.
+\ref{fig:expected-occupancy} shows that the average occupancy for the inner pads is 28\%, but can reach 44\%, or with a high multiplicity as high as 74\%.
+The chance of reaching a multiplicity equal to 44\% occupancy is 10\%, while only 1\% chance to reach 75\%.
 Based on this a normal distribution of occupancies can be created for a more realistic simulation.
 A normal distribution is a mathematical/statistical distribution of values which depend on a central value (the mean value) and a stretch factor (the standard deviation)\cite{normal-dist}.
 An example of a normal distribution is shown in \ref{fig:normal-dist}.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.6\textwidth]{images/expected-occupancy.png}
+		\caption{Expected average occupancies within a given time frame. \cite{tdr-016}}
+		\label{fig:expected-occupancy}
+\end{figure}
+
 
 \begin{figure}[h!]
 	\centering
@@ -985,7 +1041,7 @@ An example of a normal distribution is shown in \ref{fig:normal-dist}.
 \end{figure}
 
 \paragraph{•}
-Using a normally distributed \gls{rng} a set of occupancy values can be created.
+Using a normally distributed \gls{rng}, a set of occupancy values can be created.
 For every new timeframe in the simulation, a random value from the set is picked as the current occupancy.
 The size of the set is determined by the number of timeframes in the simulation.
 The mean value for the distribution is already known being 28\%, but the standard deviation is not obvious and needs to be calculated.
@@ -996,16 +1052,16 @@ $ \frac{\sum_{i=1}^{100} (x_i - mean)^2}{100}$
 Take the square root of the \textit{varians} and the result is the standard deviation.
 How this is implemented programmatically is shown in \ref{lst:standard-deviation} along with creating the final set of occupancies.
 
+\paragraph{•}
 \begin{minipage}{\linewidth}
-\lstinputlisting[caption=Data generator SystemC thread.,firstline=45,lastline=77,label=lst:standard-deviation]{codelistings/dg.cpp}
+\lstinputlisting[caption=Data generator SystemC thread.,firstline=40,lastline=62,label=lst:standard-deviation]{codelistings/dg.cpp}
 \end{minipage}
 
 \paragraph{•}
 After testing the distribution out the conclusion was that the distribution became very narrow towards the mean.
 By using values from $mean-10$ to $mean+10$ gave a bigger deviation, and as a result a wider distribution.
+A wider distribution will most likely create more interesting results.
 The difference by increasing the deviation is shown in \ref{fig:distribution}.
-
-
 
 \begin{figure}[h!]
 	\centering
@@ -1024,7 +1080,7 @@ Even though the data still doesn't look like the real thing, in the case of test
 
 \begin{figure}[h!]
 	\centering
-		\includegraphics[width=1.0\textwidth]{images/normal-data-shape.png}
+		\includegraphics[width=0.75\textwidth]{images/normal-data-shape.png}
 		\caption{FEIL FIGUR!}
 		\label{fig:normal-data-shape}
 \end{figure}
@@ -1035,34 +1091,80 @@ The space can be calculated by first finding the number of samples with value 0,
 Since both the occupancy and the number of samples in a timeframe is know, the math becomes very straight forward.
 The solution used is shown in \ref{lst:calc-space}.
 
+\paragraph{•}
 \begin{minipage}{\linewidth}
-\lstinputlisting[caption=Calculating the space between two peaks in a timeframe.,firstline=79,lastline=85,label=lst:calc-space]{codelistings/dg.cpp}
+\lstinputlisting[caption=Calculating the space between two peaks in a timeframe.,firstline=64,lastline=70,label=lst:calc-space]{codelistings/dg.cpp}
 \end{minipage}
 
 \paragraph{•}
 With a completed set of occupancies and the necessary functions to help shape the data the only thing left is to implement the sink function.
-It uses the same loop structure as the three previous sink functions, but in addition before every timeframe it picks the next occupancy from the set and calculate the space between the peaks.
-\textit{Her mangler jeg litt utfylding, kode og litt drøfting om målet bak denne typen simulering.}
+It uses the same loop structure as the three previous sink functions, but in addition before every new timeframe it picks the next occupancy from the set and uses this to determine if it should send a sample with value, or an empty one.
 
-\subsubsection{"Real data"}
+\subsubsection{Realistic datasets}
+\label{subsubsec:real-data}
 
 \paragraph{•}
 The last type of simulation will use realistic datasets as input. %Skift ut denne setningen.
-Two types of datasets has been available for use: Experiment data collected from RUN 1, and synthetic data created by researchers which matches the expected data from RUN 3.
+Two types of datasets has been available for use: Black event data collected from RUN 1, and synthetic data created by researchers which matches the expected data from RUN 3.
 In addition to this, we want to use the data from RUN 1 and create pileup data.
 Pileup occurs when a channel gets overlapping data from multiple neighbouring channels in the same timeframe \textit{Riktig?}.
 In the worst case the pileup can happen five times, i.e samples from five neighbouring channels are causing interference.
 By overlapping five timeframes from the RUN 1 data, a third set for use in the simulation is made available.
+For clarities sake the datasets will be noted as: black-events, synthetic and pileup data from now on.
  
-\paragraph{•}
-The tasks required to implement this boils down to the following list.
-\begin{itemize}
-	\item Define a common data structure to store the different data.
-	\item Create readout functions for the different datasets.
-	\item Implement the sink function.
-\end{itemize}
+\paragraph{•} 
+The format for the black-events and the pileup datasets are as followed:
+%Fill in format later
+ \begin{lstlisting}[caption=Data container., label=lst:black-event-format]
+ddl <ddl number>
+hw  <hardware addr>
+<start time> <timeframe length>
+<timebin> <signal>
+<timebin> <signal>
+....
+hw <hardware addr>
+\end{lstlisting}
+The hardware address is a number which represents the channel, the \gls{altro} chip front-end card and branch address.
+The address is represented as a decimal number, but read as binary in the following way:
+\textit{Branch << 11 | Fec << | Altro << 4 | Channel}
+Take 129 as an example address, when translated it becomes: Branch: 0, Fec: 1, Altro: 0 and Channel: 1.
+In this context the ddl number is not important, but ddls with low numbers usually has a higher than average occupancy among its channels.
 
-\textit{Kode for det forklart over. Hva ønsker vi å oppnå med å bruke realistiske data.}
+
+\begin{lstlisting}[caption=Data container., label=lst:black-event-format]
+#sector #padRow #padNr #timebin #signal #meta-data
+
+\end{lstlisting}
+This formatting is much easier to work with then the one for the black events, because it doesn't have a hardware address to decode, but rather the actual pad connected to the \gls{sampa} channel.
+%Finish this paragraph
+
+\paragraph{•}
+The next step is creating a shared data container which can store samples from any dataset, this way the simulation only needs one sink function.
+The data container needs to store samples for every channel, and for every timeframe that is being simulated.
+This can be made by defining a simple \codeword{template} using existing containers.
+
+\begin{lstlisting}[caption=Data container., label=lst:data-template]
+typedef std::map< int, std::list<Sample> > DataEntry;
+typedef std::vector< DataEntry > Datamap;
+\end{lstlisting}
+
+\paragraph{•}
+The \codeword{DataEntry} template stores one entire timeframe worth of samples for every channel in the simulation.
+The \codeword{Datamap} is just a \codeword{vector} storing \codeword{DataEntry} objects.
+One weakness of storing the samples in this manner is that the sink function will now expect that it contains full timeframes for all channels.
+In other words, it expect that the datasets contain 1022 signals for every channel, which in all datasets is not the case.
+The black-event data was based on the \gls{altro} chip, meaning there is only 8 chips per front-end card, and 16 channels per \gls{altro}.
+At the same time the timeframe seems to be shorter, so there is always less then a full timeframe worth of data.
+The synthetic data has a mapping which is usable for the \gls{sampa} channels, but only contains 1000 signals per timeframe.
+To fix the lack of samples, empty ones can be placed at the front and/or end of the timeframes while reading them into memory.
+Doing so will create full timeframes no matter the actual number available.
+Regarding the channel mismatch in the black-event data, it can be remedied by creating a mapping table, using neighbouring channels to fill in the gap.
+%Express that the mapping was not used, and the simulation doesn't care about that.
+
+\paragraph{•}
+The two original datasets that are available comes with its own format, and as such it needs its own function for reading from it.
+The constructed pilup data will still use the same format as the original, so it can use the same function.
+
 
 \subsection{Signal classes}
 \label{subsec:signal-classes}
@@ -1112,7 +1214,19 @@ As seen in \ref{cha:3} connecting the modules together is done in the \codeword{
 \chapter{Conclusion and Future work}
 \textit{Conclude the thesis, talk about the impact it has and its usefulness in future planing of the front end electronics.}
 
+\appendix
+\chapter{Code Listings}
+\label{cha:app-code}
 
+\paragraph{•}
+\begin{minipage}{\linewidth}
+\lstinputlisting[caption=Channel header file.,firstline=1,lastline=24,label=lst:channel1]{codelistings/channel.cpp}
+\end{minipage}
+
+\paragraph{•}
+\begin{minipage}{\linewidth}
+\lstinputlisting[caption=Sampa header file.,firstline=1,lastline=26,label=lst:sampa2]{codelistings/sampa2.cpp}
+\end{minipage}
 
 \bibliography{biblio}{}
 \bibliographystyle{unsrt}

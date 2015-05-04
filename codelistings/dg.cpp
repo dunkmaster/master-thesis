@@ -13,18 +13,13 @@ void DataGenerator::sink_thread(void){
 }
 
 void DataGenerator::standardSink(){
-  int64_t packetCounter = 1;
-  int currentSample = 0;
-  int currentTimeWindow = 1;
-  RandomGenerator randomGenerator;
-  //While we still have timewindows to send
-  while(currentTimeWindow <= constants::NUMBER_TIME_WINDOWS_TO_SIMULATE)
+  //While we still have timeFrames to send
+  while(currentTimeFrame <= NUMBER_TIME_FRAMES_TO_SIMULATE)
   {
     //Loop each channel
-    for(int i = 0; i < constants::NUMBER_OF_SAMPA_CHIPS * constants::SAMPA_NUMBER_INPUT_PORTS; i++)
+    for(int i = 0; i < NUMBER_OF_SAMPA_CHIPS * SAMPA_NUMBER_INPUT_PORTS; i++)
     {
-
-      if(randomGenerator.generate(0, 100) <= constants::DG_OCCUPANCY){
+      if(randomGenerator.generate(0, 100) <= DG_OCCUPANCY){
         //Send real sample
       } else {
         //Send empty sample
@@ -32,9 +27,9 @@ void DataGenerator::standardSink(){
     }
     currentSample++;
     //Increments timeWindow
-    if(currentSample == constants::NUMBER_OF_SAMPLES_IN_EACH_TIME_WINDOW )//1021 samples
+    if(currentSample == NUMBER_OF_SAMPLES_IN_EACH_TIME_FRAME )//1021 samples
     {
-      currentTimeWindow++;
+      currentTimeFrame++;
       currentSample = 0;
     }
     wait((constants::DG_WAIT_TIME), SC_NS);
@@ -43,9 +38,6 @@ void DataGenerator::standardSink(){
 
 //Creates the set with the distribution of occupancies.
 std::vector<int> DataGenerator::getOccupancy(){
-  double mean = 28.0;
-  double sum = 0.0;
-  double array[100];
 
   array[0] = 74;
   for(int i = 1; i <= 10; i++){
@@ -58,28 +50,21 @@ std::vector<int> DataGenerator::getOccupancy(){
   for(int i = 0; i < 100; i++)
     sum += pow(array[i] - mean, 2.0);
 
-  double varians = sum/100;
-  double deviation = sqrt(varians);
-
+  double deviation = sqrt(sum/100);
   std::default_random_engine gen(seed);
   std::normal_distribution<double> dist(mean, deviation);
-  std::vector<int> result;
 
   //create a vector of occupancies based on the normal distribution.
-  for(int i = 0; i < constants::NUMBER_TIME_WINDOWS_TO_SIMULATE; i++){
-    int occ = (int)dist(gen);
-    if(occ <= 0)
-      result.push_back(1);
-    else
-      result.push_back(occ);
+  for(int i = 0; i < constants::NUMBER_TIME_FRAMES_TO_SIMULATE; i++){
+      result.push_back((int)dist(gen));
   }
   return result;
 }
 
 double DataGenerator::calcSpace(int occ){
-  double numberOfSamples = (constants::NUMBER_OF_SAMPLES_IN_EACH_TIME_WINDOW * occ) / 100.0;
+  double numberOfSamples = (constants::NUMBER_OF_SAMPLES_IN_EACH_TIME_FRAME * occ) / 100.0;
   double numberOfPeaks = numberOfSamples / 3.0;
-  double numberOfEmptyTimebins = constants::NUMBER_OF_SAMPLES_IN_EACH_TIME_WINDOW - numberOfSamples;
+  double numberOfEmptyTimebins = constants::NUMBER_OF_SAMPLES_IN_EACH_TIME_FRAME - numberOfSamples;
 
   return (numberOfEmptyTimebins / numberOfPeaks);
 }

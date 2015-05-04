@@ -24,39 +24,34 @@ private:
 };
 
 while(true){
-
-		//Read from datagenerator
 		if(port_DG_to_CHANNEL->nb_read(sample)){
 			numberOfClockCycles++; //timebin
 
 			//Check if max buffer size is reached.
-			if(dataBuffer.size() + sample.size > constants::CHANNEL_DATA_BUFFER_SIZE){
+			if(dataBuffer.size() + sample.size > CHANNEL_DATA_BUFFER_SIZE){
 				overflow = true;
 			}
 
 			//Add sample to buffer if there is no overflow.
 			if(!overflow){
-				numberOfSamples++;
 			  addSampleToBuffer(sample, numberOfClockCycles);
 			}
-
 		}
-		//When we reach the end of a timeWindow we send the header packet to its buffer and starts a new window
-		if(numberOfClockCycles == constants::NUMBER_OF_SAMPLES_IN_EACH_TIME_WINDOW ){
+		//End of timeframe
+		if(numberOfClockCycles == NUMBER_OF_SAMPLES_IN_EACH_TIME_FRAME ){
 
 			//Remove samples added earlier in timeframe if overflow
 			if(overflow){
-				for (int i = 0; i < numberOfSamples; ++i)
-				{
+				for (int i = 0; i < numberOfSamples; ++i){
 					dataBuffer.pop_back();
-
 				}
 				numberOfSamples = 0;
 			}
 			//Create header packet, and add to header buffer.
-			Packet header(currentTimeWindow, this->getAddr(), numberOfSamples, overflow, 1, currentOccupancy);
+			Packet header(currentTimeFrame, this->getAddr(), numberOfSamples, overflow, 1, currentOccupancy);
 			header.sampaChipId = this->getSampaAddr();
 			headerBuffer.push(header);
 			//Clean up temp variables
 		}
+		wait(constants::SAMPA_INPUT_WAIT_TIME, SC_NS);
 }
