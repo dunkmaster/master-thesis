@@ -1,11 +1,11 @@
 void DataGenerator::sink_thread(void){
-  if(constants::DG_SIMULTION_TYPE == 1){
+  if(DG_SIMULTION_TYPE == 1){
     standardSink();
-  } else if(constants::DG_SIMULTION_TYPE == 2){
+  } else if(DG_SIMULTION_TYPE == 2){
     incrementingOccupancySink();
-  } else if(constants::DG_SIMULTION_TYPE == 3){
+  } else if(DG_SIMULTION_TYPE == 3){
     alternatingOccupancySink();
-  } else if(constants::DG_SIMULTION_TYPE == 4){
+  } else if(DG_SIMULTION_TYPE == 4){
     sendBlackEvents();
   } else {
     sendGaussianDistribution();
@@ -55,16 +55,16 @@ std::vector<int> DataGenerator::getOccupancy(){
   std::normal_distribution<double> dist(mean, deviation);
 
   //create a vector of occupancies based on the normal distribution.
-  for(int i = 0; i < constants::NUMBER_TIME_FRAMES_TO_SIMULATE; i++){
+  for(int i = 0; i < NUMBER_TIME_FRAMES_TO_SIMULATE; i++){
       result.push_back((int)dist(gen));
   }
   return result;
 }
 
 double DataGenerator::calcSpace(int occ){
-  double numberOfSamples = (constants::NUMBER_OF_SAMPLES_IN_EACH_TIME_FRAME * occ) / 100.0;
+  double numberOfSamples = (NUMBER_OF_SAMPLES_IN_EACH_TIME_FRAME * occ) / 100.0;
   double numberOfPeaks = numberOfSamples / 3.0;
-  double numberOfEmptyTimebins = constants::NUMBER_OF_SAMPLES_IN_EACH_TIME_FRAME - numberOfSamples;
+  double numberOfEmptyTimebins = NUMBER_OF_SAMPLES_IN_EACH_TIME_FRAME - numberOfSamples;
 
   return (numberOfEmptyTimebins / numberOfPeaks);
 }

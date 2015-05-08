@@ -28,10 +28,10 @@ private:
 void SAMPA::processData(int serialOut){
 
 	//Go through all channels for specific serialout
-	for(int i = 0; i < constants::CHANNELS_PER_E_LINK; i++){
+	for(int i = 0; i < CHANNELS_PER_E_LINK; i++){
 		float waitTime = 0.0;
 		//Find channel
-		int channelId = i + (serialOut*constants::CHANNELS_PER_E_LINK);
+		int channelId = i + (serialOut*CHANNELS_PER_E_LINK);
 		Channel *channel = channels[channelId];
 
 		//find header
@@ -41,18 +41,14 @@ void SAMPA::processData(int serialOut){
 
 			//Read from databuffer, but check for overflow.
 			if(!header.overflow || header.numberOfSamples > 0){
-
 				for(int j = 0; j < header.numberOfSamples; j++){
-					if(!channel->dataBuffer.empty()){
-
 						channel->dataBuffer.pop_front();
-					}
 				}
 			}
 			//Simulate number of clock cycles it took to read the timeframe.
 			waitTime = (5 + header.numberOfSamples); //50bit header + 10 bit samples
 			porter_SAMPA_to_GBT[serialOut]->nb_write(header);
-			wait((constants::SAMPA_OUTPUT_WAIT_TIME * waitTime), SC_NS);
+			wait((SAMPA_OUTPUT_WAIT_TIME * waitTime), SC_NS);
 		}
 	}
 }

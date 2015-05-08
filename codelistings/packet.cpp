@@ -1,14 +1,8 @@
 class Packet
 {
 public:
-
-  int timeFrame;
-  int channelId;
-  int sampaChipId;
-  int numberOfSamples;
-  bool overflow;
-  int sampleId;
-  int occupancy;
+  //Class variables
+  
   Packet(int _timeFrame, int _channelId, int _numberOfSamples, bool _overflow, int _sampleId, int _occupancy);
   Packet();
 

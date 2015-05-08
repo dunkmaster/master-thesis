@@ -38,20 +38,16 @@ while(true){
 			}
 		}
 		//End of timeframe
-		if(numberOfClockCycles == NUMBER_OF_SAMPLES_IN_EACH_TIME_FRAME ){
+		if(numberOfClockCycles == NUMBER_OF_SAMPLES_IN_EACH_TIME_FRAME){
 
 			//Remove samples added earlier in timeframe if overflow
 			if(overflow){
 				for (int i = 0; i < numberOfSamples; ++i){
 					dataBuffer.pop_back();
 				}
-				numberOfSamples = 0;
 			}
 			//Create header packet, and add to header buffer.
-			Packet header(currentTimeFrame, this->getAddr(), numberOfSamples, overflow, 1, currentOccupancy);
-			header.sampaChipId = this->getSampaAddr();
 			headerBuffer.push(header);
-			//Clean up temp variables
 		}
 		wait(constants::SAMPA_INPUT_WAIT_TIME, SC_NS);
 }
