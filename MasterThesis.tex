@@ -253,7 +253,7 @@ The layout of the \gls{lhc} ring as well as its four collision points can be see
 \begin{figure}[h!]
   \centering
     \includegraphics[width=0.7\textwidth]{images/lhc-ring.jpg}
-     \caption{The Large Hadron Collider \cite{lhc-ring-image}}
+     \caption[The Large Hadron Collider]{The Large Hadron Collider \cite{lhc-ring-image}}
     \label{fig:lhc}
 \end{figure}
 
@@ -301,7 +301,7 @@ The maximum readout rate of the current \gls{alice} detector is 500 Hz, which is
 \begin{figure}[h!]
   \centering
     \includegraphics[width=1.0\textwidth]{images/alice-detector.png}
-     \caption{The ALICE detector \cite{alice-image}}
+     \caption[The ALICE detector]{The ALICE detector \cite{alice-image}}
     \label{fig:alice}
 \end{figure}
 
@@ -323,13 +323,13 @@ It operates on a so called triggered readout mode.
 In short when \gls{altro} receives the first trigger, it stores the following data stream into memory, holding on to it until it is ready to pass on the data.
 The front-end electronics are able to readout data at a speed of up to 300 MB/s.
 \paragraph{•}
-The \gls{altro} chip sends the digitized signals further down the readout chain to the \gls{rcu}, where it is further processed and shipped to  and stored in the online systems.
+The \gls{fec} sends the digitized signals further down the readout chain to the \gls{rcu}, where it is further processed and shipped to  and stored in the online systems.
 The schematics is shown in \ref{fig:altro}.
 
 \begin{figure}[h!]
   \centering
     \includegraphics[width=0.75\textwidth]{images/altro.png}
-     \caption{Readout schematics for the current TPC detector \cite{tdr-016}}
+     \caption[Readout schematics for the current TPC detector]{Readout schematics for the current TPC detector \cite{tdr-016}}
     \label{fig:altro}
 \end{figure}
 
@@ -343,14 +343,14 @@ Essentially this comes down to a increase by a factor of 100, compared to what i
 \paragraph{•} 
 To be able to handle the increase in collision rate the \gls{tpc} will receive upgrades to both its readout chambers, and front-end readout electronics.
 The current \gls{mwpc} based read-out chambers will be replaced by \gls{gem} detectors, which has a much higher readout rate capability.
-Signals will be passed from the new readout chambers to the \gls{fec} via a readout pad structure similar to the one presently used, where each pad is mapped to a \gls{sampa} channel.
+Signals will be passed from the new readout chambers to the \gls{fec} via a readout pad structure similar to the one presently used.
 There are multiple pad structures depending on its location on the detector, but the difference in structure is not relevant for this thesis.
 What is relevant however is that more data is expected from low pad numbers, an example of a pad structure is shown in \ref{fig:pad-struct}.
 
 \begin{figure}[h!]
 	\centering
 		\includegraphics[width=0.75\textwidth]{images/pad-structure.png}
-		\caption{Pad structure of an Inner Readout Chamber(IROC)\cite{pad-structure}}
+		\caption[Pad structure of an Inner Readout Chamber(IROC)]{Pad structure of an Inner Readout Chamber(IROC)\cite{pad-structure}}
 		\label{fig:pad-struct}
 \end{figure}
 
@@ -365,7 +365,7 @@ Chapter~\ref{cha:4} will go into more detail about the readout electronics in th
 \begin{figure}[h!]
 	\centering
 		\includegraphics[width=0.75\textwidth]{images/fec.png}
-		\caption{Schematics of the readout electronics \cite{tdr-016}}
+		\caption[Schematics of the readout electronics]{Schematics of the readout electronics \cite{tdr-016}}
 		\label{fig:fec}
 \end{figure}
 
@@ -534,7 +534,7 @@ Each channel has a readout speed of 10 bit on a 10 MHz clock, which combined res
 The channels also have their own \gls{fifo} buffer memory where signals coming in are stored as they wait to be sent along.
 The most efficient size for these buffers are one of the things the simulations will hopefully provide.
 The output links for the \gls{sampa} chip consists of 4 e-links connecting them to the \gls{gbt}.
-Each e-link has as said in the previous section a speed of 320 Mbit/s, which sums up to 1.28 Gb/s\cite{tdr-015}.
+Each e-link has as said in the previous section a speed of 320 Mbit/s, which sums up to 1.28 Gbit/s\cite{tdr-015}.
 The e-links are connected to 4 readout buffers on the \gls{sampa} that reads from the channel buffers and transports the data to the e-links.
 The readout buffers reads from 8 channels each.
 Since each \gls{sampa} and \gls{gbt} has a specific number of output and input links, there are only certain setups which are desirable.
@@ -575,7 +575,7 @@ The headers are stored in their own \gls{fifo} buffers, separate for each channe
 \begin{figure}[h!]
 	\centering
 		\includegraphics[width=1.0\textwidth]{images/packet.png}
-		\caption{Data packet format \cite{tdr-015}}
+		\caption[Data packet format]{Data packet format \cite{tdr-015}}
 		\label{fig:packet}
 \end{figure}
 
@@ -829,7 +829,7 @@ Size of container & O(1) & O(1) & O(1) & Constant time for all containers.\\
 \hline
 
 \end{tabular}
-\caption[Data structure comparison.]{Data structure comparison\cite{vector}, \cite{list}, \cite{queue}.}
+\caption[Data structure comparison]{Data structure comparison\cite{vector}, \cite{list}, \cite{queue}.}
 \label{tab:ds}
 \end{table}
 
@@ -949,7 +949,7 @@ The rest of the simulation model should not need to change for each different sc
 
 \paragraph{•}
 With the expected behaviour given in the previous paragraph, the bounds and requirements of the data generator can be established.
-The module will continually be updated, and new functionality will be added as new simulation scenarios (surface?). 
+The module will continually be updated, and new functionality will be added as new simulation scenarios surface. 
 In order for this to be efficient, the module needs to be easily extended, without causing any disturbance to the rest of the module.
 Sending samples should follow the specifications for the actual hardware, emulating the connection between the readout chambers and the \gls{sampa} asic.
 That includes the clock frequency and making sure every channel receives data asynchronously.
@@ -960,7 +960,7 @@ That includes the clock frequency and making sure every channel receives data as
 Achieving the same format for every simulation sample is done by using a custom class which the link between the data generator and the \codeword{Channels} are expecting as input.
 This means that every time the data generator sends a signal it uses this class.
 The format of the \codeword{Sample} class is discussed and shown in section~\ref{subsec:signal-classes}.
-Creating a single function that has the core functionality of data generator, which all simulation scenarios use as base could have been a good way to remove some of the boilerplate code needed, but without knowing all types of simulations from the start this could lead to unwanted restrictions later on.
+Creating a single function that has the core functionality of data generator, which all simulation scenarios used as base could have been a good way to remove some of the boilerplate code needed, but without knowing all types of simulations from the start this could lead to unwanted restrictions later on.
 Because of this, for every different way of creating/distributing data, there is a completely different function.
 The benefits of implementing it like this is that the functions doesn't depend on each other and can be separately updated or improved, which allows for easier development as the module becomes larger and more complex.
 
@@ -1012,7 +1012,7 @@ To get more accurate results from the simulation there is a need for data which 
 The implementation so far doesn't worry about the value of the samples, but the values are required in order to test \gls{zs} and Huffman encoding.
 
 \subsubsection{Creating Normally distributed samples}
-
+\label{subsubsec:normal-distribution}
 \paragraph{•}
 Measured occupancies gathered from experiment events recorded in 2010 provides a graph of expected average occupancies within a timeframe.
 This is shown in \ref{fig:expected-occupancy}, where the x axis is the position of a pad row on the actual detector.
@@ -1022,12 +1022,13 @@ The pads closer to the center has generally higher occupancy than the outer ones
 The chance of reaching a multiplicity equal to 44\% occupancy is 10\%, while only 1\% chance to reach 75\%.
 Based on this a normal distribution of occupancies can be created for a more realistic simulation.
 A normal distribution is a mathematical/statistical distribution of values which depend on a central value (the mean value) and a stretch factor (the standard deviation)\cite{normal-dist}.
-An example of a normal distribution is shown in \ref{fig:normal-dist}.
+The formula for a normal distribution is as followed: $f(x,\mu,\sigma) = \frac{1}{\sigma}\phi(\frac{x-\mu}{\sigma})  $, with $ \mu$ being the mean value and $ \sigma$ the standard deviation. 
+An example of a normal distribution is shown in \ref{fig:normal-dist}
 
 \begin{figure}[h!]
 	\centering
 		\includegraphics[width=0.5\textwidth]{images/expected-occupancy.png}
-		\caption{Expected average occupancies within a given time frame. \cite{tdr-016}}
+		\caption[Expected average occupancies within a given time frame.]{Expected average occupancies within a given time frame. \cite{tdr-016}}
 		\label{fig:expected-occupancy}
 \end{figure}
 
@@ -1035,13 +1036,13 @@ An example of a normal distribution is shown in \ref{fig:normal-dist}.
 \begin{figure}[h!]
 	\centering
 		\includegraphics[width=0.6\textwidth]{images/normal-dist.png}
-		\caption{Normal distribution. \cite{normal-dist-image}}
+		\caption[Normal distribution.]{Normal distribution. \cite{normal-dist-image}}
 		\label{fig:normal-dist}
 \end{figure}
 
 \paragraph{•}
 Using a normally distributed \gls{rng}, a set of occupancy values can be created.
-For every new timeframe in the simulation, a random value from the set is picked as the current occupancy.
+For every new time frame in the simulation, a random value from the set is picked as the current occupancy.
 The size of the set is determined by the number of timeframes in the simulation.
 The mean value for the distribution is already known being 28\%, but the standard deviation is not obvious and needs to be calculated.
 Using the statistics given in \ref{fig:expected-occupancy} the deviation can be calculated.
@@ -1108,9 +1109,9 @@ The last type of simulation will use realistic datasets as input.
 Two types of datasets has been available for use: Black event data collected from RUN 1, and synthetic data created by researchers which matches the expected data from RUN 3.
 Black events is the term for when there is data in all channels at the same time, which means overall higher occupancy then normal events.
 In addition to this, we want to use the data from RUN 1 and create pileup data.
-Pileup occurs when a channel gets overlapping data from multiple neighbouring channels in the same timeframe \textit{Riktig?}.
+Pileup occurs when a channel gets overlapping data from multiple neighbouring channels in the same time frame.
 In the worst case the pileup can happen five times, i.e samples from five neighbouring channels are causing interference.
-By overlapping five timeframes from the RUN 1 data, a third set for use in the simulation is made available.
+By overlapping five time frames from the RUN 1 data, a third set for use in the simulation is made available.
 For clarities sake the datasets will be noted as: black-events, synthetic and pileup data from now on.
  
 \paragraph{•} 
@@ -1249,32 +1250,23 @@ With a completed simulation model in place, blablabla
 \section{Results}
 
 \subsection{Verify the Simulation Model}
-\begin{table}
-	\begin{tabular}{| p{2cm} | c | c | c | p{4cm} |}
-		\hline
-		\textbf{Simulation} & \textbf{Modules} & \textbf{Timeframes} & \textbf{Buffer sizes} & \textbf{Remarks} \\
-		\hline
-		TITLE & One \gls{fec} & 8/30 & 4k/8k * 10bit & Simulation uses the \textit{standardSink()} function, testing five different levels of occupancy. \\
-		\hline
-		Alternating Occupancy & One \gls{fec} & 26 & 4k * 10bit & Simulation uses the \textit{alternatingOccupancySink()} function, with a static occupancy pattern as input. \\
-		\hline
-		Flat 100\% Occupancy & One \gls{fec} & 10 & 4k * 10bit & Using the \textit{standardSink()} function with full timeframes for the entire simulation. \\
-		\hline
-		Increasing Occupancy & One \gls{fec} & 103 & 4k * 10bit & Using the \textit{increasingOccupancySink()} function, running a longer simulation. \\
-		\hline
-	\end{tabular}
-	\caption[]{Data structure comparison\cite{vector}, \cite{list}, \cite{queue}.}
-	\label{tab:setup-1}
-\end{table}
+
+\subsubsection{Preface}
+
+\paragraph{•}
+To begin with, a number of different simulations is run, all with one goal in mind: verifying the simulation model.
+Before using realistic data, the model most be tested to see if it behaves as expected.
+In order to trust the results provided by the simulations, the simulation model must be dependable, and accurate enough.
+Using static input data which only depends on occupancy, will give a controlled environment where the results can easily be predicted beforehand and compared to the actual results.
+Doing some test simulations will also flush out any flaws or weaknesses in the way data is gathered, or if any parameters must be changed.
 
 \subsubsection{1. TITLE}
-
 \paragraph{•}
 A good place to begin is to run multiple simulations with different static occupancy level.
 This will create a wide range of results to use in verifying the simulation model.
 To begin with, three different occupancy levels was used, 30, 60 and 90 percent.
 Starting small with only eight timeframes per simulation, using the entire \gls{fec}, giving a total of 160 channels.
-The maximum buffer size is set to 4k * 10bit for the data buffer and 256 * 10bit for the header buffer.
+The maximum buffer size is set to 4k * 10 bit for the data buffer and 256 * 10bit for the header buffer.
 The purpose of this simulation is to see how the buffers hold up with the expected data occupancy, compared to higher amounts.
 
 \begin{figure}[h!]
@@ -1285,7 +1277,12 @@ The purpose of this simulation is to see how the buffers hold up with the expect
 \end{figure}
 
 \paragraph{•} % 50 vs 70 percent 30 tf.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel convallis velit, id varius magna. Donec vel eleifend odio. Pellentesque risus elit, tincidunt eu nulla nec, luctus viverra tellus. Etiam vel purus placerat, auctor lorem ac, maximus augue. Mauris nec dignissim neque, at vulputate elit. Vivamus nec diam magna. Sed laoreet neque in est porta, ut cursus est rutrum. Proin tempus ante a dui accumsan condimentum. Aliquam in suscipit purus. Vestibulum diam nisi, bibendum a metus eu, rhoncus ultrices nisi. Quisque vestibulum risus ac nibh varius posuere. Phasellus vitae tristique dolor.
+Results from the first simulation were very much as expected.
+Given 30 percent the buffer usage remain stable at around 250-300 samples over all time frames, while 60 and 90 percent uses more space as time goes on.
+After seven time frames the simulation using 90 percent reaches the maximum buffer usage, causing it to overflow.
+From the results one can predict that using 60 percent will also cause overflow, given enough time.
+To confirm this prediction, a slightly longer simulation using 50 and 70 percent occupancy is performed.
+This time the simulation uses 30 time frames instead of just 8, and the maximum buffer size is set to 8k * 10 bit.
 
 \begin{figure}[h!]
 	\centering
@@ -1294,13 +1291,132 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel convallis vel
 		\label{fig:results-50-70}
 \end{figure}
 
+\paragraph{•} %Sum up
+The results confirms the prediction, and it seems that with occupancies higher then 30 percent the buffer usage keeps growing as time goes on, and the serial outs will never be able to read the data fast enough.
+Looking at the header buffer during these simulations, it became clear that it will most likely never become full, using only one to two header packets at the most.
+This is because it doesn't depend on the data occupancy, every header packet is always 50 bit, no matter how many samples in a time frame.
+So far the model seems to be working as expected, but the simulation has been using very controlled, and static data.
+Some more tests needs to be done in order to confirm that the simulation model is accurate enough to produce valid results with more realistic input data.
+
 \subsubsection{2. Alternating Occupancy}
+
+\paragraph{•} %Intro
+The occupancy will in most cases vary from time frame to time frame, and sometimes the won't be any data at all.
+Using the \textit{alternatingOccupancySink()} function, a pattern of different levels of occupancies can be used as input.
+This way it will be more fluctuations in the amount of input data, which will give more fluctuating results.
+The pattern chosen for this simulation is displayed in \ref{fig:occ-pattern}.
+It starts of with the expected average occupancy, before increasing in a steep fashion to 100 percent, then more slowly decreases down to zero.
+With this pattern, the model is tested how it handles increasing occupancy over time, and how fast it can stabilize after the amount of data decreases.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.8\textwidth]{images/occ-pattern.png}
+		\caption{Occupancy pattern used for the simulation.}
+		\label{fig:occ-pattern}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.8\textwidth]{images/results-alternating.png}
+		\caption{Results using a static pattern of occupancies.}
+		\label{fig:results-alternating}
+\end{figure}
+
+\paragraph{•} %Sum up
+Results from \ref{fig:results-alternating} shows that after 10-11 time frames the buffers are already full, but even though the occupancy decreases the serial outs still need more time in order to stabilize.
+What is seen is that the resulting buffer usage follows the occupancy pattern, giving more confidence in the model.
+
 \subsubsection{3. Flat 100\% Occupancy}
+
+\paragraph{•} %Intro
+This simulation wishes to see how fast the buffer usage increases when getting 100 percent occupancy, as well as seeing how many time frames it takes to reach the estimated 4k * 10 bit size of the buffers.
+The expected result is that it will go beyond 4k in the ten time frames being simulated, because of this the maximum buffer size is set to 8k.
+The readout speed is 2.5 times slower then the input speed, meaning that every serial out will be able to read around three out of eight channel buffers before the next time frame is finished.
+Lets take the first channel as an example: It will be the first channel the serial out will read, and while being read more data will come pouring in.
+The channel will have 40 percent of the data from the next time frame already stored when the serial out finish with the first time frame.
+Then it needs to wait while the other seven channels are read from before coming back to it.
+The point here is that the expected behaviour is that the channel buffer usage will rapidly increase, but small periods where it slows down because data is being read out.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.9\textwidth]{images/flat-100.png}
+		\caption{Results from a specific channel.(Channel 7 on SAMPA 0)}
+		\label{fig:flat-100}
+\end{figure}
+
+\paragraph{•} %Sum up
+The results in \ref{fig:flat-100} shows that the buffer usage increases in a linear fashion until the third time frame.
+This means that after three time frames, the serial out started reading from it, which is consistent with the fact that channel number 7 is the last channel read by one of the serial outs.
+After five time frames the buffer usage reaches 4k, and it peaks at about 6k after ten time frames.
+
 \subsubsection{4. Increasing Occupancy}
+
+\paragraph{•} %Intro
+Some of the problems with the previous simulations has been the length.
+They have been to short to be able to say anything for certain.
+Improving on this, the next simulation will run for about 100 time frames, with continuously increasing occupancy.
+With the high amount of time frames, the resulting graph should provide more detailed information.
+Starting ten percent below the expected average of 30 percent, and then increase in a steady fashion until reaching 100 percent.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/increasing-occ.png}
+		\caption{Results using a static pattern of occupancies.}
+		\label{fig:increasing-occ}
+\end{figure}
+
+\paragraph{•} %Sum up
+No real surprises from this simulation, the graph shows a steady increase in buffer usage, which grows faster as the occupancy increases.
+This confirms once again that the simulation model is working as intended, and should produce both valid and interesting results.
+One thing that was unexpected was the amount of time it took to run the simulation just for one \gls{fec}.
+It took about two hours to complete the 100 time frames, and it looked as if the higher the occupancy, the longer it took to complete a time frame.
+
 \subsubsection{Evaluating the Results}
 
+\paragraph{•}
+The results from the verification simulations have been very useful when determining how good the model is, but it doesn't really give an indication about the performance of the channel buffers.
+This was not the intent of the simulations and to test the performance itself more realistic simulation data is necessary.
+In the results from the alternating occupancy simulation it can be seen that every time it reaches the maximum buffer size, overflow occurs and the data from that time frame is removed, causing the graph to decrease slightly.
+What was learned from this is that in the future it can be a good idea to remove the buffer size restrictions, in order to see how much is actually used.
+Already from the first simulation it became clear that the size of the header buffers won't be an issue, and in future simulations no information about them will be included. 
+Regarding the simulation time for longer simulations, it is clear that it needs improvement.
+One of the reasons it uses a long time, is that the there are 160 channels to simulate.
+If instead only 32 channels, i.e one \gls{sampa} module was used, it would be five times as fast.
+Using 32 channels will still give valid results because the simulation doesn't care about what happens after the data leaves the \gls{sampa} module.
+This will be implemented for the rest of the simulations, and it can be done without much effort because the testbench stores information about the number of channels.
+
 \subsection{Normal Distribution}
+
+\subsubsection{Preface}
+
+\paragraph{•}
+Now that it is established that the model is working as intended, more realistic data can be used as input.
+Using the normal distribution sink explained in section~\ref{subsubsec:normal-distribution}, a more accurate estimations of buffer usage can be established.
+Another goal of these simulations is finding the compression factor for the \gls{zs}, see how it changes with different levels of occupancy, and where it reaches the necessary factor of 2.5.
+
 \subsubsection{1. 28\% Mean Occupancy}
+
+\paragraph{•}
+According to \ref{fig:expected-occupancy} the mean occupancy that is expected is 28 percent, this becomes a natural starting point for the first simulation.
+If the results show that the model can't handle 28 percent or it is to little, the occupancy level can be adjusted.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/mean-28.png}
+		\caption{Using 28 percent mean occupancy.}
+		\label{fig:28-occ}
+\end{figure}
+
+\paragraph{•}
+
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/occupancy-28.png}
+		\caption{Results using a static pattern of occupancies.}
+		\label{fig:increasing-occ}
+\end{figure}
+
 \subsubsection{2. 23\% Mean Occupancy}
 \subsubsection{3. 25\% Mean Occupancy}
 \subsubsection{4. Compression Factor}
