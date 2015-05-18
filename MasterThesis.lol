@@ -18,5 +18,5 @@
 \contentsline {lstlisting}{\numberline {5.14}Format for the synthetic dataset.}{58}{lstlisting.5.14}
 \contentsline {lstlisting}{\numberline {5.15}Data container.}{58}{lstlisting.5.15}
 \contentsline {lstlisting}{\numberline {5.16}Custom data type - The SAMPA header.}{61}{lstlisting.5.16}
-\contentsline {lstlisting}{\numberline {A.1}Channel header file.}{72}{lstlisting.A.1}
-\contentsline {lstlisting}{\numberline {A.2}Sampa header file.}{73}{lstlisting.A.2}
+\contentsline {lstlisting}{\numberline {A.1}Channel header file.}{84}{lstlisting.A.1}
+\contentsline {lstlisting}{\numberline {A.2}Sampa header file.}{85}{lstlisting.A.2}

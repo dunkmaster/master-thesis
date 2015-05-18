@@ -1393,12 +1393,24 @@ This will be implemented for the rest of the simulations, and it can be done wit
 Now that it is established that the model is working as intended, more realistic data can be used as input.
 Using the normal distribution sink explained in section~\ref{subsubsec:normal-distribution}, a more accurate estimations of buffer usage can be established.
 Another goal of these simulations is finding the compression factor for the \gls{zs}, see how it changes with different levels of occupancy, and where it reaches the necessary factor of 2.5.
+The verification simulations showed that simulations of about 100 time frames gave a good amount of data, so the simulations using normal distribution will run at least that long.
+
 
 \subsubsection{1. 28\% Mean Occupancy}
 
 \paragraph{•}
 According to \ref{fig:expected-occupancy} the mean occupancy that is expected is 28 percent, this becomes a natural starting point for the first simulation.
-If the results show that the model can't handle 28 percent or it is to little, the occupancy level can be adjusted.
+If the results show that the model can't handle 28 percent or it is to little, the occupancy level can be adjusted for the next simulation.
+This is what is most likely to happen, because the shape of the data is the worst possible case for the \gls{zs} algorithm. 
+In \ref{fig:occ-28} the randomly picked normal distribution used for this simulation is shown.
+Values ranging from 0 to 50 percent is being used.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.9\textwidth]{images/occupancy-28.png}
+		\caption{The distribution of occupancies used in the simulation from \ref{fig:28-occ}.}
+		\label{fig:28-dist}
+\end{figure}
 
 \begin{figure}[h!]
 	\centering
@@ -1408,34 +1420,271 @@ If the results show that the model can't handle 28 percent or it is to little, t
 \end{figure}
 
 \paragraph{•}
+As seen in \ref{fig:28-occ} the channel buffers fill up over time, and there is to much data for the serial outs to read.
+For the first 15-20 time frames it seems somewhat stable, this is most likely because the simulation was "lucky" and picked low numbers of occupancies for the first part.
+The buffer usage peaks at 4944 samples, but this number would continue to grow if the simulation was longer.
+The difference when using a more realistic data model, instead of static occupancy becomes very clear in the resulting graph.
+There is a lot more fluctuation in the buffer usage, and in comparison to the verification simulations, the resulting graph doesn't just increase in a linear fashion.
+This is a good indication that both the behaviour of the simulation model and the normal distribution is working.
 
+
+\subsubsection{2. 23\% Mean Occupancy}
+
+\paragraph{•}
+Since 28 percent mean occupancy was to much for the model to handle, the next simulation will try five percent less, i.e 23.
+It uses the same setup in all other regards so that the results can be compared.
+23 percent was chosen because it is far enough away from the first simulation to create a different result, without it being obvious whether the model will be able to handle it or not.
 
 \begin{figure}[h!]
 	\centering
-		\includegraphics[width=1.0\textwidth]{images/occupancy-28.png}
-		\caption{Results using a static pattern of occupancies.}
-		\label{fig:increasing-occ}
+		\includegraphics[width=0.9\textwidth]{images/23-occ.png}
+		\caption{Results from simulation using 23\% mean occupancy.}
+		\label{fig:23-occ}
 \end{figure}
 
-\subsubsection{2. 23\% Mean Occupancy}
-\subsubsection{3. 25\% Mean Occupancy}
-\subsubsection{4. Compression Factor}
+\paragraph{•}
+The graph in \ref{fig:23-occ} shows shifting buffer usage, varying between 100 and 1500 samples.
+However the graph shows that the model is able to read out the samples fast enough for the buffers not to overflow, always staying below the lowest of the suggested buffer sizes, 2k.
+On average the buffers stored 675 samples at any time.
+This is a number which is more then acceptable, and the simulation could most likely run forever and it would not matter.
+To confirm this, a simulation using 10 000 time frames was run (\ref{fig:10k-23-occ}, and the results back up what the smaller one showed.
+The results from it is compressed into a histogram over the occurrence of different buffer usage values.
+It shows that most of the time the buffer usage is around 300-600, with an average of 473.
+When running longer simulation it is only natural that it will shift more than the smaller ones, peaking at 2100 samples.
+This means that a maximum buffer size of 2k is probably to small, as it is surpassed multiple times during 10 000 time frames.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.9\textwidth]{images/10k-23-occ.png}
+		\caption{Results from running 10 000 time frames using 23\% mean occupancy.}
+		\label{fig:10k-23-occ}
+\end{figure}
+
+\paragraph{•}
+The results gathered here show two very important things.
+First of all it is clear that the model is able to level out the buffer usage when there is 23 percent occupancy, and it does so without any big spikes.
+Second, it shows that when using 100 time frames the results gives an over estimate of the average usage.
+When it ran for longer, it evened out to a smaller average, but with more and bigger spikes.
+Now that it is clear that 23 percent is manageable, the next step is to find out where the limit it.
+Given that 28 percent was to much, the limit is somewhere between 23 and 28 percent occupancy.
+
+\subsubsection{3. Finding the limit} %Results unclear...
+
+\paragraph{•}
+Since finding the occupancy limit requires simulations using 24 to 27 percent occupancy, a combined graph, comparing the development of the buffer usage over time.
+This will give a good overview of what happens both above and below the occupancy limit.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/24-27-occ.png}
+		\caption{Results from using 24-27 percent occupancy.}
+		\label{fig:24-27-occ}
+\end{figure}
+
+\paragraph{•}
+The graph in \ref{fig:24-27-occ} shows results from all four different simulations.
+The difference between 24 and 25 percent is not visibly seen, and it looks like they both are pretty stable over the course of 100 time frames.
+However the difference in average buffer usage is still 150 samples, where 24 has around 850 and 25 has 1000.
+1000 samples on average is starting to become high enough to cause issues with more time frames.
+In this particular simulation it may be stable and without any large spikes, but this can be because that the simulation received occupancy levels which had a narrow distribution.
+Another thing to note about the difference of 24 and 25 is that 24 has higher peaks then 25.
+The reason for this can be seen when looking at their respective occupancy levels over time.
+Even though the mean is one percent higher for 25, it has smaller range of values, and almost never gets multiple high occupancies in a row.
+24 percent has on the other hand a wide distribution, with multiple values over the mean in a row. 
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/occ-over-time.png}
+		\caption{Showing occupancy over time using 24 and 25 percent.}
+		\label{fig:occ-over-time}
+\end{figure}
+
+\paragraph{•}
+When looking at 26 percent mean occupancy it can already be established that this is to much.
+With a good distribution and lucky picking it can probably stay stable, but after a while the buffer usage will start to grow.
+Not shockingly, this is definitely the case for 27 percent, increasing in buffer usage almost as fast as 28 percent.
+
 \subsubsection{Evaluating the Results}
 
-\subsection{Black Events w/o Pileup}
+\paragraph{•}
+From all simulations ran using the normal distribution, a graph showing the \gls{zs} compression factor for every level of occupancy has been compiled.
+The compression factor is calculated by dividing maximum number of samples in a time frame with how many samples makes it though the \gls{zs}.
+From prior calculations it is concluded that a compression factor of 2.5 is necessary in order for the serial outs to read fast enough.
+If the compression factor of 2.5 is consistent with the occupancy limit found in the previous section, the results can be considered valid.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/comp-factor-results.png}
+		\caption{The compression factor over level of occupancy.}
+		\label{fig:comp-factor-results}
+\end{figure}
+
+\paragraph{•}
+The compression factor graph shows that is reaches 2.5 at around 25 percent occupancy, decreasing faster and faster, giving an exponential function.
+25 percent was exactly where the simulation model started to have trouble reading the data quickly enough, confirming that the results found where indeed valid.
+A conclusion regarding this is that a 4k maximum buffer size should be enough with average occupancy lower then 25 percent.
+This is only about three percent lower than the estimated average occupancy, and considering that the shape of the samples are as bad as possible for the \gls{zs} this is acceptable difference.
+
+
+\subsection{Black Events}
+
+\subsubsection{Preface}
+\paragraph{•}
+Using the black event dataset, the \gls{zs} and the Huffman encoding can be compared.
+A crucial difference between the two different compression schemes is that the \gls{zs} is applied before the samples are stored in the buffers, while the Huffman encoding is applied while reading out from the buffers.
+In other words, the \gls{zs} decreases the number of samples stored, while the Huffman effectively increases the readout speed by compressing each sample.
+For the Huffman encoding there are two things that can happen.
+Either it compresses the data enough that it manages to read the entire time frame before the next one is finished, which means that the buffer usage for every time frame will always be the size of an entire frame, i.e 1022 samples.
+The other case is that the compression isn't good enough, and the buffers will overflow.
+If the first case happens, then measuring the buffer usage seems pointless, therefore what is measured is the size of the time frame after compression.
+This will be the closest way of comparing the results from both compression schemes.
+Another thing that will be discussed is what difference black events with pileup will have in comparison to no pileup.
+
+
 \subsubsection{1. Zero Suppression}
+
+\paragraph{•}
+The focus when looking at the \gls{zs} on the black events, will be the resulting buffer usage and not the compression factor itself.
+The reasoning for this is that the \gls{zs} worst case has already been discussed.
+The first results, which are displayed in \ref{fig:blackevents-zs} are using black events w/o pileup.
+Results seems to show a rather low, and stable buffer usage, averaging out at about 330 samples, and peaking at 600 samples.
+Since the data is collected from RUN 1, they have slightly less occupancy then what is expected for RUN 3, but the it still has the most realistic shape available.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/blackevents-zs.png}
+		\caption{Results from Black events w/o pileup using Zero suppression.}
+		\label{fig:blackevents-zs}
+\end{figure}
+
+\paragraph{•}
+One of the reasons for creating pileup data is to increase the amount of real samples, which possible can give more interesting results then using plain black event data.
+Running the simulation with the pileup data did indeed create interesting results, which can be seen in \ref{fig:blackevents-pileup-zs}.
+As the previous results it stayed at around the same level during the entire simulation, but one can clearly see the increase in overall occupancy.
+The pileup results peaked about 200 samples higher, and had an average of about 100 samples more.
+Even though it is still manageable, it is clear that pileup has a real effect on the buffer usage when using \gls{zs}.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/blackevents-pileup-zs.png}
+		\caption{Results from Black events with pileup using Zero suppression.}
+		\label{fig:blackevents-pileup-zs}
+\end{figure}
+
 \subsubsection{2. Huffman Encoding}
+
+\paragraph{•}
+Now the same two simulations as before can be ran using the Huffman encoding instead of the \gls{zs}.
+The expectation for the Huffman results is that the pileup should have less of an effect on the outcome, then when using \gls{zs}.
+This is because that occupancy doesn't play as big of a role for Huffman, but instead the distribution of the sample values is what's important.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.9\textwidth]{images/blackevents-huffman.png}
+		\caption{Results from Black events w/o pileup, using Huffman encoding.}
+		\label{fig:blackevents-huffman}
+\end{figure}
+
+\paragraph{•}
+The normal black event data was compressed enough for the serial outs to be able to read fast enough, therefore the buffer usage never surpassed the size of one full time frame.
+In \ref{fig:blackevents-huffman} the compressed size of each time frame can be seen.
+The graph shows that in most cases the Huffman encoding is able to compress the time frame to about 1/5 the original size, i.e a compression factor of four.
+A full overview over the compression factors during the simulation is displayed as a histogram in \ref{fig:compression-factor-huffman}.
+The factor goes down as low as 3.2, but on the other hand reaches as high as 4.95.
+This isn't only more then the 2.5 that is needed, but also higher then what was expected of it.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/compression-factor-huffman.png}
+		\caption{Compression factor of Huffman on normal black events.}
+		\label{fig:compression-factor-huffman}
+\end{figure}
+
+\paragraph{•}
+The pileup results showed a definite decrease in the compression factor.
+Reasons being that now that samples have been piled on top of each other, the difference between neighbouring samples is bigger, which results in a worse Huffman table.
+Even so, the decrease was more then expected, only getting an average compression factor of three.
+The factor varies between 2.6 and 3.5, which is still decent enough for the model to handle.
+The compressed size of each time frame is now on average 100 words more then the normal black events.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/compression-factor-huffman.png}
+		\caption{Results from Black events with pileup using Huffman encoding.}
+		\label{fig:compression-factor-huffman}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/compression-factor-huffman.png}
+		\caption{Compression factor of Huffman on piled up black events.}
+		\label{fig:compression-factor-huffman}
+\end{figure}
+
 \subsubsection{Evaluating the Results}
+
+\paragraph{•}
+Comparing the results when using \gls{zs} to using Huffman encoding ended up being harder then expected.
+This is because of the difference in how they compress the data, one being applied before storing, and one after.
+However there are multiple things to take away from these results.
+For all of the scenarios, the buffers never came close to being full.
+It seems that for the black event dataset, the Huffman is able to perform better then \gls{zs}, but only by a small margin.
+Huffman had a decrease in performance then \gls{zs} when comparing normal black events, and pileup.
+It can be argued that this is because the Huffman has a best case scenario, seeing as it uses the best possible Huffman table.
+There is a significant difference between normal and pileup data, but not enough to be an issue.
+
+\paragraph{•}
+There was no way to see how the model behaved when Huffman didn't compress good enough, this is hopefully something that will be seen when trying the synthetic data made for RUN 3.
+
 
 \subsection{Synthetic Data for RUN 3}
+\subsubsection{Preface}
+\paragraph{•}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, scelerisque et urna quis, volutpat dapibus massa. Vivamus consequat ante eu metus lobortis vestibulum. Cras laoreet nisl quam, et rhoncus quam efficitur ac. Etiam at suscipit felis. Maecenas aliquet nibh sit amet ultrices placerat. Pellentesque lobortis ultricies nunc, consectetur pharetra leo sollicitudin id. Maecenas varius rhoncus posuere. Sed euismod molestie ante eu malesuada. Ut sem eros, viverra ut iaculis a, cursus id libero. Proin egestas pulvinar volutpat. Morbi ac eleifend lectus, in suscipit augue.
+
+
 \subsubsection{1. Zero Suppression}
+
+\paragraph{•}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, scelerisque et urna quis, volutpat dapibus massa. Vivamus consequat ante eu metus lobortis vestibulum. Cras laoreet nisl quam, et rhoncus quam efficitur ac. Etiam at suscipit felis. Maecenas aliquet nibh sit amet ultrices placerat. Pellentesque lobortis ultricies nunc, consectetur pharetra leo sollicitudin id. Maecenas varius rhoncus posuere. Sed euismod molestie ante eu malesuada. Ut sem eros, viverra ut iaculis a, cursus id libero. Proin egestas pulvinar volutpat. Morbi ac eleifend lectus, in suscipit augue.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/bufferuse-one-channel-fake-pileup.png}
+		\caption{Results from using \gls{zs} on synthetic data.}
+		\label{fig:synthetic-zs}
+\end{figure}
+
+\paragraph{•}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, scelerisque et urna quis, volutpat dapibus massa. Vivamus consequat ante eu metus lobortis vestibulum. Cras laoreet nisl quam, et rhoncus quam efficitur ac. Etiam at suscipit felis. Maecenas aliquet nibh sit amet ultrices placerat. Pellentesque lobortis ultricies nunc, consectetur pharetra leo sollicitudin id. Maecenas varius rhoncus posuere. Sed euismod molestie ante eu malesuada. Ut sem eros, viverra ut iaculis a, cursus id libero. Proin egestas pulvinar volutpat. Morbi ac eleifend lectus, in suscipit augue.
+
+
 \subsubsection{2. Huffman Encoding}
+
+\paragraph{•}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, scelerisque et urna quis, volutpat dapibus massa. Vivamus consequat ante eu metus lobortis vestibulum. Cras laoreet nisl quam, et rhoncus quam efficitur ac. Etiam at suscipit felis. Maecenas aliquet nibh sit amet ultrices placerat. Pellentesque lobortis ultricies nunc, consectetur pharetra leo sollicitudin id. Maecenas varius rhoncus posuere. Sed euismod molestie ante eu malesuada. Ut sem eros, viverra ut iaculis a, cursus id libero. Proin egestas pulvinar volutpat. Morbi ac eleifend lectus, in suscipit augue.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/huffman-fake-pileup.png}
+		\caption{Results from using Huffman encoding on synthetic data.}
+		\label{fig:synthetic-huffman}
+\end{figure}
+
+\paragraph{•}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, scelerisque et urna quis, volutpat dapibus massa. Vivamus consequat ante eu metus lobortis vestibulum. Cras laoreet nisl quam, et rhoncus quam efficitur ac. Etiam at suscipit felis. Maecenas aliquet nibh sit amet ultrices placerat. Pellentesque lobortis ultricies nunc, consectetur pharetra leo sollicitudin id. Maecenas varius rhoncus posuere. Sed euismod molestie ante eu malesuada. Ut sem eros, viverra ut iaculis a, cursus id libero. Proin egestas pulvinar volutpat. Morbi ac eleifend lectus, in suscipit augue.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/huffman-comp-fake-pileup.png}
+		\caption{Compression factor of using Huffman encoding on synthetic data.}
+		\label{fig:compression-factor-huffman-synt}
+\end{figure}
+
 \subsubsection{Evaluating the Results}
 
-\subsection{Black Events with Pileup}
-\subsubsection{1. Zero Suppression}
-\subsubsection{2. Huffman Encoding}
-\subsubsection{Evaluating the Results}
+\paragraph{•}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, scelerisque et urna quis, volutpat dapibus massa. Vivamus consequat ante eu metus lobortis vestibulum. Cras laoreet nisl quam, et rhoncus quam efficitur ac. Etiam at suscipit felis. Maecenas aliquet nibh sit amet ultrices placerat. Pellentesque lobortis ultricies nunc, consectetur pharetra leo sollicitudin id. Maecenas varius rhoncus posuere. Sed euismod molestie ante eu malesuada. Ut sem eros, viverra ut iaculis a, cursus id libero. Proin egestas pulvinar volutpat. Morbi ac eleifend lectus, in suscipit augue.
 
 
 \chapter{Conclusion and Future work}
