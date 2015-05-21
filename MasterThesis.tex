@@ -8,7 +8,7 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-\documentclass[a4paper, 12pt]{report}
+\documentclass[a4paper, 12pt]{report}\dfrac{\right }{•}
 \usepackage{helvet}
 \usepackage[toc,page]{appendix}
 \usepackage[toc,acronym,nomain]{glossaries}
@@ -176,7 +176,7 @@ Håvard Helstrup, Johan Alme, Dieter, Arild, Christian, (Damian).
 \label{sec:motivation}
 \paragraph{•}
 The \gls{lhc} at the \gls{cern} is the world's largest particle accelerator, hosting multiple ongoing experiments.
-After a run period of more than 3 years, the \gls{lhc} will be shut down from 2018 until 2021.\cite{ls2}
+After a run period of more than 3 years, the \gls{lhc} will be shut down from 2018 until 2021\cite{ls2}.
 The purpose of this shutdown is to do maintenance on various equipment in the \gls{lhc}, as well as significant upgrades to the different detectors, one of which is the detector for the \gls{alice}.
 \gls{alice} consists of multiple sub-detectors, which combined collect an enormous amount of data.
 This amount is expected to increase after the shutdown period as the interaction rate of the \gls{lhc} will increase.
@@ -207,7 +207,7 @@ Given the motivation and introduction given in section \ref{sec:motivation} the 
 Is it possible to design and implement a simulation which directly represent the readout electronics, and in doing so will it have an optimizing effect?
 
 \paragraph{•}
-Further explained, the main tasks of this thesis will be to create a computer model of the readout electronics main components, and run multiple simulations on it.
+Further explained, the main tasks of this thesis will be to create a computer model of the main components of the readout electronics, and run multiple simulations on it.
 Experimenting with different configurations in order to find bottlenecks, faulty design or areas of improvement.
 The experiments should be logged, and the results will be presented in an organized fashion.
 
@@ -241,8 +241,8 @@ Currently the biggest project at \gls{cern} is the \gls{lhc} particle accelerato
 Starting up on 10 September 2008, \gls{lhc} is the latest construct added to \gls{cern}'s particle accelerator complex\cite{lhc}.
 It consist of a 27 kilometer underground ring of superconducting magnets which boost the energy of the particles travelling inside the collider.
 The collider contains two adjacent parallel high-energy particle beams.
-These beams consist of protons extracted from standard hydrogen atoms by stripping them of electrons.
-Along the collider ring there are four intersection points where collisions occur.
+These beams consist of protons extracted from hydrogen atoms by stripping them of electrons.
+Along the collider there are four intersection points where collisions occur.
 Each point corresponds to the location of a particle detector - ATLAS, \gls{alice}, CMS and LHCb.
 The particle detectors are each built and operated by large collaborations, with thousands of scientists from different institutes around the world.
 The beams travel at close to the speed of light and are guided by magnetic fields, which are created and maintained by superconducting electromagnets.
@@ -265,15 +265,15 @@ This leads to a huge amount of data for each of the detectors to read out.
 The high amount of data per collision is produced primarily by the \gls{tpc} sub-detector, which records a high number of points per track, and has a low momentum threshold. Detectors like ATLAS and CMS  are designed with a higher momentum threshold, but can cope with significantly higher collision rates than ALICE.
 ALICE is designed for the study of heavy ion reactions, where particle correlations at low momentum is an important measure.
 The number of tracks correlating with momentum is exponentially declining.
-This means that a lot of tracks which doesn't get registered in ATLAS, produces data in \gls{alice}.
+This means that a lot of tracks which do not get registered in ATLAS, produce data in \gls{alice}.
 
 \section{ALICE}
 \subsection{Introduction}
 
 \paragraph{•}
 \gls{alice} is designed as a heavy-ion detector, which means it studies collisions between heavy nuclei of high energy\cite{alice-home}.
-The experiments is run with two different particle collision systems, lead-lead(Pb-Pb) and lead-proton(Pb-p)
-Both systems produce a extreme amount of temperature and density.
+The experiments are run with two different particle collision systems, lead-lead(Pb-Pb) and lead-proton(Pb-p)
+Both systems produce an extreme amount of temperature and density.
 They produce different, but equally interesting results.
 Pb-Pb collisions create Hot Nuclear Matter, while Pb-p create Cold Nuclear Matter.
 The explanations for these types of matter is beyond the scope of this thesis and will not be discussed further.
@@ -281,7 +281,7 @@ The high temperature and density is necessary to produce a phase of matter calle
 
 \subsection{Quark-gluon plasma}
 \paragraph{•}
-Shortly after the Big Bang, the universe was filled with a extremely hot cluster of all kinds of different particles moving around at near the speed of light\cite{alice-physics}.
+Shortly after the Big Bang, the universe was filled with an extremely hot cluster of all kinds of different particles moving around at near the speed of light\cite{alice-physics}.
 Most of these particles were quarks, fundamental building blocks for matter, and gluons which ties quarks together in order to form heavier particles.
 Normally quarks and gluons are very strictly tied together, but in the conditions of extreme temperature and density as in the time shortly after the Big Bang, they are allowed to move freely in an extended volume called quark-gluon plasma.
 The existence of quark-gluon plasma and its properties is one of the key issues in \gls{qcd}.
@@ -370,7 +370,7 @@ Chapter~\ref{cha:4} will go into more detail about the readout electronics in th
 \end{figure}
 
 \chapter{Simulations}
-
+\label{cha:3}
 \textit{SystemC, Starting design of the simulation, plans for implementation and test runs}
 
 \section{Simulation Theory}
@@ -424,7 +424,7 @@ This makes it easy to separate concerns between the different models in your sim
 \paragraph{•}
 When simulating a hardware system there is a couple of key points to be aware of, firstly you need to be able to handle hardware timing, clock cycles, and synchronisation.
 One of the benefits of \gls{sc} is that it takes care of all of this, again taking advantage of the object-oriented nature of \gls{cpp} to extend its capabilities through \codeword{classes}.
-Here is some of the other features \gls{sc} provides, with emphasis on the ones needed to understand code snippets shown in this thesis.
+Here are some of the other features \gls{sc} provides, with emphasis on the ones needed to understand code snippets shown in this thesis.
 
 \paragraph{•}
 \begin{itemize}
@@ -502,7 +502,7 @@ There are benefits and drawbacks for both ways, but sticking to a high abstracti
 \label{cha:4}
 
 \paragraph{}
-The previous chapters has briefly introduced the problems of this thesis, relevant background information and looked at tools and the method of solving them.
+The previous chapters have briefly introduced the problems of this thesis, relevant background information and looked at tools and the method of solving them.
 Essentially it boils down to creating a model based on the schematic of the \gls{tpc} readout electronics, run multiple simulations, testing different parameters for the involved components.
 Until now there has only been an introduction level description of the different components that is being included in the simulation model.
 This chapter will go deeper into them, giving detailed information about their design parameters, and how the \gls{alice} experiment data is handled by them.
@@ -528,7 +528,7 @@ The next sections will go into details about the more important components.
 \paragraph{}
 The \gls{sampa} \gls{asic} is based on the work from its predecessor, the \gls{altro}.
 Just like the \gls{altro} it will be the first step for signals being tracked in the \gls{tpc} detector.
-The signals will be processed, compressed, digitized, and temporarily stored in the \glspl{sampa} memory before it is passed along.
+The signals will be processed, compressed, digitized, and temporarily stored in the \glspl{sampa} memory before they are passed along.
 The \gls{sampa} has 32 integrated channels, which separately and asynchronously process the analog signals coming from the detector\cite{tdr-016}.
 Each channel has a readout speed of 10 bit on a 10 MHz clock, which combined results in 3.2 Gbit/s.
 The channels also have their own \gls{fifo} buffer memory where signals coming in are stored as they wait to be sent along.
@@ -631,7 +631,7 @@ What has been used with the current setup and is also discussed to use in in the
 \label{subsec:zs}
 
 \paragraph{}
-\gls{zs} is the process of removing insignificant values below a set threshold or baseline.\cite{zerosuppression}.
+\gls{zs} is the process of removing insignificant values below a set threshold or baseline\cite{zerosuppression}.
 Applying this in order to remove the background noise without discarding any important samples, a baseline for the \gls{zs} must be established.
 The problem with this is that the baseline may shift, in the case of our 2 example time frames the first one has a visibly lower baseline by 1 or 2.
 In the upgrade plans described in \cite{tdr-015}, it is specified how the signal processing will take place.
@@ -647,7 +647,7 @@ The difference is displayed in \ref{fig:minseq}.
 \end{figure}
 
 \paragraph{•}
-Because of the fact that \gls{zs} removes signals from various places in a time frame, the data losses its temporal positioning.
+Because of the fact that \gls{zs} removes signals from various places in a time frame, the data looses its temporal positioning.
 Therefore every real pulse must be tagged with a time stamp and a word representing the number of words in the pulse.
 Since for every pulse we add two words, if two consecutive pulses are closer than three words they are merged and counted as one (\ref{fig:merge}).
 
@@ -671,7 +671,7 @@ One proposed method is to use Huffman coding on the signal values.
 Huffman is a method used to achieve data compression\cite{huffman}.
 It works by assigning binary codes to symbols in order to reduce the number of bits used to encode the symbol.
 By looking at the frequency of appearance for every symbol used one can produce a frequency table sorted by most frequent.
-One thing to note is that since the binary codes is of variable length, they may not all be uniquely decipherable.
+One thing to note is that since the binary codes are of variable length, they may not all be uniquely decipherable.
 For instance, if the codewords looks like the following: \codeword{\{0,01,11,001\}}, the code \codeword{0} is a prefix to \codeword{001}.
 This is solved by using the right data structure to store the codes, the one most used is a \textit{full} \gls{bt}.
 A \textit{full} \gls{bt} is a tree where every node either has zero or two child nodes.
@@ -707,7 +707,6 @@ Creating the Huffman tree can be implemented using the following pseudo-code alg
 \end{figure}
 
 \paragraph{}
-\textit{Need to have Dieter look over this paragraph}
 In the context of compressing data coming from the detector there is one particular foreseen complication.
 First of all, generating the Huffman tree needs values from the detector, so how do one create a tree with high compression factor without knowing this?
 One answer to this is to generate a tree using existing data from previous experiments, but update the tree when receiving new data.
@@ -772,7 +771,7 @@ Working like this will result in a large period with no speakable results, but t
 
 \paragraph{•}
 As the focus of study in this project, the implementation of the \gls{sampa} module is the most important piece to the simulation.
-The overall structure to the \gls{sampa} consists of 32 channels, with a input port for each channel, and in total 4 serial outputs which reads data from the channel buffers.
+The overall structure to the \gls{sampa} consists of 32 channels, with an input port for each channel, and in total 4 serial outputs which reads data from the channel buffers.
 There are a couple of things to think about when translating this design into code.
 
 \begin{enumerate}
@@ -789,7 +788,7 @@ There are a couple of things to think about when translating this design into co
 		\begin{itemize}
 \item When choosing a data structure one need to think about what the purpose of it is, what operations are being done on it, and so forth.
 		The essential attributes the structure must have are: \textit{Insert} items to the back, \textit{Read/Remove} items from the front, dynamical storage space, and the structure should be a linear one-dimensional sequential storage.
-		On first glance using a \gls{fifo} like structure sounds like the best way to go.
+		At first glance using a \gls{fifo} like structure sounds like the best way to go.
 		However in addition to the essential attributes it may be needed to be able to remove and read from the back of the buffer.
 		This is important, as it allows the system to grab statistical data from the buffer, and read operations won't have any impact on the simulation result, but instead can make the buffers more versatile.
 		\gls{cpp} has many different data structures to choose from, all depending on the need for it.		
@@ -833,16 +832,16 @@ Size of container & O(1) & O(1) & O(1) & Constant time for all containers.\\
 \label{tab:ds}
 \end{table}
 
-\paragraph{•}%OBS! Reference book here.
+\paragraph{•}
 The setup for the \gls{sampa} uses a single thread for receiving signals, and four individual threads which represents the serial outs.
 It also stores the channel header and data buffers in two separate arrays, declaring input ports, and the output eLinks.
-Lets look at how the implementation for receiving signals can look like.
+Let's look at how the implementation for receiving signals can look like.
 In listing~\ref{lst:sampa1.2} the thread logic is implemented, and already some weaknesses with the \gls{sampa} module becomes clear.
 Having to iterate over every channel every timebin can become costly and hard to maintain when the code becomes more complex.
 In the code shown there is already a flaw, if one of the channel buffers has \codeword{overflow}, none of the other buffers will receive data.
-The \codeword{overflow} variable needs to be stored as a array to be able to know what channel it represented.
+The \codeword{overflow} variable needs to be stored as an array to be able to know what channel it represented.
 The same problem will occur for every other variable that is unique for each channel.
-A principle of \gls{oop} is single-responsibility, meaning that every class/object should be responsibly for one piece of functionality.
+A principle of \gls{oop} is single-responsibility, meaning that every class/object should be responsibly for one piece of functionality\cite{martin2011agile}.
 One solution to the previous problem following this principle can be to create a \codeword{Channel} sub-module inside of the \gls{sampa} module.
 The \codeword{Channel} module will contain logic for receiving signals, as this happens for every channel, while the \gls{sampa} will contain the serial outs, which are accessing data from the buffers.
 
@@ -851,7 +850,7 @@ The \codeword{Channel} module will contain logic for receiving signals, as this 
 \end{minipage}
 
 \paragraph{•}
-The corrected overall structure for the \gls{sampa}, and the new \codeword{Channel} module is shown in \ref{cha:app-code}.
+The corrected overall structure for the \gls{sampa}, and the new \codeword{Channel} module is shown in Appendix~\ref{cha:app-code}.
 As seen there the \gls{sampa} now has an array of \codeword{Channel} modules, a new method called \codeword{initChannel()} that initiate the channels, and connects them to the correct input port.
 The \codeword{Channel} module now has the \codeword{receiveData()} thread, and its own data/header buffer.
 Having it structured like this makes it possible to add \codeword{Channel} specific variables or methods, without disturbing the \gls{sampa} as a whole.
@@ -867,7 +866,7 @@ It continuously receives samples and adds them to the buffer, unless the buffer 
 The implementation of reading from the buffer is somewhat more complicated than receiving data.
 This is because the real reading procedure is more complex in itself.
 In listing~\ref{lst:read-buffers} the most important parts of the code implementation is shown.
-The procedure loops through the eight channels for the given serial out, getting the correct channel, and reading out the entire timeframe.
+The procedure loops through the eight channels for the given serial out, getting the correct channel, and reading out the entire time frame.
 This procedure is ran for all four serial out threads at the same time.
 One thing to notice here is that the actual data from the buffers aren't passed along further.
 This is because we only care about the time it takes to transfer them, which is being calculated in the \codeword{wait} statement.
@@ -882,9 +881,9 @@ The header packet is sent as it contains important information which can be usef
 
 \paragraph{•} 
 Now that the input channels, and the serial outs are in place, the data processing can be implemented.
-The \gls{zs} occurs before the samples are added to the channel buffers, so the correct place to put it in the simulation will be in the \codeword{Channel} modules \codeword{receiveData()} method.
+The \gls{zs} occurs before the samples are added to the channel buffers, so the correct place to put it in the simulation will be in the \codeword{Channel} module's \codeword{receiveData()} method.
 Since this is a piece of code which needs to be turned off and on, the implementation is done in its own method called \codeword{zeroSuppress}.
-The method needs the current sample, the last received sample, and some meta-data about the current behaviour of the timeframe.
+The method needs the current sample, the last received sample, and some meta-data about the current behaviour of the time frame.
 The rules for the \gls{zs} is described in detail in section~\ref{subsec:zs}, therefore this section will only look at the implementation.
 
 \paragraph{•}
@@ -897,7 +896,7 @@ In code this translates to four different conditional statements, in this case t
 \end{minipage}
 
 \paragraph{•}
-When both of the two last samples are over the threshold, the algorithm knows for sure that a valid cluster is found, and marks it as such.
+When both of the two last samples are over the threshold, the algorithm knows for sure that a valid cluster are found, and marks it as such.
 If the current sample is valid, but the last is not, then it isn't clear if the sample is part of a valid cluster, so it is added to the buffer, but marked as invalid for now.
 If the last two samples where both invalid, it means that either they are just part of some noise, they can be a part of the last valid cluster, or if the next sample is part of a cluster, they can be merged together, forming a single cluster.
 Most of the time the last condition will be very straight forward, but there exists one edge case which makes it more complicated to implement.
@@ -925,7 +924,7 @@ Since the code was implemented in its own method, all the change needed in the \
 
 \paragraph{•}
 Huffman is a well known, and widely used algorithm.
-Because of this, there are multiple providers which has made there implementation available online for people to use.
+Because of this, there are multiple providers which has made the implementation available online for people to use.
 The Huffman code used in the simulation is based on code provided by Rosetta Code, licensed under GNU Free Documentation License 1.2\cite{rosetta}\cite{gnu}.
 The code is modified slightly to suit the requirements of the simulation program.
 In addition methods for writing a full Huffman tree to a file, as well as reading a tree from a source file is implemented.
@@ -933,11 +932,11 @@ In addition methods for writing a full Huffman tree to a file, as well as readin
 \paragraph{•}
 The simulation will only be able to use the Huffman encoding when it uses realistic data, i.e where the samples have realistic values.
 Only when there is a wide spectre of different values can the simulation determine an accurate compression factor.
-There are two different sets of realistic data available for use, and they are gone into more detail in section~\ref{subsubsec:real-data}.
+There are two different sets of realistic data available for use, and they are described in more detail in section~\ref{subsubsec:real-data}.
 The Huffman tree will be created directly from the dataset that is used, and saved to a file so that it can be used to decode the samples later on.
 Creating the tree in such a manner means that it gets the optimal compression possible.
 In the real world a perfect compression is not plausible as signals coming from the detector will continuously change, and it doesn't contain a steady pattern.
-Even though using the optimal compression in the simulation doesn't give us the worst case, it can still establish a base estimate that is within reason.
+Even though using the optimal compression in the simulation doesn't give us the worst case, it can still establish a base estimate that is reasonable.
 
 \subsection{The DataGenerator module}
 \paragraph{•}
@@ -954,22 +953,25 @@ In order for this to be efficient, the module needs to be easily extended, witho
 Sending samples should follow the specifications for the actual hardware, emulating the connection between the readout chambers and the \gls{sampa} asic.
 That includes the clock frequency and making sure every channel receives data asynchronously.
 
-\subsubsection{Basic data generating functions??}
+\subsubsection{Basic data generating functions}
 
 \paragraph{•}
-Achieving the same format for every simulation sample is done by using a custom class which the link between the data generator and the \codeword{Channels} are expecting as input.
+Achieving the same format for every simulation sample is done by using a custom class which forms the link between the data generator and what the \codeword{Channels} are expecting as input.
 This means that every time the data generator sends a signal it uses this class.
 The format of the \codeword{Sample} class is discussed and shown in section~\ref{subsec:signal-classes}.
 Creating a single function that has the core functionality of data generator, which all simulation scenarios used as base could have been a good way to remove some of the boilerplate code needed, but without knowing all types of simulations from the start this could lead to unwanted restrictions later on.
 Because of this, for every different way of creating/distributing data, there is a completely different function.
-The benefits of implementing it like this is that the functions doesn't depend on each other and can be separately updated or improved, which allows for easier development as the module becomes larger and more complex.
+The benefits of implementing it like this is that the functions does not depend on each other and can be separately updated or improved, which allows for easier development as the module becomes larger and more complex.
 
 \paragraph{•} 
 To be able to quickly switch between different functions when running a different simulation, the module contains only a single \gls{sc} thread, where it is possible to choose the correct function based on the simulation type.
-The \codeword{sink\_tread()} function can be seen in \ref{lst:sink-thread}.
-The testbench is explained in section~\ref{subsec:testbench}, but one of its purposes is storing global variables which are used around the different modules.
-One example of such a variable is shown in \ref{lst:sink-thread} with the use of the \codeword{DG\_SIMULATION\_TYPE} variable.
-The different functions for distributing data is also shown.
+The \codeword{sink\_tread()} function can be seen in listing~\ref{lst:sink-thread}.
+In listing~\ref{lst:sink-thread} the variable \codeword{DG\_SIMULATION\_TYPE} is used.
+This variable is stored in what is referred to as the simulation testbench.
+Throughout the following code listings many variables from the testbench will be used.
+In short the testbench is a \codeword{class} which defines a global \codeword{namespace} where every shared variable or property for all modules part of the simulation is stored.
+The testbench makes it very easy to run multiple different simulations in quick succession.
+In most cases this will be the only file which is modified in between simulations, only changing the properties the simulation uses.
 
 \begin{minipage}{\linewidth}
 \lstinputlisting[caption=Data generator SystemC thread.,firstline=1,lastline=13,label=lst:sink-thread]{codelistings/dg.cpp}
@@ -977,28 +979,28 @@ The different functions for distributing data is also shown.
 
 \paragraph{•}
 They have been implemented one by one in different stages of the development phase.
-The first three: \codeword{standardSink()}, \codeword{incrementingOccupancySink()}, and \codeword{alternatingOccupancySink()} are functions created in the early stages, before there was any need to implement compression schemes in the simulation model.
+The first three: \textit{standardSink()}, \textit{incrementingOccupancySink()}, and \textit{alternatingOccupancySink()} are functions created in the early stages, before there was any need to implement compression schemes in the simulation model.
 They all assume that the data being generated are already compressed, and can be sent through the simulation without any data processing.
 The shear amount of samples is the important factor with these functions, relying on a flat occupancy value to determine if a sample is sent.
 The chosen occupancy(specified as percent(0-100)) is compared against a number generated by a \gls{rng}.
 If the number is lower then the occupancy the sample is sent, else it will send an empty sample instead.
 In other words, a sample is sent a fixed percent of the time, specified by the occupancy.
-The \codeword{standardSink()} implementation is shown in \ref{lst:standard-sink}.
+The \textit{standardSink()} implementation is shown in listing~\ref{lst:standard-sink}.
 The double loop seen here is just about the same for all the five functions, where the outer one counts the number of time frames and the inner goes through all \gls{sampa} channels present.
 The wait statement is called after the inner loop, which is equivalent to sending samples to all channels in the same clock cycle.
 This function is a good starting point in order to test the rest of the simulation model, and to verify that the model can be trusted.
-Since it relays on a flat occupancy it is expected that most channels will get similar data, and there will be little to no fluctuations.
-Real experiment data will not be as flat, and the occupancy will differ from timeframe to timeframe.
+Since it relies on a flat occupancy it is expected that most channels will get similar data, and there will be little to no fluctuations.
+Real experiment data will not be as flat, and the occupancy will differ from time frame to time frame.
 
 \begin{minipage}{\linewidth}
 \lstinputlisting[caption=Data generator SystemC thread.,firstline=15,lastline=37,label=lst:standard-sink]{codelistings/dg.cpp}
 \end{minipage}
 
 \paragraph{•}
-The limitations of the \codeword{standardSink()} function was the motivation behind the \codeword{incrementingOccupancySink()} and the \codeword{alternatingOccupancySink()}.
+The limitations of the \textit{standardSink()} function was the motivation behind the \textit{incrementingOccupancySink()} and the \textit{alternatingOccupancySink()}.
 As their names suggest they implement more diversity into the simulation with the ability to increase, or alternate the data occupancy as time goes.
 This creates more possibilities to test the limits of the model, especially the \gls{sampa} buffers.
-The code for these functions is similar to the \codeword{standardSink()}, and the differences is shown in \ref{lst:sink-diff1} and \ref{lst:sink-diff2}.
+The code for these functions is similar to the \textit{standardSink()}, and the differences is shown in listing~\ref{lst:sink-diff1} and listing~\ref{lst:sink-diff2}.
 
 \begin{minipage}{\linewidth}
 \lstinputlisting[caption=Difference between standardSink() and incrementingOccupancySink() functions.,firstline=1,lastline=17,label=lst:sink-diff1]{codelistings/dg-diff.cpp}
@@ -1006,19 +1008,19 @@ The code for these functions is similar to the \codeword{standardSink()}, and th
 \end{minipage}
 
 \paragraph{•} 
-The \codeword{incrementingOccupancy()} will provide initial results on how much occupancy the system will be able to handle, while the \codeword{alternatingOccupancySing()} will test its ability to handle various amount of data distributed over time.
-This is an improvement from the \codeword{standardSink()}, but the functions does still not care about how the data is shaped or distributed inside a timeframe.
+The \textit{incrementingOccupancy()} will provide initial results on how much occupancy the system will be able to handle, while the \textit{alternatingOccupancySing()} will test its ability to handle various amount of data distributed over time.
+This is an improvement from the \textit{standardSink()}, but the functions do still not care about how the data is shaped or distributed inside a time frame.
 To get more accurate results from the simulation there is a need for data which more closely resembles actual experiment data.
 The implementation so far doesn't worry about the value of the samples, but the values are required in order to test \gls{zs} and Huffman encoding.
 
 \subsubsection{Creating Normally distributed samples}
 \label{subsubsec:normal-distribution}
 \paragraph{•}
-Measured occupancies gathered from experiment events recorded in 2010 provides a graph of expected average occupancies within a timeframe.
+Measured occupancies gathered from experimental events recorded in 2010 provides a graph of expected average occupancies within a time frame.
 This is shown in \ref{fig:expected-occupancy}, where the x axis is the position of a pad row on the actual detector.
 The closer to origin, the closer to the center of the detector.
 The pads closer to the center has generally higher occupancy than the outer ones, which makes them the worst case, and the most interesting for use in the simulation.
-\ref{fig:expected-occupancy} shows that the average occupancy for the inner pads is 28\%, but can reach 44\%, or with a high multiplicity as high as 74\%.
+\ref{fig:expected-occupancy} shows that the average occupancy for the inner pads is 28\%, but it can reach 44\%, or with a high multiplicity as high as 74\%.
 The chance of reaching a multiplicity equal to 44\% occupancy is 10\%, while only 1\% chance to reach 75\%.
 Based on this a normal distribution of occupancies can be created for a more realistic simulation.
 A normal distribution is a mathematical/statistical distribution of values which depend on a central value (the mean value) and a stretch factor (the standard deviation)\cite{normal-dist}.
@@ -1043,14 +1045,14 @@ An example of a normal distribution is shown in \ref{fig:normal-dist}
 \paragraph{•}
 Using a normally distributed \gls{rng}, a set of occupancy values can be created.
 For every new time frame in the simulation, a random value from the set is picked as the current occupancy.
-The size of the set is determined by the number of timeframes in the simulation.
+The size of the set is determined by the number of time frames in the simulation.
 The mean value for the distribution is already known being 28\%, but the standard deviation is not obvious and needs to be calculated.
 Using the statistics given in \ref{fig:expected-occupancy} the deviation can be calculated.
 In a set $x$ of 100 values, 1 value will be 74, 10 will be 44 and the rest will on average be 28.
-First of the \textit{varians} must be calculated by the following formula:
+First of the \textit{variance} must be calculated by the following formula:
 $ \frac{\sum_{i=1}^{100} (x_i - mean)^2}{100}$
-Take the square root of the \textit{varians} and the result is the standard deviation.
-How this is implemented programmatically is shown in \ref{lst:standard-deviation} along with creating the final set of occupancies.
+Take the square root of the \textit{variance} and the result is the standard deviation.
+How this is implemented programmatically is shown in listing~\ref{lst:standard-deviation} along with creating the final set of occupancies.
 
 \paragraph{•}
 \begin{minipage}{\linewidth}
@@ -1073,16 +1075,16 @@ The difference by increasing the deviation is shown in \ref{fig:distribution}.
 \paragraph{•}
 To be able to test the \gls{zs} the samples need to have a shape which allows for this.
 The \gls{zs} works best with data where the peaks are wider, but further apart from each other.
-So to test it in its worst case the samples within a timeframe needs to have as many peaks as possible, split evenly over it.
-A peak will be of width 3, and the occupancy for the timeframe determines the space between two peaks.
+So to test it in its worst case the samples the time frame need to have as many peaks as possible, split evenly over it.
+A peak will be of width 3, and the occupancy for the time frame determines the space between two peaks.
 An example using 28\% occupancy is displayed in \ref{fig:normal-data-shape}.
 Even though the data still doesn't look like the real thing, in the case of testing the \gls{zs} it should sufficient since it only cares if the sample value is zero or above.
 
 \paragraph{•}
 A process for determining the space between each peak is the next thing to look at.
-The space can be calculated by first finding the number of samples with value 0, and divide it by the number of peaks in the timeframe.
-Since both the occupancy and the number of samples in a timeframe is know, the math becomes very straight forward.
-The solution used is shown in \ref{lst:calc-space}.
+The space can be calculated by first finding the number of samples with value 0, and divide it by the number of peaks in the time frame.
+Since both the occupancy and the number of samples in a time frame is known, the math becomes very straight forward.
+The solution used is shown in listing~\ref{lst:calc-space}.
 
 \begin{figure}[h!]
 	\centering
@@ -1093,12 +1095,12 @@ The solution used is shown in \ref{lst:calc-space}.
 
 \paragraph{•}
 \begin{minipage}{\linewidth}
-\lstinputlisting[caption=Calculating the space between two peaks in a timeframe.,firstline=64,lastline=70,label=lst:calc-space]{codelistings/dg.cpp}
+\lstinputlisting[caption=Calculating the space between two peaks in a time frame.,firstline=64,lastline=70,label=lst:calc-space]{codelistings/dg.cpp}
 \end{minipage}
 
 \paragraph{•}
 With a completed set of occupancies and the necessary functions to help shape the data the only thing left is to implement the sink function.
-It uses the same loop structure as the three previous sink functions, but in addition before every new timeframe it picks the next occupancy from the set.
+It uses the same loop structure as the three previous sink functions, but in addition before every new time frame it picks the next occupancy from the set.
 Then using the current occupancy to calculate the number of empty samples between the peaks, and starts sending the samples in the correct order.
 
 \subsubsection{Realistic datasets}
@@ -1106,13 +1108,13 @@ Then using the current occupancy to calculate the number of empty samples betwee
 
 \paragraph{•}
 The last type of simulation will use realistic datasets as input. 
-Two types of datasets has been available for use: Black event data collected from RUN 1, and synthetic data created by researchers which matches the expected data from RUN 3.
+Two types of datasets have been available for use: Black event data collected from RUN 1, and synthetic data created by researchers which matches the expected data from RUN 3.
 Black events is the term for when there is data in all channels at the same time, which means overall higher occupancy then normal events.
 In addition to this, we want to use the data from RUN 1 and create pileup data.
 Pileup occurs when a channel gets overlapping data from multiple neighbouring channels in the same time frame.
 In the worst case the pileup can happen five times, i.e samples from five neighbouring channels are causing interference.
 By overlapping five time frames from the RUN 1 data, a third set for use in the simulation is made available.
-For clarities sake the datasets will be noted as: black-events, synthetic and pileup data from now on.
+For the sake of clarity the datasets will be noted as: black-events, synthetic and pileup data from now on.
  
 \paragraph{•} 
 The format for the black-events and the pileup datasets are as followed:
@@ -1120,7 +1122,7 @@ The format for the black-events and the pileup datasets are as followed:
 \begin{lstlisting}[caption=Format for the black-event and pileup dataset., label=lst:black-event-format]
 ddl <ddl number>
 hw  <hardware addr>
-<start time> <timeframe length>
+<start time> <time frame length>
 <timebin> <signal>
 <timebin> <signal>
 ....
@@ -1131,7 +1133,7 @@ hw <hardware addr>
 \paragraph{•}
 The hardware address is a decimal number which represents the channel, the \gls{altro} chip, the front-end card and branch address.
 Even though it is displayed as a decimal, it can be translated into four different values using bitwise operators.
-The bitwise operation looks as following: \textit{BranchNr << 11 | FecNr << 7 | AltroNr << 4 | ChannelNr}.
+The bitwise operation looks as following: $BranchNr << 11 | FecNr << 7 | AltroNr << 4 | ChannelNr $.
 In \ref{fig:hw-binary} an example address is shown, displayed in binary and the bits representing each of the four values are highlighted.
 In this context the ddl number is not important, but ddls with low numbers usually has a higher than average occupancy among its channels.
 
@@ -1143,7 +1145,7 @@ In this context the ddl number is not important, but ddls with low numbers usual
 \end{figure}
 
 \paragraph{•}
-To get the different values from the original hardware address, the opposite bit operation then the one used to store it is applied.
+To get the different values from the original hardware address, the opposite bit operation than the one used to store it is applied.
 Taking the \textit{BranchNr} as an example.
 Its value is stored by taking the value and left shifting it 11 bits, so in order to reverse it all that is needed is to right shift the hardware address 11 bits.
 \paragraph{•}
@@ -1159,7 +1161,7 @@ int ChannelNr = hw & 15;
 \paragraph{•}
 The formatting used for the synthetic data is more straight forward then the one for black-events.
 It starts with one row with the title of values in its column, before continuously storing rows of data, following the format specified in the first row.
-The main difference between the two formats is that the synthetic stores the exact pad and pad row for every timebin, instead of storing it before the start of every timeframe, as in the black-events.
+The main difference between the two formats is that the synthetic stores the exact pad and pad row for every timebin, instead of storing it before the start of every time frame, as in the black-events.
 
 \begin{lstlisting}[caption=Format for the synthetic dataset., label=lst:synthetic-data-format]
 #sector #padRow #padNr #timebin #signal #meta-data
@@ -1167,7 +1169,7 @@ The main difference between the two formats is that the synthetic stores the exa
 
 \paragraph{•}
 The next step is creating a shared data container which can store samples from any dataset, this way the simulation only needs one sink function.
-The data container needs to store samples for every channel, and for every timeframe that is being simulated.
+The data container needs to store samples for every channel, and for every time frame that is being simulated.
 This can be made by defining a simple \codeword{template} using existing containers.
 
 \begin{lstlisting}[caption=Data container., label=lst:data-template]
@@ -1176,24 +1178,24 @@ typedef std::vector< DataEntry > Datamap;
 \end{lstlisting}
 
 \paragraph{•}
-The \codeword{DataEntry} template stores one entire timeframe worth of samples for every channel in the simulation.
+The \codeword{DataEntry} template stores one entire time frame worth of samples for every channel in the simulation.
 The \codeword{Datamap} is just a \codeword{vector} storing \codeword{DataEntry} objects.
-One weakness of storing the samples in this manner is that the sink function will now expect that it contains full timeframes for all channels.
-In other words, it expect that the datasets contain 1022 signals for every channel, which in all datasets is not the case.
+One weakness of storing the samples in this manner is that the sink function will now expect that it contains full time frames for all channels.
+In other words, it expects that the datasets contain 1022 signals for every channel, which is not the case.
 The black-event data was based on the \gls{altro} chip, meaning there is only 8 chips per front-end card, and 16 channels per \gls{altro}.
-At the same time the timeframe seems to be shorter, so there is always less then a full timeframe worth of data.
-The lack of samples can easily be fixed by placing empty samples at the front and/or back of each timeframe.
-Doing so will create full timeframes no matter the actual number available.
+At the same time the time frame seems to be shorter, so there is always less then a full time frame worth of data.
+The lack of samples can easily be fixed by placing empty samples at the front and/or back of each time frame.
+Doing so will create full time frames no matter the actual number available.
 Regarding the channel mismatch in the black-event data, it can be remedied by creating a mapping table, using neighbouring channels to fill in the gap.
-Even though there is enough channels to work with, the dataset still only contains three timeframes worth of data for each channel used in RUN 1.
-Three timeframes is not enough to create valid results, which means that data from other channels need to be used as well to create longer simulations.
-Since the current solution still propose to use a fake mapping between \gls{altro} and \gls{sampa} channel, why not read in data without caring about which channel it belongs to.
-Doing so will provide more then enough timeframes, and since these are black events, the occupancy should be on average the same non the less.
+Even though there is enough channels to work with, the dataset still only contains three time frames worth of data for each channel used in RUN 1.
+Three time frames is not enough to create valid results, which means that data from other channels need to be used as well to create longer simulations.
+Since the current solution still proposes to use a fake mapping between \gls{altro} and \gls{sampa} channel, why not read in data without caring about which channel it belongs to.
+Doing so will provide more then enough time frames, and since these are black events, the occupancy should be on average the same non the less.
 
 \paragraph{•}
-The synthetic data has a mapping which is usable for the \gls{sampa} channels, but only contains 1000 signals per timeframe.
+The synthetic data has a mapping which is usable for the \gls{sampa} channels, but only contains 1000 signals per time frame.
 As with the black-event data, the lack of samples is solved by placing empty ones where it is needed.
-There is more then enough synthetic data to use, but since it stores timeframes for every single pad in the readout chamber reading out a meaningful amount of timeframes for the same channels will be very time costly.
+There is more then enough synthetic data to use, but since it stores time frames for every single pad in the readout chamber reading out a meaningful amount of time frames for the same channels will be very time costly.
 The only alternative is to disregard the mapping, and focus on reading in data instead.
 
 \begin{figure}[h!]
@@ -1220,9 +1222,9 @@ In addition the output streaming(\codeword{ostream\& operator<<()}) method is re
 \paragraph{•}
 The simulation needs two different data types, these have been briefly shown in the previous code listings.
 The \codeword{Sample} and the \codeword{Packet} classes.
-\codeword{Sample} represents a single 10-bit signal, storing information about what timeframe the sample belongs to, the signal value itself, and other statistical variables.
+\codeword{Sample} represents a single 10-bit signal, storing information about what time frame the sample belongs to, the signal value itself, and other statistical variables.
 Representing the \gls{sampa} header is the \codeword{Packet} class, it stores the relevant values selected from its documentation.
-This include the timeframe, channel id, sampa id, number of samples and whether there was overflow in its timeframe.
+This include the time frame, channel id, sampa id, number of samples and whether there was overflow in its time frame.
 Source code for the \codeword{Packet} class is shown in listing~\ref{lst:packet}.
 The \codeword{Sample} class is implemented in similar fashion and will not be displayed in the report. 
 
@@ -1232,14 +1234,48 @@ The \codeword{Sample} class is implemented in similar fashion and will not be di
 
 \subsection{Connecting the modules together}
 \paragraph{•}
-As seen in \ref{cha:3} connecting the modules together is done in the \codeword{sc\_main} method.
-\textit{Mangler mer utdypende her.}
+As seen in chapter~\ref{cha:3} connecting the modules together is done in the \codeword{sc\_main} method.
+The implementation becomes a little more complex when dealing with such a large amount of different modules, as well as sub-modules.
+In order for the simulation to function correctly the modules must be connected the right way.
+The connection occurs in three stages:
+\begin{itemize}
+	\item Instantiating the modules.
+		\begin{itemize}
+			\item This is done by simply creating arrays of module objects, iterate that array and instantiate new objects.
+			\item The number of modules is specified in the testbench, which makes it possible to easily edit the number of \gls{sampa} chips, or channels per \gls{sampa}.
+		\end{itemize}
+	\item Initialize the \gls{fifo} channels.
+		\begin{itemize}
+			\item An array of \gls{fifo} channels must be created for every pair of modules that are connected together.
+			\item An overview of the number of channels between each module is shown in \ref{fig:sampa-overview}.
+		\end{itemize}
+	\item Connecting the modules together.
+		\begin{itemize}
+			\item In this case the DataGenerator needs to have 32 different channels per \gls{sampa} module, the \gls{sampa} needs four channels to the \gls{gbt} and from the \gls{gbt} to the \gls{cru} one is needed.
+			\item So by having three arrays of \gls{fifo} channels, they can be set as channels for the three pairs of modules that needs to be connected.
+			\item In listing~\ref{lst:connecting-modules} the connection between the \gls{sampa} and the \gls{gbt} is used as an example.
+		\end{itemize}
+\end{itemize}
 
-\section{Creating a customizable testbench}
-\textit{Dette omtaler egentlig bare en fil med et namespace der alle variabler for simuleringen er. Kanskje ikke verd et eget del kapittel? Hvor skal jeg sette det inn da?}
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/sampa-overview.png}
+		\caption{Overview of the number of channels between every module.}
+		\label{fig:sampa-overview}
+\end{figure}
+
+\begin{minipage}{\linewidth}
+\lstinputlisting[caption=Connecting the \gls{sampa} modules with the \gls{gbt}.,label=lst:connecting-modules]{codelistings/connection.cpp}
+\end{minipage}
 
 \section{Data gathering}
 \textit{Creating Struct object in the sampa and channel modules to gather information, which can be written to a graph file later on}
+
+\paragraph{•}
+Taking advantage of the fact that the main method stores every module in memory, they can be accessed after the simulation is done, and simulation data stored in them can be gathered.
+The most important modules is of course the \textit{channel} and \textit{\gls{sampa}}, so this section will focus on the data gathering from those components, but the same principle is used for all modules.
+Every module has one or multiple \codeword{struct} objects, which stores statistical data which has recorded throughout the simulation time.
+
 
 \chapter{Evaluation and results}
 \textit{Running the tests, results from different tests, Evaluating the final product}
@@ -1255,7 +1291,7 @@ With a completed simulation model in place, blablabla
 
 \paragraph{•}
 To begin with, a number of different simulations is run, all with one goal in mind: verifying the simulation model.
-Before using realistic data, the model most be tested to see if it behaves as expected.
+Before using realistic data, the model must be tested to see if it behaves as expected.
 In order to trust the results provided by the simulations, the simulation model must be dependable, and accurate enough.
 Using static input data which only depends on occupancy, will give a controlled environment where the results can easily be predicted beforehand and compared to the actual results.
 Doing some test simulations will also flush out any flaws or weaknesses in the way data is gathered, or if any parameters must be changed.
@@ -1265,7 +1301,7 @@ Doing some test simulations will also flush out any flaws or weaknesses in the w
 A good place to begin is to run multiple simulations with different static occupancy level.
 This will create a wide range of results to use in verifying the simulation model.
 To begin with, three different occupancy levels was used, 30, 60 and 90 percent.
-Starting small with only eight timeframes per simulation, using the entire \gls{fec}, giving a total of 160 channels.
+Starting small with only eight time frames per simulation, using the entire \gls{fec}, giving a total of 160 channels.
 The maximum buffer size is set to 4k * 10 bit for the data buffer and 256 * 10bit for the header buffer.
 The purpose of this simulation is to see how the buffers hold up with the expected data occupancy, compared to higher amounts.
 
@@ -1292,9 +1328,9 @@ This time the simulation uses 30 time frames instead of just 8, and the maximum 
 \end{figure}
 
 \paragraph{•} %Sum up
-The results confirms the prediction, and it seems that with occupancies higher then 30 percent the buffer usage keeps growing as time goes on, and the serial outs will never be able to read the data fast enough.
+The results confirm the prediction, and it seems that with occupancies higher then 30 percent the buffer usage keeps growing as time goes on, and the serial outs will never be able to read the data fast enough.
 Looking at the header buffer during these simulations, it became clear that it will most likely never become full, using only one to two header packets at the most.
-This is because it doesn't depend on the data occupancy, every header packet is always 50 bit, no matter how many samples in a time frame.
+This is because it doesn't depend on the data occupancy, every header packet is always 50 bit, no matter how many samples there are in a time frame.
 So far the model seems to be working as expected, but the simulation has been using very controlled, and static data.
 Some more tests needs to be done in order to confirm that the simulation model is accurate enough to produce valid results with more realistic input data.
 
@@ -1305,7 +1341,7 @@ The occupancy will in most cases vary from time frame to time frame, and sometim
 Using the \textit{alternatingOccupancySink()} function, a pattern of different levels of occupancies can be used as input.
 This way it will be more fluctuations in the amount of input data, which will give more fluctuating results.
 The pattern chosen for this simulation is displayed in \ref{fig:occ-pattern}.
-It starts of with the expected average occupancy, before increasing in a steep fashion to 100 percent, then more slowly decreases down to zero.
+It starts off with the expected average occupancy, before increasing in a steep fashion to 100 percent, then more slowly decreases down to zero.
 With this pattern, the model is tested how it handles increasing occupancy over time, and how fast it can stabilize after the amount of data decreases.
 
 \begin{figure}[h!]
@@ -1334,8 +1370,8 @@ The expected result is that it will go beyond 4k in the ten time frames being si
 The readout speed is 2.5 times slower then the input speed, meaning that every serial out will be able to read around three out of eight channel buffers before the next time frame is finished.
 Lets take the first channel as an example: It will be the first channel the serial out will read, and while being read more data will come pouring in.
 The channel will have 40 percent of the data from the next time frame already stored when the serial out finish with the first time frame.
-Then it needs to wait while the other seven channels are read from before coming back to it.
-The point here is that the expected behaviour is that the channel buffer usage will rapidly increase, but small periods where it slows down because data is being read out.
+Then it needs to wait while the other seven channels are read before coming back to it.
+The point here is that the expected behaviour is that the channel buffer usage will rapidly increase, but in small periods it slows down because data is being read out.
 
 \begin{figure}[h!]
 	\centering
@@ -1353,7 +1389,7 @@ After five time frames the buffer usage reaches 4k, and it peaks at about 6k aft
 
 \paragraph{•} %Intro
 Some of the problems with the previous simulations has been the length.
-They have been to short to be able to say anything for certain.
+They have been too short to be able to say anything for certain.
 Improving on this, the next simulation will run for about 100 time frames, with continuously increasing occupancy.
 With the high amount of time frames, the resulting graph should provide more detailed information.
 Starting ten percent below the expected average of 30 percent, and then increase in a steady fashion until reaching 100 percent.
@@ -1391,7 +1427,7 @@ This will be implemented for the rest of the simulations, and it can be done wit
 
 \paragraph{•}
 Now that it is established that the model is working as intended, more realistic data can be used as input.
-Using the normal distribution sink explained in section~\ref{subsubsec:normal-distribution}, a more accurate estimations of buffer usage can be established.
+Using the normal distribution sink explained in section~\ref{subsubsec:normal-distribution}, a more accurate estimation of buffer usage can be established.
 Another goal of these simulations is finding the compression factor for the \gls{zs}, see how it changes with different levels of occupancy, and where it reaches the necessary factor of 2.5.
 The verification simulations showed that simulations of about 100 time frames gave a good amount of data, so the simulations using normal distribution will run at least that long.
 
@@ -1402,7 +1438,7 @@ The verification simulations showed that simulations of about 100 time frames ga
 According to \ref{fig:expected-occupancy} the mean occupancy that is expected is 28 percent, this becomes a natural starting point for the first simulation.
 If the results show that the model can't handle 28 percent or it is to little, the occupancy level can be adjusted for the next simulation.
 This is what is most likely to happen, because the shape of the data is the worst possible case for the \gls{zs} algorithm. 
-In \ref{fig:occ-28} the randomly picked normal distribution used for this simulation is shown.
+In \ref{fig:28-dist} the randomly picked normal distribution used for this simulation is shown.
 Values ranging from 0 to 50 percent is being used.
 
 \begin{figure}[h!]
@@ -1420,7 +1456,7 @@ Values ranging from 0 to 50 percent is being used.
 \end{figure}
 
 \paragraph{•}
-As seen in \ref{fig:28-occ} the channel buffers fill up over time, and there is to much data for the serial outs to read.
+As seen in \ref{fig:28-occ} the channel buffers fill up over time, and there is too much data for the serial outs to read.
 For the first 15-20 time frames it seems somewhat stable, this is most likely because the simulation was "lucky" and picked low numbers of occupancies for the first part.
 The buffer usage peaks at 4944 samples, but this number would continue to grow if the simulation was longer.
 The difference when using a more realistic data model, instead of static occupancy becomes very clear in the resulting graph.
@@ -1431,7 +1467,7 @@ This is a good indication that both the behaviour of the simulation model and th
 \subsubsection{2. 23\% Mean Occupancy}
 
 \paragraph{•}
-Since 28 percent mean occupancy was to much for the model to handle, the next simulation will try five percent less, i.e 23.
+Since 28 percent mean occupancy was too much for the model to handle, the next simulation will try five percent less, i.e 23\%.
 It uses the same setup in all other regards so that the results can be compared.
 23 percent was chosen because it is far enough away from the first simulation to create a different result, without it being obvious whether the model will be able to handle it or not.
 
@@ -1446,7 +1482,7 @@ It uses the same setup in all other regards so that the results can be compared.
 The graph in \ref{fig:23-occ} shows shifting buffer usage, varying between 100 and 1500 samples.
 However the graph shows that the model is able to read out the samples fast enough for the buffers not to overflow, always staying below the lowest of the suggested buffer sizes, 2k.
 On average the buffers stored 675 samples at any time.
-This is a number which is more then acceptable, and the simulation could most likely run forever and it would not matter.
+This is a number which is more than acceptable, and the simulation could most likely run forever and it would not matter.
 To confirm this, a simulation using 10 000 time frames was run (\ref{fig:10k-23-occ}, and the results back up what the smaller one showed.
 The results from it is compressed into a histogram over the occurrence of different buffer usage values.
 It shows that most of the time the buffer usage is around 300-600, with an average of 473.
@@ -1500,7 +1536,7 @@ Even though the mean is one percent higher for 25, it has smaller range of value
 \end{figure}
 
 \paragraph{•}
-When looking at 26 percent mean occupancy it can already be established that this is to much.
+When looking at 26 percent mean occupancy it can already be established that this is too much.
 With a good distribution and lucky picking it can probably stay stable, but after a while the buffer usage will start to grow.
 Not shockingly, this is definitely the case for 27 percent, increasing in buffer usage almost as fast as 28 percent.
 
@@ -1521,7 +1557,7 @@ If the compression factor of 2.5 is consistent with the occupancy limit found in
 
 \paragraph{•}
 The compression factor graph shows that is reaches 2.5 at around 25 percent occupancy, decreasing faster and faster, giving an exponential function.
-25 percent was exactly where the simulation model started to have trouble reading the data quickly enough, confirming that the results found where indeed valid.
+25 percent was exactly where the simulation model started to have trouble reading the data quickly enough, confirming that the results found were indeed valid.
 A conclusion regarding this is that a 4k maximum buffer size should be enough with average occupancy lower then 25 percent.
 This is only about three percent lower than the estimated average occupancy, and considering that the shape of the samples are as bad as possible for the \gls{zs} this is acceptable difference.
 
@@ -1548,7 +1584,7 @@ The focus when looking at the \gls{zs} on the black events, will be the resultin
 The reasoning for this is that the \gls{zs} worst case has already been discussed.
 The first results, which are displayed in \ref{fig:blackevents-zs} are using black events w/o pileup.
 Results seems to show a rather low, and stable buffer usage, averaging out at about 330 samples, and peaking at 600 samples.
-Since the data is collected from RUN 1, they have slightly less occupancy then what is expected for RUN 3, but the it still has the most realistic shape available.
+Since the data is collected from RUN 1, they have slightly less occupancy then what is expected for RUN 3, but it still has the most realistic shape available.
 
 \begin{figure}[h!]
 	\centering
@@ -1558,7 +1594,7 @@ Since the data is collected from RUN 1, they have slightly less occupancy then w
 \end{figure}
 
 \paragraph{•}
-One of the reasons for creating pileup data is to increase the amount of real samples, which possible can give more interesting results then using plain black event data.
+One of the reasons for creating pileup data is to increase the amount of real samples, which possibly can give more interesting results than using plain black event data.
 Running the simulation with the pileup data did indeed create interesting results, which can be seen in \ref{fig:blackevents-pileup-zs}.
 As the previous results it stayed at around the same level during the entire simulation, but one can clearly see the increase in overall occupancy.
 The pileup results peaked about 200 samples higher, and had an average of about 100 samples more.
@@ -1601,24 +1637,27 @@ This isn't only more then the 2.5 that is needed, but also higher then what was 
 \end{figure}
 
 \paragraph{•}
-The pileup results showed a definite decrease in the compression factor.
-Reasons being that now that samples have been piled on top of each other, the difference between neighbouring samples is bigger, which results in a worse Huffman table.
-Even so, the decrease was more then expected, only getting an average compression factor of three.
-The factor varies between 2.6 and 3.5, which is still decent enough for the model to handle.
-The compressed size of each time frame is now on average 100 words more then the normal black events.
+Comparing the results from normal black events with the pileup results, there is a clear difference in regards to compression.
+Reasons being that now that samples have been piled on top of each other, the difference between neighbouring time bins is bigger, which results in a worse Huffman table.
+The compressed size of each time frame is now on average 100 words more than the normal black events, varying between 300 and 400 words.
 
 \begin{figure}[h!]
 	\centering
-		\includegraphics[width=1.0\textwidth]{images/compression-factor-huffman.png}
-		\caption{Results from Black events with pileup using Huffman encoding.}
-		\label{fig:compression-factor-huffman}
+		\includegraphics[width=1.0\textwidth]{images/blackevents-pileup-huffman.png}
+		\caption{Compression factor of Huffman on piled up black events.}
+		\label{fig:blackevents-huffman-pileup}
 \end{figure}
 
+\paragraph{•}
+The pileup results show a definite decrease in the compression factor, as can be seen in \ref{fig:comp-huffman-pileup}.
+However with an average compression factor of three the model is still able to read out data fast enough.
+The factor varies between 2.6 and 3.5, always staying above the 2.5 limit, meaning that the model should never have any trouble.
+
 \begin{figure}[h!]
 	\centering
-		\includegraphics[width=1.0\textwidth]{images/compression-factor-huffman.png}
-		\caption{Compression factor of Huffman on piled up black events.}
-		\label{fig:compression-factor-huffman}
+		\includegraphics[width=1.0\textwidth]{images/compression-factor-pileup-huffman.png}
+		\caption{Results from black events with pileup using Huffman encoding.}
+		\label{fig:comp-huffman-pileup}
 \end{figure}
 
 \subsubsection{Evaluating the Results}
@@ -1626,27 +1665,32 @@ The compressed size of each time frame is now on average 100 words more then the
 \paragraph{•}
 Comparing the results when using \gls{zs} to using Huffman encoding ended up being harder then expected.
 This is because of the difference in how they compress the data, one being applied before storing, and one after.
-However there are multiple things to take away from these results.
-For all of the scenarios, the buffers never came close to being full.
-It seems that for the black event dataset, the Huffman is able to perform better then \gls{zs}, but only by a small margin.
-Huffman had a decrease in performance then \gls{zs} when comparing normal black events, and pileup.
+However there are multiple things to learn from these results.
+For all the scenarios, the buffers never came close to being full.
+It seems that for the black event dataset, the Huffman is able to perform better than \gls{zs}, but only by a small margin.
+Huffman had a stronger decrease in performance than \gls{zs} when comparing normal black events, and pileup.
 It can be argued that this is because the Huffman has a best case scenario, seeing as it uses the best possible Huffman table.
 There is a significant difference between normal and pileup data, but not enough to be an issue.
 
 \paragraph{•}
-There was no way to see how the model behaved when Huffman didn't compress good enough, this is hopefully something that will be seen when trying the synthetic data made for RUN 3.
+There was no way to see how the model behaved when Huffman didn't compress well enough, this is hopefully something that will be seen when trying the synthetic data made for RUN 3.
 
 
 \subsection{Synthetic Data for RUN 3}
+
 \subsubsection{Preface}
 \paragraph{•}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, scelerisque et urna quis, volutpat dapibus massa. Vivamus consequat ante eu metus lobortis vestibulum. Cras laoreet nisl quam, et rhoncus quam efficitur ac. Etiam at suscipit felis. Maecenas aliquet nibh sit amet ultrices placerat. Pellentesque lobortis ultricies nunc, consectetur pharetra leo sollicitudin id. Maecenas varius rhoncus posuere. Sed euismod molestie ante eu malesuada. Ut sem eros, viverra ut iaculis a, cursus id libero. Proin egestas pulvinar volutpat. Morbi ac eleifend lectus, in suscipit augue.
-
+Using the synthetic dataset made to simulate RUN 3 data, a final set of simulations can be performed.
+As with the black events, the focus will be comparing \gls{zs} and Huffman encoding in terms of buffer usage, as well as look at the compression factor for the Huffman.
+Hopefully there will be enough spread in the data to really test how the model behaves when the Huffman encoding isn't enough.
+It is impossible to make any predictions here, as the properties of this dataset is unknown, and not previously been tested.
 
 \subsubsection{1. Zero Suppression}
 
 \paragraph{•}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, scelerisque et urna quis, volutpat dapibus massa. Vivamus consequat ante eu metus lobortis vestibulum. Cras laoreet nisl quam, et rhoncus quam efficitur ac. Etiam at suscipit felis. Maecenas aliquet nibh sit amet ultrices placerat. Pellentesque lobortis ultricies nunc, consectetur pharetra leo sollicitudin id. Maecenas varius rhoncus posuere. Sed euismod molestie ante eu malesuada. Ut sem eros, viverra ut iaculis a, cursus id libero. Proin egestas pulvinar volutpat. Morbi ac eleifend lectus, in suscipit augue.
+For the \gls{zs} instead of taking the overall buffer usage now the channel with the highest average will be picked out and shown.
+This gives a slightly different look into the model, focusing on the behaviour of a single channel.
+Seeing as it is still the channel with the highest buffer usage it is still comparable to the overall highest shown in previous sections. 
 
 \begin{figure}[h!]
 	\centering
@@ -1656,13 +1700,28 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, sceler
 \end{figure}
 
 \paragraph{•}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, scelerisque et urna quis, volutpat dapibus massa. Vivamus consequat ante eu metus lobortis vestibulum. Cras laoreet nisl quam, et rhoncus quam efficitur ac. Etiam at suscipit felis. Maecenas aliquet nibh sit amet ultrices placerat. Pellentesque lobortis ultricies nunc, consectetur pharetra leo sollicitudin id. Maecenas varius rhoncus posuere. Sed euismod molestie ante eu malesuada. Ut sem eros, viverra ut iaculis a, cursus id libero. Proin egestas pulvinar volutpat. Morbi ac eleifend lectus, in suscipit augue.
+Results show a unexpectedly low buffer usage, averaging out on about 220 samples.
+In addition the difference from time frame to time frame is very low.
+Comparing this to the results from the black events, it is significantly lower then those.
+In \ref{fig:occ-synt-zs} the occupancy of the data is calculated.
+The highest recorded occupancy found was 24 percent, with most being between 10 and 16 percent.
+It seems that there isn't enough data to get any more decent results using \gls{zs}, but occupancy doesn't effect Huffman encoding in the same way.
 
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=1.0\textwidth]{images/occ-after-zs.png}
+		\caption{Occupancy after \gls{zs}.}
+		\label{fig:occ-synt-zs}
+\end{figure}
 
 \subsubsection{2. Huffman Encoding}
 
 \paragraph{•}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, scelerisque et urna quis, volutpat dapibus massa. Vivamus consequat ante eu metus lobortis vestibulum. Cras laoreet nisl quam, et rhoncus quam efficitur ac. Etiam at suscipit felis. Maecenas aliquet nibh sit amet ultrices placerat. Pellentesque lobortis ultricies nunc, consectetur pharetra leo sollicitudin id. Maecenas varius rhoncus posuere. Sed euismod molestie ante eu malesuada. Ut sem eros, viverra ut iaculis a, cursus id libero. Proin egestas pulvinar volutpat. Morbi ac eleifend lectus, in suscipit augue.
+Even though the results from using the \gls{zs} was disappointing, the dataset should give interesting results using Huffman encoding, which can be compared to the black event and pileup results.
+As with those datasets, both the compressed size of the time frame, and the overall compression factor is what will be monitored, and presented.
+In \ref{fig:synthetic-huffman} the graph shows that the average compressed size of a time frame is around 290 words.
+What is strange, compared to the other datasets is the narrow difference in compressed size, with the largest time frame is 300, while the lowest is 285.
+
 
 \begin{figure}[h!]
 	\centering
@@ -1672,7 +1731,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, sceler
 \end{figure}
 
 \paragraph{•}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, scelerisque et urna quis, volutpat dapibus massa. Vivamus consequat ante eu metus lobortis vestibulum. Cras laoreet nisl quam, et rhoncus quam efficitur ac. Etiam at suscipit felis. Maecenas aliquet nibh sit amet ultrices placerat. Pellentesque lobortis ultricies nunc, consectetur pharetra leo sollicitudin id. Maecenas varius rhoncus posuere. Sed euismod molestie ante eu malesuada. Ut sem eros, viverra ut iaculis a, cursus id libero. Proin egestas pulvinar volutpat. Morbi ac eleifend lectus, in suscipit augue.
+The narrow difference in compressed size of a time frame seen in \ref{fig:synthetic-huffman} means that the dataset has very low, but even difference between consecutive time bins.
+Since the Huffman encoding stores the difference between two time bins, the same difference has to be present a lot over all the time frames.
+Looking at the histogram in \ref{fig:compression-factor-huffman-synt} displaying the compression factor, it shows that the difference in compression factor is very small.
+It varies between 3.4 and 3.6, so to show the difference two decimals has to be used in the figure.
 
 \begin{figure}[h!]
 	\centering
@@ -1684,11 +1746,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, sceler
 \subsubsection{Evaluating the Results}
 
 \paragraph{•}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor dui, scelerisque et urna quis, volutpat dapibus massa. Vivamus consequat ante eu metus lobortis vestibulum. Cras laoreet nisl quam, et rhoncus quam efficitur ac. Etiam at suscipit felis. Maecenas aliquet nibh sit amet ultrices placerat. Pellentesque lobortis ultricies nunc, consectetur pharetra leo sollicitudin id. Maecenas varius rhoncus posuere. Sed euismod molestie ante eu malesuada. Ut sem eros, viverra ut iaculis a, cursus id libero. Proin egestas pulvinar volutpat. Morbi ac eleifend lectus, in suscipit augue.
-
+The results from using \gls{zs} was quite frankly uninteresting and there was not much to be learned from it, except that the dataset has a very low occupancy.
+The Huffman results on the other hand was much more rewarding, and was comparable to the previous results found.
+Comparing to the black events and pileup results, it lies somewhere in between them when it comes to compression.
+Unlike previous results it has a very narrow result window, something not seen in the black event and pileup datasets.
+One thing that all the Huffman results has in common is that it never reaches a compression factor of 5, meaning that between 2.6 and 4.9 is the best possible compression factor possible.
+That being said, a factor over four will probably not be possible when using Huffman encoding in RUN 3.
+Even though the hope for this simulation was to see how the model behaves when the Huffman encoding was not enough, the results was all in all educational.
 
 \chapter{Conclusion and Future work}
 \textit{Conclude the thesis, talk about the impact it has and its usefulness in future planing of the front end electronics.}
+
+\paragraph{•}
+
 
 \appendix
 \chapter{Code Listings}
