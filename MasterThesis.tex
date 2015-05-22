@@ -8,7 +8,7 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-\documentclass[a4paper, 12pt]{report}\dfrac{\right }{•}
+\documentclass[a4paper, 12pt]{report}
 \usepackage{helvet}
 \usepackage[toc,page]{appendix}
 \usepackage[toc,acronym,nomain]{glossaries}
@@ -1273,9 +1273,17 @@ The connection occurs in three stages:
 
 \paragraph{•}
 Taking advantage of the fact that the main method stores every module in memory, they can be accessed after the simulation is done, and simulation data stored in them can be gathered.
-The most important modules is of course the \textit{channel} and \textit{\gls{sampa}}, so this section will focus on the data gathering from those components, but the same principle is used for all modules.
-Every module has one or multiple \codeword{struct} objects, which stores statistical data which has recorded throughout the simulation time.
+Most of the data gathering happens on a per \textit{channel} basis, so this section will focus on the data gathering from the \textit{channel} module, but the same principle is used for all modules.
+Every module has \codeword{struct} objects or arrays, which stores statistical data which has been recorded throughout the simulation time.
+For the \textit{channel}, the information stored is the current buffer usage for that channel, and some extra meta-data about the time frame, and channel.
+To avoid large data files, filled with unnecessary information it only records the buffer usage at the end of every time frame.
+In order to record how many samples make it though the \gls{zs} algorithm, an array is filled every time a sample is added to the buffer when the \gls{zs} is used.
+When the Huffman encoding is active, the total size for every time frame is monitored and stored as an array.
 
+\paragraph{•}
+In the main method after the simulation is done, the different data objects are accessed and iterated, writing them to a semicolon separated file.
+This file can be processed by any excel like program, and the data can be arranged/structured in a more readable way.
+In most cases this involves creating graphs and diagrams which visually displays the results gathered in the simulation.
 
 \chapter{Evaluation and results}
 \textit{Running the tests, results from different tests, Evaluating the final product}
@@ -1296,7 +1304,7 @@ In order to trust the results provided by the simulations, the simulation model 
 Using static input data which only depends on occupancy, will give a controlled environment where the results can easily be predicted beforehand and compared to the actual results.
 Doing some test simulations will also flush out any flaws or weaknesses in the way data is gathered, or if any parameters must be changed.
 
-\subsubsection{1. TITLE}
+\subsubsection{1. Static Simulations}
 \paragraph{•}
 A good place to begin is to run multiple simulations with different static occupancy level.
 This will create a wide range of results to use in verifying the simulation model.
@@ -1752,12 +1760,65 @@ Comparing to the black events and pileup results, it lies somewhere in between t
 Unlike previous results it has a very narrow result window, something not seen in the black event and pileup datasets.
 One thing that all the Huffman results has in common is that it never reaches a compression factor of 5, meaning that between 2.6 and 4.9 is the best possible compression factor possible.
 That being said, a factor over four will probably not be possible when using Huffman encoding in RUN 3.
+
+\paragraph{•}
 Even though the hope for this simulation was to see how the model behaves when the Huffman encoding was not enough, the results was all in all educational.
+It showed the best possible compression that is achievable, and that datasets with different levels of occupancy had little to no impact on the Huffman's compression factor.
+One thing that could have been done differently was to use a worse Huffman table when compressing in order to get the results missing from all of this.
+That being said, the results would most likely resemble the ones found using \gls{zs}.
 
 \chapter{Conclusion and Future work}
 \textit{Conclude the thesis, talk about the impact it has and its usefulness in future planing of the front end electronics.}
 
 \paragraph{•}
+This thesis and its surrounding work have tried to create a different way of testing the readout electronics for the \gls{tpc} detector in RUN 3.
+By creating a computer model of the electronics and by running this model through a number of different simulations in both naive and realistic environments, a estimation of how the it would fair could be tested.
+The thesis has focused on analysing the buffer usage for the \gls{sampa} buffers, and comparing two different data compression schemes to see what worked best, and in what situation they did so.
+The previous chapter discusses a lot of the data gathered from the simulations, but does not draw any final conclusion in regards to the actual effects they have on the development of the readout electronics.
+The results found in this thesis has been verified running multiple verification tests on the simulation model, and is within an acceptable margin for error.
+With that in mind the results found can be trusted and has good enough credibility to be taken seriously.
+
+\paragraph{•}
+In regards to the results found about buffer usage in this thesis, they confirm that the compression factor needed for the system to work is 2.5.
+Using the normal distribution it was discovered that this limit was reached around 25 percent occupancy, just 2-3 percent lower than the highest calculated average for the inner pads.
+Since the simulation used an unrealistic data shape in order to create a worst case scenario it can be said that the electronics should be able to handle a average occupancy of 28 percent.
+To make an estimate on how big the buffers need to be in order to avoid overflow, one has to look at the results which was able to hold a stable level without increasing over time.
+It does not matter how big the buffers are if the electronics on average can't handle the amount of data coming in.
+\ref{fig:10k-23-occ} shows that with 23 percent occupancy the buffer usage can reach as high as 2k, which means that when the average is at its limit it can go higher than that.
+This excludes 2k as a potential buffer size, and 4k may not be enough for the inner pads.
+To be safe that overflow does not occur on a regular basis, the buffers need to be 6k or even 8k.
+
+\paragraph{•}
+As to the question about what compression scheme works the best, there are a lot of factors to consider.
+Given the right environment, both of them would work very well.
+The benefits of using \gls{zs} is that it works perfectly with the right amount of data, and is more dependent on the shear amount rather then the shape.
+However since it has a definite limit where it just doesn't work any more, it becomes useless if it faces a large enough occupancy.
+The Huffman encoding on the other hand cares very little about the occupancy, and is more likely to work with higher levels of occupancy.
+The problem is to create a good enough Huffman table, and this is hard considering the experiment data is for the most part hard to predict.
+A solution to this is to have a dynamic table which updates as it receives more data.
+Another solution is to extend the Huffman algorithm to make it so that all samples that ends up with a negative compression uses the actual sample value instead.
+
+\section{Future Work}
+
+\paragraph{•}
+The simulation model created in this thesis can be very useful later on in the development of the readout electronics.
+There are still work to be done with testing Huffman encoding, and this is something that the model could be used for in the future.
+Creating a solution which tests the cooperation between \gls{zs} and Huffman in the simulation could be accomplished by using the current model as a starting point.
+It has become a powerful tool which could be extended to include other components, or another setup all together.
+That being said, there is a lot that could be improved.
+One of things that may need improvement is the data gathering, and the way it is recorded.
+Another quality of life change that could be made is to create a more object-oriented DataGenerator as it quickly became quite large, and cluttered.
+Instead of adding new functions for sending data, there should be a base class which could be extended, and every implementation contained logic for one way of sending data.
+There are many ways that it can become useful later on, and how it will be used remains to be decided.
+
+\section{Reflections}
+
+\paragraph{•}
+To successfully create a simulation model which could produce valid results, and help in the development of the readout electronics is a testament to the endless applications of computer science.
+Even though the implementation required a lot of work, the hardest part was to acquire the necessary domain knowledge.
+Starting from scratch with one of the biggest research projects in the field of physics, as a programmer has been challenging to say the least.
+Working on this project has rewarded knowledge and experience across multiple fields of science.
+The experience of working with experts from around the world has been a great opportunity, and one thing I have learned is how important cooperation when working on such a cross domain task is.
 
 
 \appendix

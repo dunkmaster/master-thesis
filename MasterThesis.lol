@@ -19,5 +19,5 @@
 \contentsline {lstlisting}{\numberline {5.15}Data container.}{58}{lstlisting.5.15}
 \contentsline {lstlisting}{\numberline {5.16}Custom data type - The SAMPA header.}{61}{lstlisting.5.16}
 \contentsline {lstlisting}{\numberline {5.17}Connecting the \gls {sampa} modules with the \gls {gbt}.}{62}{lstlisting.5.17}
-\contentsline {lstlisting}{\numberline {A.1}Channel header file.}{87}{lstlisting.A.1}
-\contentsline {lstlisting}{\numberline {A.2}Sampa header file.}{88}{lstlisting.A.2}
+\contentsline {lstlisting}{\numberline {A.1}Channel header file.}{89}{lstlisting.A.1}
+\contentsline {lstlisting}{\numberline {A.2}Sampa header file.}{90}{lstlisting.A.2}
